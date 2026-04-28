@@ -1,0 +1,967 @@
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_dot_loader/flutter_dot_loader.dart';
+
+void main() => runApp(const DotMatrixGalleryApp());
+
+class DotMatrixGalleryApp extends StatelessWidget {
+  const DotMatrixGalleryApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Dot Matrix Studio',
+      theme: ThemeData.dark(useMaterial3: true).copyWith(
+        scaffoldBackgroundColor: const Color(0xFF050505),
+        colorScheme: const ColorScheme.dark(
+          primary: Color(0xFFFF3333),
+          surface: Color(0xFF0A0A0C),
+        ),
+      ),
+      home: const MainNavigation(),
+    );
+  }
+}
+
+// ─── Shared Components ───
+
+// ─── Blocks Game Animation Logo ───
+
+class _BlocksLogo extends StatelessWidget {
+  final double dotSize;
+  final double spacing;
+  const _BlocksLogo({this.dotSize = 3.5, this.spacing = 1.8});
+
+  static const List<List<List<int>>> _frames = [
+    // 1. Empty
+    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0] ],
+    // 2. L-block appears
+    [ [1,0,0,0,0,0], [1,0,0,0,0,0], [1,1,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0] ],
+    // 3. L-block falls
+    [ [0,0,0,0,0,0], [1,0,0,0,0,0], [1,0,0,0,0,0], [1,1,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0] ],
+    // 4. L-block falls
+    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,0,0,0], [1,0,0,0,0,0], [1,1,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0] ],
+    // 5. L-block falls
+    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,0,0,0], [1,0,0,0,0,0], [1,1,0,0,0,0], [0,0,0,0,0,0] ],
+    // 6. L-block hits bottom
+    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,0,0,0], [1,0,0,0,0,0], [1,1,0,0,0,0] ],
+    
+    // 7. Square appears
+    [ [0,0,0,1,1,0], [0,0,0,1,1,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,0,0,0], [1,0,0,0,0,0], [1,1,0,0,0,0] ],
+    // 8. Square falls
+    [ [0,0,0,0,0,0], [0,0,0,1,1,0], [0,0,0,1,1,0], [0,0,0,0,0,0], [1,0,0,0,0,0], [1,0,0,0,0,0], [1,1,0,0,0,0] ],
+    // 9. Square falls
+    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,1,1,0], [0,0,0,1,1,0], [1,0,0,0,0,0], [1,0,0,0,0,0], [1,1,0,0,0,0] ],
+    // 10. Square hits bottom
+    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,1,1,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    
+    // 11. Line appears
+    [ [0,1,1,1,1,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,1,1,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    // 12. Line falls
+    [ [0,0,0,0,0,0], [0,1,1,1,1,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,1,1,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    // 13. Line falls
+    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,1,1,1,1,0], [0,0,0,0,0,0], [1,0,0,1,1,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    // 14. Line hits bottom - line clear animation (flash)
+    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,1,1,1,1,0], [1,1,1,1,1,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    // 15. Flash empty
+    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    // 16. Flash full
+    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,1,1,1,1,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    // 17. Cleared and dropped
+    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    
+    // 18. T-Block appears
+    [ [0,0,1,1,1,0], [0,0,0,1,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    // 19. T-Block falls
+    [ [0,0,0,0,0,0], [0,0,1,1,1,0], [0,0,0,1,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    // 20. T-Block falls
+    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,1,1,1,0], [0,0,0,1,0,0], [0,0,0,0,0,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    // 21. T-Block hits bottom
+    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,1,1,1,0], [0,0,0,1,0,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    
+    // 22. Wait before loop
+    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,1,1,1,0], [0,0,0,1,0,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      // Keep width static to match the layout
+      width: 6 * (dotSize + spacing) - spacing,
+      height: 7 * (dotSize + spacing) - spacing,
+      child: MatrixLoader(
+        columns: 6,
+        rows: 7,
+        dotSize: dotSize,
+        spacing: spacing,
+        pattern: MatrixPattern.custom,
+        activeColor: const Color(0xFFFF3333),
+        inactiveColor: const Color(0xFF1A1A1E),
+        duration: const Duration(seconds: 4),
+        customIntensity: (row, col, progress) {
+          int idx = (progress * _frames.length).floor();
+          if (idx >= _frames.length) idx = _frames.length - 1;
+          return _frames[idx][row][col] == 1 ? 1.0 : 0.0;
+        },
+      ),
+    );
+  }
+}
+
+// ─── Main Navigation ───
+class MainNavigation extends StatefulWidget {
+  const MainNavigation({super.key});
+  @override
+  State<MainNavigation> createState() => _MainNavigationState();
+}
+
+class _MainNavigationState extends State<MainNavigation> {
+  int _currentIndex = 0;
+
+  final List<Widget> _pages = const [
+    GalleryScreen(),
+    PlaygroundScreen(),
+    StudioScreen(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF0A0A0C),
+        elevation: 0,
+        title: Row(
+          children: [
+            const _BlocksLogo(dotSize: 3, spacing: 1.5),
+            const SizedBox(width: 16),
+            if (!isMobile)
+              const Text(
+                'DOT MATRIX',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 4,
+                  color: Colors.white,
+                ),
+              ),
+          ],
+        ),
+        actions: [
+          _NavBarTab(
+            title: 'Gallery',
+            isActive: _currentIndex == 0,
+            onTap: () => setState(() => _currentIndex = 0),
+          ),
+          _NavBarTab(
+            title: 'Playground',
+            isActive: _currentIndex == 1,
+            onTap: () => setState(() => _currentIndex = 1),
+          ),
+          _NavBarTab(
+            title: 'Studio',
+            isActive: _currentIndex == 2,
+            onTap: () => setState(() => _currentIndex = 2),
+          ),
+          const SizedBox(width: 16),
+        ],
+      ),
+      body: _pages[_currentIndex],
+    );
+  }
+}
+
+class _NavBarTab extends StatelessWidget {
+  final String title;
+  final bool isActive;
+  final VoidCallback onTap;
+  const _NavBarTab({required this.title, required this.isActive, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        alignment: Alignment.center,
+        child: Text(
+          title,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+            color: isActive ? Colors.white : Colors.white54,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Data Models ───
+class _LoaderEntry {
+  final String name;
+  final MatrixShape shape;
+  final MatrixPattern pattern;
+  const _LoaderEntry(this.name, this.shape, this.pattern);
+}
+const _squareLoaders = [
+  _LoaderEntry('Neon Drift', MatrixShape.square, MatrixPattern.square1),
+  _LoaderEntry('Pulse Ladder', MatrixShape.square, MatrixPattern.square2),
+  _LoaderEntry('Core Spiral', MatrixShape.square, MatrixPattern.square3),
+  _LoaderEntry('Twin Orbit', MatrixShape.square, MatrixPattern.square4),
+  _LoaderEntry('Prism Sweep', MatrixShape.square, MatrixPattern.square5),
+  _LoaderEntry('Checker Shift', MatrixShape.square, MatrixPattern.square6),
+  _LoaderEntry('Diamond Pulse', MatrixShape.square, MatrixPattern.square7),
+  _LoaderEntry('Snake Trail', MatrixShape.square, MatrixPattern.square8),
+  _LoaderEntry('Cross Weave', MatrixShape.square, MatrixPattern.square9),
+  _LoaderEntry('Scan Line', MatrixShape.square, MatrixPattern.square10),
+  _LoaderEntry('Vortex Spin', MatrixShape.square, MatrixPattern.square11),
+  _LoaderEntry('Diagonal Fade', MatrixShape.square, MatrixPattern.square12),
+  _LoaderEntry('Grid Bloom', MatrixShape.square, MatrixPattern.square13),
+  _LoaderEntry('Spiral Arm', MatrixShape.square, MatrixPattern.square14),
+  _LoaderEntry('Interference', MatrixShape.square, MatrixPattern.square15),
+  _LoaderEntry('Corner Wave', MatrixShape.square, MatrixPattern.square16),
+  _LoaderEntry('Sine Band', MatrixShape.square, MatrixPattern.square17),
+  _LoaderEntry('Rail Scan', MatrixShape.square, MatrixPattern.square18),
+  _LoaderEntry('Ripple Echo', MatrixShape.square, MatrixPattern.square19),
+  _LoaderEntry('Star Burst', MatrixShape.square, MatrixPattern.square20),
+];
+
+const _circularLoaders = [
+  _LoaderEntry('Halo Drift', MatrixShape.circular, MatrixPattern.circular1),
+  _LoaderEntry('Pulse Ring', MatrixShape.circular, MatrixPattern.circular2),
+  _LoaderEntry('Orbit Wave', MatrixShape.circular, MatrixPattern.circular3),
+  _LoaderEntry('Ripple Out', MatrixShape.circular, MatrixPattern.circular4),
+  _LoaderEntry('Galaxy Arm', MatrixShape.circular, MatrixPattern.circular5),
+  _LoaderEntry('Tri Sweep', MatrixShape.circular, MatrixPattern.circular6),
+  _LoaderEntry('Flower Spin', MatrixShape.circular, MatrixPattern.circular7),
+  _LoaderEntry('Beacon Pulse', MatrixShape.circular, MatrixPattern.circular8),
+  _LoaderEntry('Helix Curl', MatrixShape.circular, MatrixPattern.circular9),
+  _LoaderEntry('Glyph Cycle', MatrixShape.circular, MatrixPattern.circular10),
+  _LoaderEntry('Radial Mix', MatrixShape.circular, MatrixPattern.circular11),
+  _LoaderEntry('Siren Wave', MatrixShape.circular, MatrixPattern.circular12),
+  _LoaderEntry('Bloom Fade', MatrixShape.circular, MatrixPattern.circular13),
+  _LoaderEntry('Shock Ring', MatrixShape.circular, MatrixPattern.circular14),
+  _LoaderEntry('Petal Drift', MatrixShape.circular, MatrixPattern.circular15),
+  _LoaderEntry('Orbit Cell', MatrixShape.circular, MatrixPattern.circular16),
+  _LoaderEntry('Aurora Spin', MatrixShape.circular, MatrixPattern.circular17),
+  _LoaderEntry('Sonar Ping', MatrixShape.circular, MatrixPattern.circular18),
+  _LoaderEntry('Glyph Cluster', MatrixShape.circular, MatrixPattern.circular19),
+  _LoaderEntry('Cosmic Halo', MatrixShape.circular, MatrixPattern.circular20),
+];
+
+const _triangleLoaders = [
+  _LoaderEntry('Core Spokes', MatrixShape.triangle, MatrixPattern.triangle1),
+  _LoaderEntry('Altitude Wave', MatrixShape.triangle, MatrixPattern.triangle2),
+  _LoaderEntry('Corner Bounce', MatrixShape.triangle, MatrixPattern.triangle3),
+  _LoaderEntry('Vertex Chase', MatrixShape.triangle, MatrixPattern.triangle4),
+  _LoaderEntry('Twin Helix', MatrixShape.triangle, MatrixPattern.triangle5),
+  _LoaderEntry('Rung Shift', MatrixShape.triangle, MatrixPattern.triangle6),
+  _LoaderEntry('Tri Vortex', MatrixShape.triangle, MatrixPattern.triangle7),
+  _LoaderEntry('Column Wave', MatrixShape.triangle, MatrixPattern.triangle8),
+  _LoaderEntry('Apex Pulse', MatrixShape.triangle, MatrixPattern.triangle9),
+  _LoaderEntry('Fan Sweep', MatrixShape.triangle, MatrixPattern.triangle10),
+  _LoaderEntry('Cascade Fall', MatrixShape.triangle, MatrixPattern.triangle11),
+  _LoaderEntry('Cross Hatch', MatrixShape.triangle, MatrixPattern.triangle12),
+  _LoaderEntry('Prism Burst', MatrixShape.triangle, MatrixPattern.triangle13),
+  _LoaderEntry('Blade Spin', MatrixShape.triangle, MatrixPattern.triangle14),
+  _LoaderEntry('Ripple Edge', MatrixShape.triangle, MatrixPattern.triangle15),
+  _LoaderEntry('Spiral Glow', MatrixShape.triangle, MatrixPattern.triangle16),
+  _LoaderEntry('Ladder Shift', MatrixShape.triangle, MatrixPattern.triangle17),
+  _LoaderEntry('Mesh Pulse', MatrixShape.triangle, MatrixPattern.triangle18),
+  _LoaderEntry('Storm Spin', MatrixShape.triangle, MatrixPattern.triangle19),
+  _LoaderEntry('Harmony', MatrixShape.triangle, MatrixPattern.triangle20),
+];
+
+// ─── 1. Gallery Screen ───
+class GalleryScreen extends StatefulWidget {
+  const GalleryScreen({super.key});
+  @override
+  State<GalleryScreen> createState() => _GalleryScreenState();
+}
+class _GalleryScreenState extends State<GalleryScreen> {
+  int _selectedTab = 0;
+  final _tabs = const ['All', 'Square', 'Circular', 'Triangle'];
+
+  List<_LoaderEntry> get _currentLoaders {
+    switch (_selectedTab) {
+      case 1: return _squareLoaders;
+      case 2: return _circularLoaders;
+      case 3: return _triangleLoaders;
+      default: return [..._squareLoaders, ..._circularLoaders, ..._triangleLoaders];
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    int crossAxisCount = 4;
+    if (isMobile) {
+      crossAxisCount = 2;
+    } else if (screenWidth < 900) {
+      crossAxisCount = 3;
+    }
+    final hPad = isMobile ? 16.0 : 24.0;
+
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Container(
+            padding: EdgeInsets.fromLTRB(hPad, isMobile ? 24 : 40, hPad, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'DOT MATRIX',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: isMobile ? 20 : 28,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    letterSpacing: 6,
+                    shadows: [Shadow(color: const Color(0xFFFF2222).withValues(alpha: 0.3), blurRadius: 20)],
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    isMobile ? 15 : 25,
+                    (i) => Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 3),
+                      width: 3, height: 3,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withValues(alpha: 0.1 + (i % 3) * 0.15),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Loaders for every app',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: isMobile ? 13 : 15,
+                    color: Colors.white.withValues(alpha: 0.4),
+                    letterSpacing: 2,
+                  ),
+                ),
+                SizedBox(height: isMobile ? 20 : 32),
+              ],
+            ),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: hPad),
+            child: SizedBox(
+              height: 36,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: _tabs.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 6),
+                itemBuilder: (context, index) {
+                  final isSelected = _selectedTab == index;
+                  return GestureDetector(
+                    onTap: () => setState(() => _selectedTab = index),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      padding: EdgeInsets.symmetric(horizontal: isMobile ? 12 : 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: isSelected ? const Color(0xFF1A1A1E) : Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: isSelected ? const Color(0xFF333333) : Colors.transparent),
+                      ),
+                      child: Text(
+                        _tabs[index],
+                        style: TextStyle(
+                          fontSize: isMobile ? 12 : 13,
+                          fontWeight: FontWeight.w500,
+                          color: isSelected ? Colors.white : const Color(0xFF71717A),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+        SliverToBoxAdapter(child: SizedBox(height: isMobile ? 16 : 24)),
+        SliverPadding(
+          padding: EdgeInsets.symmetric(horizontal: hPad),
+          sliver: SliverGrid(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              mainAxisSpacing: isMobile ? 8 : 12,
+              crossAxisSpacing: isMobile ? 8 : 12,
+              childAspectRatio: isMobile ? 0.9 : 0.85,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => _LoaderCard(entry: _currentLoaders[index], isMobile: isMobile),
+              childCount: _currentLoaders.length,
+            ),
+          ),
+        ),
+        const SliverToBoxAdapter(child: SizedBox(height: 48)),
+      ],
+    );
+  }
+}
+
+class _LoaderCard extends StatelessWidget {
+  final _LoaderEntry entry;
+  final bool isMobile;
+  const _LoaderCard({required this.entry, this.isMobile = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFF0A0A0C),
+        borderRadius: BorderRadius.circular(isMobile ? 12 : 16),
+        border: Border.all(color: const Color(0xFF1A1A1E), width: 1),
+      ),
+      child: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: MatrixLoader(
+                columns: 5, rows: 5,
+                dotSize: isMobile ? 3.5 : 4,
+                spacing: isMobile ? 2.5 : 3,
+                size: isMobile ? 36 : 44,
+                shape: entry.shape,
+                pattern: entry.pattern,
+                activeColor: Colors.white,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: isMobile ? 10 : 16),
+            child: Text(
+              entry.name,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'monospace',
+                fontSize: isMobile ? 10 : 11,
+                color: const Color(0xFF71717A),
+                letterSpacing: 0.2,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+// ─── 2. Playground Screen ───
+class PlaygroundScreen extends StatefulWidget {
+  const PlaygroundScreen({super.key});
+  @override
+  State<PlaygroundScreen> createState() => _PlaygroundScreenState();
+}
+
+class _PlaygroundScreenState extends State<PlaygroundScreen> {
+  int _cols = 7;
+  int _rows = 7;
+  double _dotSize = 6;
+  double _spacing = 2;
+  double _speed = 1.5;
+  MatrixShape _shape = MatrixShape.square;
+  MatrixPattern _pattern = MatrixPattern.square1;
+
+  final List<MatrixShape> _shapes = [MatrixShape.square, MatrixShape.circular, MatrixShape.triangle];
+
+  List<MatrixPattern> get _availablePatterns {
+    if (_shape == MatrixShape.square) return _squareLoaders.map((e) => e.pattern).toList();
+    if (_shape == MatrixShape.circular) return _circularLoaders.map((e) => e.pattern).toList();
+    return _triangleLoaders.map((e) => e.pattern).toList();
+  }
+
+  void _onShapeChanged(MatrixShape? val) {
+    if (val == null) return;
+    setState(() {
+      _shape = val;
+      _pattern = _availablePatterns.first;
+    });
+  }
+
+  String _generateCode() {
+    return '''
+MatrixLoader(
+  columns: $_cols,
+  rows: $_rows,
+  dotSize: ${_dotSize.toStringAsFixed(1)},
+  spacing: ${_spacing.toStringAsFixed(1)},
+  duration: const Duration(milliseconds: ${(1000 * _speed).toInt()}),
+  shape: MatrixShape.${_shape.name},
+  pattern: MatrixPattern.${_pattern.name},
+  activeColor: Colors.white,
+)''';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 800;
+    
+    Widget controls = SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('CONTROLS', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5)),
+          const SizedBox(height: 24),
+          _buildDropdown<MatrixShape>('Shape', _shapes, _shape, _onShapeChanged, (s) => s.name.toUpperCase()),
+          const SizedBox(height: 16),
+          _buildDropdown<MatrixPattern>('Pattern', _availablePatterns, _pattern, (v) => setState(() => _pattern = v!), (p) => p.name),
+          const SizedBox(height: 24),
+          _buildSlider('Columns', _cols.toDouble(), 1, 20, (v) => setState(() => _cols = v.toInt())),
+          _buildSlider('Rows', _rows.toDouble(), 1, 20, (v) => setState(() => _rows = v.toInt())),
+          _buildSlider('Dot Size', _dotSize, 2, 20, (v) => setState(() => _dotSize = v)),
+          _buildSlider('Spacing', _spacing, 0, 10, (v) => setState(() => _spacing = v)),
+          _buildSlider('Duration (s)', _speed, 0.5, 5, (v) => setState(() => _speed = v)),
+        ],
+      ),
+    );
+
+    Widget preview = Container(
+      color: const Color(0xFF050505),
+      child: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: MatrixLoader(
+                columns: _cols,
+                rows: _rows,
+                dotSize: _dotSize,
+                spacing: _spacing,
+                duration: Duration(milliseconds: (1000 * _speed).toInt()),
+                shape: _shape,
+                pattern: _pattern,
+                activeColor: Colors.white,
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(16),
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              border: Border(top: BorderSide(color: Color(0xFF1A1A1E))),
+              color: Color(0xFF0A0A0C),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Code Snippet', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white70)),
+                    TextButton.icon(
+                      icon: const Icon(Icons.copy, size: 14, color: Colors.white),
+                      label: const Text('Copy', style: TextStyle(color: Colors.white)),
+                      onPressed: () {
+                        Clipboard.setData(ClipboardData(text: _generateCode()));
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Copied to clipboard!')));
+                      },
+                    )
+                  ],
+                ),
+                const SizedBox(height: 8),
+                SelectableText(
+                  _generateCode(),
+                  style: const TextStyle(fontFamily: 'monospace', fontSize: 12, color: Color(0xFFA1A1AA)),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+
+    if (isMobile) {
+      return Column(
+        children: [
+          Expanded(flex: 3, child: preview),
+          const Divider(height: 1, color: Color(0xFF1A1A1E)),
+          Expanded(flex: 4, child: controls),
+        ],
+      );
+    }
+    return Row(
+      children: [
+        Expanded(flex: 2, child: preview),
+        const VerticalDivider(width: 1, color: Color(0xFF1A1A1E)),
+        SizedBox(width: 320, child: controls),
+      ],
+    );
+  }
+
+  Widget _buildDropdown<T>(String label, List<T> items, T value, ValueChanged<T?> onChanged, String Function(T) labeler) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 12, color: Colors.white54)),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            color: const Color(0xFF1A1A1E),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: const Color(0xFF27272A)),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<T>(
+              isExpanded: true,
+              value: value,
+              dropdownColor: const Color(0xFF1A1A1E),
+              items: items.map((e) => DropdownMenuItem(value: e, child: Text(labeler(e), style: const TextStyle(fontSize: 14)))).toList(),
+              onChanged: onChanged,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSlider(String label, double value, double min, double max, ValueChanged<double> onChanged) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(label, style: const TextStyle(fontSize: 12, color: Colors.white54)),
+              Text(value.toStringAsFixed(1), style: const TextStyle(fontSize: 12, fontFamily: 'monospace')),
+            ],
+          ),
+          SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              activeTrackColor: const Color(0xFFFF3333),
+              inactiveTrackColor: const Color(0xFF27272A),
+              thumbColor: Colors.white,
+              overlayColor: const Color(0xFFFF3333).withValues(alpha: 0.2),
+              trackHeight: 4,
+            ),
+            child: Slider(value: value, min: min, max: max, onChanged: onChanged),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── 3. Studio Screen ───
+class StudioScreen extends StatefulWidget {
+  const StudioScreen({super.key});
+  @override
+  State<StudioScreen> createState() => _StudioScreenState();
+}
+
+class _StudioScreenState extends State<StudioScreen> {
+  final int cols = 7;
+  final int rows = 8;
+  late List<List<List<int>>> frames;
+  int currentFrame = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Start with one empty frame
+    frames = [List.generate(rows, (_) => List.filled(cols, 0))];
+  }
+
+  void _toggleDot(int r, int c) {
+    setState(() {
+      frames[currentFrame][r][c] = frames[currentFrame][r][c] == 1 ? 0 : 1;
+    });
+  }
+
+  void _addFrame() {
+    setState(() {
+      // Copy current frame
+      final newFrame = List.generate(rows, (r) => List<int>.from(frames[currentFrame][r]));
+      frames.add(newFrame);
+      currentFrame = frames.length - 1;
+    });
+  }
+
+  void _deleteFrame() {
+    if (frames.length <= 1) return;
+    setState(() {
+      frames.removeAt(currentFrame);
+      if (currentFrame >= frames.length) currentFrame = frames.length - 1;
+    });
+  }
+
+  void _clearFrame() {
+    setState(() {
+      frames[currentFrame] = List.generate(rows, (_) => List.filled(cols, 0));
+    });
+  }
+  
+  void _invertFrame() {
+    setState(() {
+      for (int r = 0; r < rows; r++) {
+        for (int c = 0; c < cols; c++) {
+          frames[currentFrame][r][c] = frames[currentFrame][r][c] == 1 ? 0 : 1;
+        }
+      }
+    });
+  }
+
+  String _generateCode() {
+    final frameStrs = frames.map((f) {
+      final rowsStrs = f.map((r) => '[${r.join(', ')}]').join(',\n      ');
+      return '    [\n      $rowsStrs\n    ]';
+    }).join(',\n');
+    
+    return '''
+// 1. Define your custom frames
+final List<List<List<int>>> customFrames = [
+$frameStrs
+];
+
+// 2. Use MatrixLoader with customIntensity
+MatrixLoader(
+  columns: $cols,
+  rows: $rows,
+  pattern: MatrixPattern.custom,
+  customIntensity: (row, col, progress) {
+    int frameIndex = (progress * customFrames.length).floor();
+    if (frameIndex >= customFrames.length) frameIndex = customFrames.length - 1;
+    return customFrames[frameIndex][row][col] == 1 ? 1.0 : 0.0;
+  },
+)''';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 800;
+
+    Widget editor = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: const Color(0xFF0A0A0C),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFF1A1A1E)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: List.generate(rows, (r) {
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: List.generate(cols, (c) {
+                  final isActive = frames[currentFrame][r][c] == 1;
+                  return GestureDetector(
+                    onTap: () => _toggleDot(r, c),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 150),
+                      margin: const EdgeInsets.all(4),
+                      width: 24, height: 24,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isActive ? const Color(0xFFFF3333) : const Color(0xFF1A1A1E),
+                        border: Border.all(color: isActive ? const Color(0xFFFF6666) : const Color(0xFF27272A)),
+                        boxShadow: isActive ? [BoxShadow(color: const Color(0xFFFF3333).withValues(alpha: 0.4), blurRadius: 8)] : [],
+                      ),
+                    ),
+                  );
+                }),
+              );
+            }),
+          ),
+        ),
+        const SizedBox(height: 32),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            OutlinedButton.icon(
+              onPressed: _clearFrame,
+              icon: const Icon(Icons.clear, size: 16),
+              label: const Text('Clear'),
+            ),
+            const SizedBox(width: 12),
+            OutlinedButton.icon(
+              onPressed: _invertFrame,
+              icon: const Icon(Icons.invert_colors, size: 16),
+              label: const Text('Invert'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 32),
+        const Text('TIMELINE', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5, color: Colors.white54)),
+        const SizedBox(height: 16),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              for (int i = 0; i < frames.length; i++)
+                GestureDetector(
+                  onTap: () => setState(() => currentFrame = i),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: currentFrame == i ? const Color(0xFFFF3333) : const Color(0xFF27272A), width: 2),
+                      borderRadius: BorderRadius.circular(8),
+                      color: const Color(0xFF0A0A0C),
+                    ),
+                    width: 48, height: 48,
+                    child: CustomPaint(painter: _MiniFramePainter(frames[i])),
+                  ),
+                ),
+              const SizedBox(width: 8),
+              IconButton(
+                onPressed: _addFrame,
+                icon: const Icon(Icons.add_box),
+                color: Colors.white54,
+                iconSize: 32,
+              ),
+              if (frames.length > 1)
+                IconButton(
+                  onPressed: _deleteFrame,
+                  icon: const Icon(Icons.delete),
+                  color: Colors.redAccent,
+                  iconSize: 32,
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+
+    Widget rightPanel = Column(
+      children: [
+        Expanded(
+          child: Container(
+            color: const Color(0xFF0A0A0C),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('LIVE PREVIEW', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5, color: Colors.white54)),
+                  const SizedBox(height: 24),
+                  MatrixLoader(
+                    columns: cols, rows: rows, dotSize: 6, spacing: 3,
+                    pattern: MatrixPattern.custom,
+                    activeColor: const Color(0xFFFF3333),
+                    customIntensity: (row, col, progress) {
+                      int idx = (progress * frames.length).floor();
+                      if (idx >= frames.length) idx = frames.length - 1;
+                      return frames[idx][row][col] == 1 ? 1.0 : 0.0;
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.all(16),
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            border: Border(top: BorderSide(color: Color(0xFF1A1A1E))),
+            color: Color(0xFF050505),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Generated Code', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white70)),
+                  TextButton.icon(
+                    icon: const Icon(Icons.copy, size: 14, color: Colors.white),
+                    label: const Text('Copy', style: TextStyle(color: Colors.white)),
+                    onPressed: () {
+                      Clipboard.setData(ClipboardData(text: _generateCode()));
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Copied to clipboard!')));
+                    },
+                  )
+                ],
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                height: 200,
+                child: SingleChildScrollView(
+                  child: SelectableText(
+                    _generateCode(),
+                    style: const TextStyle(fontFamily: 'monospace', fontSize: 12, color: Color(0xFFA1A1AA)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+
+    if (isMobile) {
+      return DefaultTabController(
+        length: 2,
+        child: Column(
+          children: [
+            const TabBar(
+              tabs: [Tab(text: 'Editor'), Tab(text: 'Preview')],
+              indicatorColor: Color(0xFFFF3333),
+              labelColor: Colors.white,
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  SingleChildScrollView(padding: const EdgeInsets.all(24), child: editor),
+                  rightPanel,
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Row(
+      children: [
+        Expanded(flex: 3, child: editor),
+        const VerticalDivider(width: 1, color: Color(0xFF1A1A1E)),
+        Expanded(flex: 2, child: rightPanel),
+      ],
+    );
+  }
+}
+
+class _MiniFramePainter extends CustomPainter {
+  final List<List<int>> frame;
+  _MiniFramePainter(this.frame);
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rows = frame.length;
+    final cols = frame[0].length;
+    final dotW = size.width / cols;
+    final dotH = size.height / rows;
+    final paint = Paint()..style = PaintingStyle.fill;
+    for (int r = 0; r < rows; r++) {
+      for (int c = 0; c < cols; c++) {
+        if (frame[r][c] == 1) {
+          paint.color = const Color(0xFFFF3333);
+        } else {
+          paint.color = const Color(0xFF1A1A1E);
+        }
+        canvas.drawRect(Rect.fromLTWH(c * dotW + 0.5, r * dotH + 0.5, dotW - 1, dotH - 1), paint);
+      }
+    }
+  }
+  @override bool shouldRepaint(covariant _MiniFramePainter old) => true;
+}
