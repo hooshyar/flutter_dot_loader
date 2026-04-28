@@ -2,6 +2,8 @@
 
 A collection of highly customizable dot-matrix and triangle loaders for Flutter, inspired by the React `matrix` library by `zzzzshawn`.
 
+![Gallery & Studio Demo](https://raw.githubusercontent.com/hooshyar/flutter_dot_loader/main/assets/demo.webp)
+
 ## Features
 
 - **60 Math-Driven Patterns**: 20 `square`, 20 `circular`, and 20 `triangle` unique algorithmic animations (e.g., spirals, vortexes, scanners, pulse waves).
