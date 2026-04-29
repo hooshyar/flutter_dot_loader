@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dot_loader/flutter_dot_loader.dart';
@@ -35,53 +34,229 @@ class _BlocksLogo extends StatelessWidget {
 
   static const List<List<List<int>>> _frames = [
     // 1. Empty
-    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0] ],
+    [
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0]
+    ],
     // 2. L-block appears
-    [ [1,0,0,0,0,0], [1,0,0,0,0,0], [1,1,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0] ],
+    [
+      [1, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 0],
+      [1, 1, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0]
+    ],
     // 3. L-block falls
-    [ [0,0,0,0,0,0], [1,0,0,0,0,0], [1,0,0,0,0,0], [1,1,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0] ],
+    [
+      [0, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 0],
+      [1, 1, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0]
+    ],
     // 4. L-block falls
-    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,0,0,0], [1,0,0,0,0,0], [1,1,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0] ],
+    [
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 0],
+      [1, 1, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0]
+    ],
     // 5. L-block falls
-    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,0,0,0], [1,0,0,0,0,0], [1,1,0,0,0,0], [0,0,0,0,0,0] ],
+    [
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 0],
+      [1, 1, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0]
+    ],
     // 6. L-block hits bottom
-    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,0,0,0], [1,0,0,0,0,0], [1,1,0,0,0,0] ],
-    
+    [
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 0],
+      [1, 1, 0, 0, 0, 0]
+    ],
+
     // 7. Square appears
-    [ [0,0,0,1,1,0], [0,0,0,1,1,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,0,0,0], [1,0,0,0,0,0], [1,1,0,0,0,0] ],
+    [
+      [0, 0, 0, 1, 1, 0],
+      [0, 0, 0, 1, 1, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 0],
+      [1, 1, 0, 0, 0, 0]
+    ],
     // 8. Square falls
-    [ [0,0,0,0,0,0], [0,0,0,1,1,0], [0,0,0,1,1,0], [0,0,0,0,0,0], [1,0,0,0,0,0], [1,0,0,0,0,0], [1,1,0,0,0,0] ],
+    [
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 1, 0],
+      [0, 0, 0, 1, 1, 0],
+      [0, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 0],
+      [1, 1, 0, 0, 0, 0]
+    ],
     // 9. Square falls
-    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,1,1,0], [0,0,0,1,1,0], [1,0,0,0,0,0], [1,0,0,0,0,0], [1,1,0,0,0,0] ],
+    [
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 1, 0],
+      [0, 0, 0, 1, 1, 0],
+      [1, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 0],
+      [1, 1, 0, 0, 0, 0]
+    ],
     // 10. Square hits bottom
-    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,1,1,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
-    
+    [
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [1, 0, 0, 1, 1, 0],
+      [1, 0, 0, 1, 1, 0],
+      [1, 1, 0, 0, 0, 0]
+    ],
+
     // 11. Line appears
-    [ [0,1,1,1,1,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,1,1,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    [
+      [0, 1, 1, 1, 1, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [1, 0, 0, 1, 1, 0],
+      [1, 0, 0, 1, 1, 0],
+      [1, 1, 0, 0, 0, 0]
+    ],
     // 12. Line falls
-    [ [0,0,0,0,0,0], [0,1,1,1,1,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,1,1,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    [
+      [0, 0, 0, 0, 0, 0],
+      [0, 1, 1, 1, 1, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [1, 0, 0, 1, 1, 0],
+      [1, 0, 0, 1, 1, 0],
+      [1, 1, 0, 0, 0, 0]
+    ],
     // 13. Line falls
-    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,1,1,1,1,0], [0,0,0,0,0,0], [1,0,0,1,1,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    [
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 1, 1, 1, 1, 0],
+      [0, 0, 0, 0, 0, 0],
+      [1, 0, 0, 1, 1, 0],
+      [1, 0, 0, 1, 1, 0],
+      [1, 1, 0, 0, 0, 0]
+    ],
     // 14. Line hits bottom - line clear animation (flash)
-    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,1,1,1,1,0], [1,1,1,1,1,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    [
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 1, 1, 1, 1, 0],
+      [1, 1, 1, 1, 1, 0],
+      [1, 0, 0, 1, 1, 0],
+      [1, 1, 0, 0, 0, 0]
+    ],
     // 15. Flash empty
-    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    [
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [1, 0, 0, 1, 1, 0],
+      [1, 1, 0, 0, 0, 0]
+    ],
     // 16. Flash full
-    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,1,1,1,1,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    [
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [1, 1, 1, 1, 1, 0],
+      [1, 0, 0, 1, 1, 0],
+      [1, 1, 0, 0, 0, 0]
+    ],
     // 17. Cleared and dropped
-    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
-    
+    [
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [1, 0, 0, 1, 1, 0],
+      [1, 1, 0, 0, 0, 0]
+    ],
+
     // 18. T-Block appears
-    [ [0,0,1,1,1,0], [0,0,0,1,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    [
+      [0, 0, 1, 1, 1, 0],
+      [0, 0, 0, 1, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [1, 0, 0, 1, 1, 0],
+      [1, 1, 0, 0, 0, 0]
+    ],
     // 19. T-Block falls
-    [ [0,0,0,0,0,0], [0,0,1,1,1,0], [0,0,0,1,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    [
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 1, 1, 1, 0],
+      [0, 0, 0, 1, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [1, 0, 0, 1, 1, 0],
+      [1, 1, 0, 0, 0, 0]
+    ],
     // 20. T-Block falls
-    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,1,1,1,0], [0,0,0,1,0,0], [0,0,0,0,0,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    [
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 1, 1, 1, 0],
+      [0, 0, 0, 1, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [1, 0, 0, 1, 1, 0],
+      [1, 1, 0, 0, 0, 0]
+    ],
     // 21. T-Block hits bottom
-    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,1,1,1,0], [0,0,0,1,0,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
-    
+    [
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 1, 1, 1, 0],
+      [0, 0, 0, 1, 0, 0],
+      [1, 0, 0, 1, 1, 0],
+      [1, 1, 0, 0, 0, 0]
+    ],
+
     // 22. Wait before loop
-    [ [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,1,1,1,0], [0,0,0,1,0,0], [1,0,0,1,1,0], [1,1,0,0,0,0] ],
+    [
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 1, 1, 1, 0],
+      [0, 0, 0, 1, 0, 0],
+      [1, 0, 0, 1, 1, 0],
+      [1, 1, 0, 0, 0, 0]
+    ],
   ];
 
   @override
@@ -177,7 +352,8 @@ class _NavBarTab extends StatelessWidget {
   final String title;
   final bool isActive;
   final VoidCallback onTap;
-  const _NavBarTab({required this.title, required this.isActive, required this.onTap});
+  const _NavBarTab(
+      {required this.title, required this.isActive, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -206,6 +382,7 @@ class _LoaderEntry {
   final MatrixPattern pattern;
   const _LoaderEntry(this.name, this.shape, this.pattern);
 }
+
 const _squareLoaders = [
   _LoaderEntry('Neon Drift', MatrixShape.square, MatrixPattern.square1),
   _LoaderEntry('Pulse Ladder', MatrixShape.square, MatrixPattern.square2),
@@ -281,16 +458,21 @@ class GalleryScreen extends StatefulWidget {
   @override
   State<GalleryScreen> createState() => _GalleryScreenState();
 }
+
 class _GalleryScreenState extends State<GalleryScreen> {
   int _selectedTab = 0;
   final _tabs = const ['All', 'Square', 'Circular', 'Triangle'];
 
   List<_LoaderEntry> get _currentLoaders {
     switch (_selectedTab) {
-      case 1: return _squareLoaders;
-      case 2: return _circularLoaders;
-      case 3: return _triangleLoaders;
-      default: return [..._squareLoaders, ..._circularLoaders, ..._triangleLoaders];
+      case 1:
+        return _squareLoaders;
+      case 2:
+        return _circularLoaders;
+      case 3:
+        return _triangleLoaders;
+      default:
+        return [..._squareLoaders, ..._circularLoaders, ..._triangleLoaders];
     }
   }
 
@@ -322,7 +504,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
                     fontWeight: FontWeight.w900,
                     color: Colors.white,
                     letterSpacing: 6,
-                    shadows: [Shadow(color: const Color(0xFFFF2222).withValues(alpha: 0.3), blurRadius: 20)],
+                    shadows: [
+                      Shadow(
+                          color: const Color(0xFFFF2222).withValues(alpha: 0.3),
+                          blurRadius: 20)
+                    ],
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -332,10 +518,12 @@ class _GalleryScreenState extends State<GalleryScreen> {
                     isMobile ? 15 : 25,
                     (i) => Container(
                       margin: const EdgeInsets.symmetric(horizontal: 3),
-                      width: 3, height: 3,
+                      width: 3,
+                      height: 3,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white.withValues(alpha: 0.1 + (i % 3) * 0.15),
+                        color: Colors.white
+                            .withValues(alpha: 0.1 + (i % 3) * 0.15),
                       ),
                     ),
                   ),
@@ -370,18 +558,26 @@ class _GalleryScreenState extends State<GalleryScreen> {
                     onTap: () => setState(() => _selectedTab = index),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
-                      padding: EdgeInsets.symmetric(horizontal: isMobile ? 12 : 16, vertical: 8),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: isMobile ? 12 : 16, vertical: 8),
                       decoration: BoxDecoration(
-                        color: isSelected ? const Color(0xFF1A1A1E) : Colors.transparent,
+                        color: isSelected
+                            ? const Color(0xFF1A1A1E)
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: isSelected ? const Color(0xFF333333) : Colors.transparent),
+                        border: Border.all(
+                            color: isSelected
+                                ? const Color(0xFF333333)
+                                : Colors.transparent),
                       ),
                       child: Text(
                         _tabs[index],
                         style: TextStyle(
                           fontSize: isMobile ? 12 : 13,
                           fontWeight: FontWeight.w500,
-                          color: isSelected ? Colors.white : const Color(0xFF71717A),
+                          color: isSelected
+                              ? Colors.white
+                              : const Color(0xFF71717A),
                         ),
                       ),
                     ),
@@ -402,7 +598,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
               childAspectRatio: isMobile ? 0.9 : 0.85,
             ),
             delegate: SliverChildBuilderDelegate(
-              (context, index) => _LoaderCard(entry: _currentLoaders[index], isMobile: isMobile),
+              (context, index) => _LoaderCard(
+                  entry: _currentLoaders[index], isMobile: isMobile),
               childCount: _currentLoaders.length,
             ),
           ),
@@ -431,7 +628,8 @@ class _LoaderCard extends StatelessWidget {
           Expanded(
             child: Center(
               child: MatrixLoader(
-                columns: 5, rows: 5,
+                columns: 5,
+                rows: 5,
                 dotSize: isMobile ? 3.5 : 4,
                 spacing: isMobile ? 2.5 : 3,
                 size: isMobile ? 36 : 44,
@@ -460,7 +658,6 @@ class _LoaderCard extends StatelessWidget {
   }
 }
 
-
 // ─── 2. Playground Screen ───
 class PlaygroundScreen extends StatefulWidget {
   const PlaygroundScreen({super.key});
@@ -477,11 +674,19 @@ class _PlaygroundScreenState extends State<PlaygroundScreen> {
   MatrixShape _shape = MatrixShape.square;
   MatrixPattern _pattern = MatrixPattern.square1;
 
-  final List<MatrixShape> _shapes = [MatrixShape.square, MatrixShape.circular, MatrixShape.triangle];
+  final List<MatrixShape> _shapes = [
+    MatrixShape.square,
+    MatrixShape.circular,
+    MatrixShape.triangle
+  ];
 
   List<MatrixPattern> get _availablePatterns {
-    if (_shape == MatrixShape.square) return _squareLoaders.map((e) => e.pattern).toList();
-    if (_shape == MatrixShape.circular) return _circularLoaders.map((e) => e.pattern).toList();
+    if (_shape == MatrixShape.square) {
+      return _squareLoaders.map((e) => e.pattern).toList();
+    }
+    if (_shape == MatrixShape.circular) {
+      return _circularLoaders.map((e) => e.pattern).toList();
+    }
     return _triangleLoaders.map((e) => e.pattern).toList();
   }
 
@@ -510,23 +715,32 @@ MatrixLoader(
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 800;
-    
+
     Widget controls = SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('CONTROLS', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5)),
+          const Text('CONTROLS',
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5)),
           const SizedBox(height: 24),
-          _buildDropdown<MatrixShape>('Shape', _shapes, _shape, _onShapeChanged, (s) => s.name.toUpperCase()),
+          _buildDropdown<MatrixShape>('Shape', _shapes, _shape, _onShapeChanged,
+              (s) => s.name.toUpperCase()),
           const SizedBox(height: 16),
-          _buildDropdown<MatrixPattern>('Pattern', _availablePatterns, _pattern, (v) => setState(() => _pattern = v!), (p) => p.name),
+          _buildDropdown<MatrixPattern>('Pattern', _availablePatterns, _pattern,
+              (v) => setState(() => _pattern = v!), (p) => p.name),
           const SizedBox(height: 24),
-          _buildSlider('Columns', _cols.toDouble(), 1, 20, (v) => setState(() => _cols = v.toInt())),
-          _buildSlider('Rows', _rows.toDouble(), 1, 20, (v) => setState(() => _rows = v.toInt())),
-          _buildSlider('Dot Size', _dotSize, 2, 20, (v) => setState(() => _dotSize = v)),
-          _buildSlider('Spacing', _spacing, 0, 10, (v) => setState(() => _spacing = v)),
-          _buildSlider('Duration (s)', _speed, 0.5, 5, (v) => setState(() => _speed = v)),
+          _buildSlider('Columns', _cols.toDouble(), 1, 20,
+              (v) => setState(() => _cols = v.toInt())),
+          _buildSlider('Rows', _rows.toDouble(), 1, 20,
+              (v) => setState(() => _rows = v.toInt())),
+          _buildSlider(
+              'Dot Size', _dotSize, 2, 20, (v) => setState(() => _dotSize = v)),
+          _buildSlider(
+              'Spacing', _spacing, 0, 10, (v) => setState(() => _spacing = v)),
+          _buildSlider('Duration (s)', _speed, 0.5, 5,
+              (v) => setState(() => _speed = v)),
         ],
       ),
     );
@@ -562,13 +776,20 @@ MatrixLoader(
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Code Snippet', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white70)),
+                    const Text('Code Snippet',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white70)),
                     TextButton.icon(
-                      icon: const Icon(Icons.copy, size: 14, color: Colors.white),
-                      label: const Text('Copy', style: TextStyle(color: Colors.white)),
+                      icon:
+                          const Icon(Icons.copy, size: 14, color: Colors.white),
+                      label: const Text('Copy',
+                          style: TextStyle(color: Colors.white)),
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: _generateCode()));
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Copied to clipboard!')));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Copied to clipboard!')));
                       },
                     )
                   ],
@@ -576,7 +797,10 @@ MatrixLoader(
                 const SizedBox(height: 8),
                 SelectableText(
                   _generateCode(),
-                  style: const TextStyle(fontFamily: 'monospace', fontSize: 12, color: Color(0xFFA1A1AA)),
+                  style: const TextStyle(
+                      fontFamily: 'monospace',
+                      fontSize: 12,
+                      color: Color(0xFFA1A1AA)),
                 ),
               ],
             ),
@@ -603,11 +827,13 @@ MatrixLoader(
     );
   }
 
-  Widget _buildDropdown<T>(String label, List<T> items, T value, ValueChanged<T?> onChanged, String Function(T) labeler) {
+  Widget _buildDropdown<T>(String label, List<T> items, T value,
+      ValueChanged<T?> onChanged, String Function(T) labeler) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.white54)),
+        Text(label,
+            style: const TextStyle(fontSize: 12, color: Colors.white54)),
         const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -621,7 +847,12 @@ MatrixLoader(
               isExpanded: true,
               value: value,
               dropdownColor: const Color(0xFF1A1A1E),
-              items: items.map((e) => DropdownMenuItem(value: e, child: Text(labeler(e), style: const TextStyle(fontSize: 14)))).toList(),
+              items: items
+                  .map((e) => DropdownMenuItem(
+                      value: e,
+                      child: Text(labeler(e),
+                          style: const TextStyle(fontSize: 14))))
+                  .toList(),
               onChanged: onChanged,
             ),
           ),
@@ -630,7 +861,8 @@ MatrixLoader(
     );
   }
 
-  Widget _buildSlider(String label, double value, double min, double max, ValueChanged<double> onChanged) {
+  Widget _buildSlider(String label, double value, double min, double max,
+      ValueChanged<double> onChanged) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(
@@ -639,8 +871,11 @@ MatrixLoader(
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(label, style: const TextStyle(fontSize: 12, color: Colors.white54)),
-              Text(value.toStringAsFixed(1), style: const TextStyle(fontSize: 12, fontFamily: 'monospace')),
+              Text(label,
+                  style: const TextStyle(fontSize: 12, color: Colors.white54)),
+              Text(value.toStringAsFixed(1),
+                  style:
+                      const TextStyle(fontSize: 12, fontFamily: 'monospace')),
             ],
           ),
           SliderTheme(
@@ -651,7 +886,8 @@ MatrixLoader(
               overlayColor: const Color(0xFFFF3333).withValues(alpha: 0.2),
               trackHeight: 4,
             ),
-            child: Slider(value: value, min: min, max: max, onChanged: onChanged),
+            child:
+                Slider(value: value, min: min, max: max, onChanged: onChanged),
           ),
         ],
       ),
@@ -688,7 +924,8 @@ class _StudioScreenState extends State<StudioScreen> {
   void _addFrame() {
     setState(() {
       // Copy current frame
-      final newFrame = List.generate(rows, (r) => List<int>.from(frames[currentFrame][r]));
+      final newFrame =
+          List.generate(rows, (r) => List<int>.from(frames[currentFrame][r]));
       frames.add(newFrame);
       currentFrame = frames.length - 1;
     });
@@ -707,7 +944,7 @@ class _StudioScreenState extends State<StudioScreen> {
       frames[currentFrame] = List.generate(rows, (_) => List.filled(cols, 0));
     });
   }
-  
+
   void _invertFrame() {
     setState(() {
       for (int r = 0; r < rows; r++) {
@@ -723,7 +960,7 @@ class _StudioScreenState extends State<StudioScreen> {
       final rowsStrs = f.map((r) => '[${r.join(', ')}]').join(',\n      ');
       return '    [\n      $rowsStrs\n    ]';
     }).join(',\n');
-    
+
     return '''
 // 1. Define your custom frames
 final List<List<List<int>>> customFrames = [
@@ -769,12 +1006,25 @@ MatrixLoader(
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 150),
                       margin: const EdgeInsets.all(4),
-                      width: 24, height: 24,
+                      width: 24,
+                      height: 24,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: isActive ? const Color(0xFFFF3333) : const Color(0xFF1A1A1E),
-                        border: Border.all(color: isActive ? const Color(0xFFFF6666) : const Color(0xFF27272A)),
-                        boxShadow: isActive ? [BoxShadow(color: const Color(0xFFFF3333).withValues(alpha: 0.4), blurRadius: 8)] : [],
+                        color: isActive
+                            ? const Color(0xFFFF3333)
+                            : const Color(0xFF1A1A1E),
+                        border: Border.all(
+                            color: isActive
+                                ? const Color(0xFFFF6666)
+                                : const Color(0xFF27272A)),
+                        boxShadow: isActive
+                            ? [
+                                BoxShadow(
+                                    color: const Color(0xFFFF3333)
+                                        .withValues(alpha: 0.4),
+                                    blurRadius: 8)
+                              ]
+                            : [],
                       ),
                     ),
                   );
@@ -801,7 +1051,12 @@ MatrixLoader(
           ],
         ),
         const SizedBox(height: 32),
-        const Text('TIMELINE', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5, color: Colors.white54)),
+        const Text('TIMELINE',
+            style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.5,
+                color: Colors.white54)),
         const SizedBox(height: 16),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -815,11 +1070,16 @@ MatrixLoader(
                     margin: const EdgeInsets.symmetric(horizontal: 4),
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      border: Border.all(color: currentFrame == i ? const Color(0xFFFF3333) : const Color(0xFF27272A), width: 2),
+                      border: Border.all(
+                          color: currentFrame == i
+                              ? const Color(0xFFFF3333)
+                              : const Color(0xFF27272A),
+                          width: 2),
                       borderRadius: BorderRadius.circular(8),
                       color: const Color(0xFF0A0A0C),
                     ),
-                    width: 48, height: 48,
+                    width: 48,
+                    height: 48,
                     child: CustomPaint(painter: _MiniFramePainter(frames[i])),
                   ),
                 ),
@@ -852,10 +1112,18 @@ MatrixLoader(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text('LIVE PREVIEW', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5, color: Colors.white54)),
+                  const Text('LIVE PREVIEW',
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.5,
+                          color: Colors.white54)),
                   const SizedBox(height: 24),
                   MatrixLoader(
-                    columns: cols, rows: rows, dotSize: 6, spacing: 3,
+                    columns: cols,
+                    rows: rows,
+                    dotSize: 6,
+                    spacing: 3,
                     pattern: MatrixPattern.custom,
                     activeColor: const Color(0xFFFF3333),
                     customIntensity: (row, col, progress) {
@@ -882,13 +1150,17 @@ MatrixLoader(
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Generated Code', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white70)),
+                  const Text('Generated Code',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white70)),
                   TextButton.icon(
                     icon: const Icon(Icons.copy, size: 14, color: Colors.white),
-                    label: const Text('Copy', style: TextStyle(color: Colors.white)),
+                    label: const Text('Copy',
+                        style: TextStyle(color: Colors.white)),
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: _generateCode()));
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Copied to clipboard!')));
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Copied to clipboard!')));
                     },
                   )
                 ],
@@ -899,7 +1171,10 @@ MatrixLoader(
                 child: SingleChildScrollView(
                   child: SelectableText(
                     _generateCode(),
-                    style: const TextStyle(fontFamily: 'monospace', fontSize: 12, color: Color(0xFFA1A1AA)),
+                    style: const TextStyle(
+                        fontFamily: 'monospace',
+                        fontSize: 12,
+                        color: Color(0xFFA1A1AA)),
                   ),
                 ),
               ),
@@ -922,7 +1197,8 @@ MatrixLoader(
             Expanded(
               child: TabBarView(
                 children: [
-                  SingleChildScrollView(padding: const EdgeInsets.all(24), child: editor),
+                  SingleChildScrollView(
+                      padding: const EdgeInsets.all(24), child: editor),
                   rightPanel,
                 ],
               ),
@@ -959,9 +1235,13 @@ class _MiniFramePainter extends CustomPainter {
         } else {
           paint.color = const Color(0xFF1A1A1E);
         }
-        canvas.drawRect(Rect.fromLTWH(c * dotW + 0.5, r * dotH + 0.5, dotW - 1, dotH - 1), paint);
+        canvas.drawRect(
+            Rect.fromLTWH(c * dotW + 0.5, r * dotH + 0.5, dotW - 1, dotH - 1),
+            paint);
       }
     }
   }
-  @override bool shouldRepaint(covariant _MiniFramePainter old) => true;
+
+  @override
+  bool shouldRepaint(covariant _MiniFramePainter old) => true;
 }

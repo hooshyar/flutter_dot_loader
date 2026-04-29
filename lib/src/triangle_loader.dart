@@ -1,14 +1,67 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
-/// A loader featuring a geometric grid of triangles that pulses or waves.
+/// A loading animation widget that renders a tessellated grid of equilateral
+/// triangles, each scaled and tinted by a radial wave emanating from the center.
+///
+/// ## Basic Usage
+///
+/// ```dart
+/// const TriangleLoader(
+///   color: Colors.indigoAccent,
+///   size: 200,
+///   triangleSize: 25.0,
+///   wireframe: false,
+/// )
+/// ```
+///
+/// ## Wireframe Mode
+///
+/// Set [wireframe] to `true` to render only triangle outlines instead of
+/// filled shapes, giving a different visual aesthetic:
+///
+/// ```dart
+/// const TriangleLoader(
+///   color: Colors.teal,
+///   size: 160,
+///   triangleSize: 20.0,
+///   wireframe: true,
+/// )
+/// ```
+///
+/// See also:
+/// - [MatrixLoader], for a dot-matrix animation with 60 built-in patterns.
 class TriangleLoader extends StatefulWidget {
+  /// The color used to fill (or stroke, if [wireframe] is `true`) each triangle.
+  ///
+  /// The actual rendered color varies per-triangle based on its wave phase,
+  /// ranging from nearly transparent to [color] at full opacity.
+  ///
+  /// Defaults to [Colors.indigoAccent].
   final Color color;
+
+  /// The width and height of the widget's bounding box in logical pixels.
+  ///
+  /// The triangle grid is drawn to fill this area. Defaults to `200.0`.
   final double size;
+
+  /// The side length of each equilateral triangle in logical pixels.
+  ///
+  /// Smaller values produce a finer, denser grid. Defaults to `30.0`.
   final double triangleSize;
+
+  /// The duration of one complete animation cycle.
+  ///
+  /// The animation loops indefinitely. Defaults to `4 seconds`.
   final Duration duration;
+
+  /// Whether to render triangles as outlines instead of filled shapes.
+  ///
+  /// When `false` (the default), triangles are filled. When `true`, only
+  /// the triangle edges are drawn (wireframe mode).
   final bool wireframe;
 
+  /// Creates a [TriangleLoader].
   const TriangleLoader({
     super.key,
     this.color = Colors.indigoAccent,
@@ -29,10 +82,8 @@ class _TriangleLoaderState extends State<TriangleLoader>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    )..repeat();
+    _controller = AnimationController(vsync: this, duration: widget.duration)
+      ..repeat();
   }
 
   @override
@@ -95,7 +146,9 @@ class _TrianglePainter extends CustomPainter {
 
         final pos = Offset(x, y);
         final distance = (pos - center).distance;
-        final double wave = math.sin((distance / 80.0) - (progress * 2 * math.pi));
+        final double wave = math.sin(
+          (distance / 80.0) - (progress * 2 * math.pi),
+        );
         final double normalizedWave = (wave + 1) / 2;
 
         double scale = 0.4 + (normalizedWave * 0.6);
@@ -106,12 +159,19 @@ class _TrianglePainter extends CustomPainter {
     }
   }
 
-  void _drawTriangle(Canvas canvas, double x, double y, double size, bool isUp, double scale, Paint paint) {
+  void _drawTriangle(
+    Canvas canvas,
+    double x,
+    double y,
+    double size,
+    bool isUp,
+    double scale,
+    Paint paint,
+  ) {
     final h = size * math.sqrt(3) / 2;
     final path = Path();
-    
+
     canvas.save();
-    // Translate to triangle center for rotation/scale
     canvas.translate(x, y + (isUp ? h / 2 : h / 3));
     canvas.scale(scale);
     canvas.translate(-x, -(y + (isUp ? h / 2 : h / 3)));
@@ -125,7 +185,7 @@ class _TrianglePainter extends CustomPainter {
       path.lineTo(x - size / 2, y);
       path.lineTo(x + size / 2, y);
     }
-    
+
     path.close();
     canvas.drawPath(path, paint);
     canvas.restore();
