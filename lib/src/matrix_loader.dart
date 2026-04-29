@@ -316,7 +316,7 @@ class MatrixLoader extends StatefulWidget {
   /// 
   /// Alternatively, provide a single [color] to automatically set both 
   /// active and inactive colors.
-  const MatrixLoader({
+  MatrixLoader({
     super.key,
     this.shape = MatrixShape.square,
     this.pattern = MatrixPattern.square1,

@@ -1,3 +1,9 @@
+## 0.0.3
+
+- feat: added DotLoader simplified wrapper
+- feat: added semantic aliases to MatrixPattern
+- feat: added 'color' parameter to MatrixLoader for automatic color derivation
+
 ## 0.0.2
 
 * **Studio Parity Update**: Expanded `MatrixLoader` with dotanime studio parity features.
