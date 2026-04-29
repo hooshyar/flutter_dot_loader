@@ -1276,19 +1276,23 @@ class _TextScreenState extends State<TextScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
             decoration: BoxDecoration(
               color: const Color(0xFF0A0A0C),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: const Color(0xFF1A1A1E)),
             ),
             child: MatrixLoader(
+              size: 400,
+              dotSize: 10,
+              spacing: 4,
               columns: 24,
               rows: 7,
               pattern: MatrixPattern.custom,
               duration: Duration(milliseconds: (10000 / _speed).round()),
               customIntensity: MatrixText.scrolling(_text, loopPadding: 24),
               activeColor: Colors.cyanAccent,
+              inactiveColor: const Color(0xFF1A1A1E),
             ),
           ),
           const SizedBox(height: 32),
@@ -1354,16 +1358,17 @@ class _InteractiveScreenState extends State<InteractiveScreen> {
           ),
           const SizedBox(height: 32),
           MatrixLoader(
+            size: 220,
             columns: 8,
             rows: 8,
             dotSize: 20,
             spacing: 8,
+            opacityBase: 0.2,
             pattern: MatrixPattern.custom,
             duration: const Duration(seconds: 1),
-            // We just return the static state of our interactive grid
             customIntensity: (row, col, progress) => _grid[row][col].toDouble(),
             activeColor: Colors.amberAccent,
-            inactiveColor: const Color(0xFF1A1A1E),
+            inactiveColor: const Color(0xFF3A3A40),
             onDotTapped: (row, col) {
               setState(() {
                 _grid[row][col] = _grid[row][col] == 1 ? 0 : 1;
