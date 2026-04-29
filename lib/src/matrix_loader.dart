@@ -20,6 +20,33 @@ enum MatrixShape { square, circular, triangle, custom }
 /// See the [MatrixLoader] documentation and the package's example app for a
 /// live gallery of all 60 patterns.
 enum MatrixPattern {
+  /// Alias for [square1]
+  diagonalWave,
+  /// Alias for [square3]
+  coreRipple,
+  /// Alias for [square7]
+  manhattanPulse,
+  /// Alias for [square11]
+  vortexSpin,
+  /// Alias for [square14]
+  spiralCore,
+  /// Alias for [square17]
+  sineRibbon,
+  /// Alias for [square18]
+  bouncingDiagonal,
+  /// Alias for [circular1]
+  angularSweep,
+  /// Alias for [circular2]
+  bullsEye,
+  /// Alias for [circular5]
+  dualSpiral,
+  /// Alias for [circular14]
+  ringFlash,
+  /// Alias for [triangle4]
+  rowSweep,
+  /// Alias for [triangle6]
+  zigzagCascade,
+
   // Predefined square patterns
   square1,
   square2,
@@ -118,6 +145,15 @@ enum MatrixPlayback {
 ///   dotSize: 5.0,
 ///   pattern: MatrixPattern.square11, // Vortex Spin
 /// )
+/// ```
+///
+/// ## AI-Agent Usage
+/// 
+/// For the easiest implementation in AI chat apps, use the [DotLoader] wrapper
+/// or providing just the [color] parameter:
+/// 
+/// ```dart
+/// MatrixLoader(color: Colors.blue)
 /// ```
 ///
 /// ## Custom Frame Animation
@@ -277,14 +313,18 @@ class MatrixLoader extends StatefulWidget {
   ///
   /// All parameters are optional and have sensible defaults. At minimum,
   /// provide [activeColor] and [inactiveColor] to match your app's theme.
+  /// 
+  /// Alternatively, provide a single [color] to automatically set both 
+  /// active and inactive colors.
   const MatrixLoader({
     super.key,
     this.shape = MatrixShape.square,
     this.pattern = MatrixPattern.square1,
     this.columns = 5,
     this.rows = 5,
-    this.activeColor = Colors.white,
-    this.inactiveColor = const Color(0xFF27272A),
+    Color? activeColor,
+    Color? inactiveColor,
+    Color? color,
     this.size = 64,
     this.dotSize = 4.0,
     this.spacing,
@@ -298,7 +338,9 @@ class MatrixLoader extends StatefulWidget {
     this.customMask,
     this.customIntensity,
     this.onDotTapped,
-  });
+  })  : activeColor = color ?? activeColor ?? Colors.white,
+        inactiveColor = inactiveColor ?? 
+            (color != null ? color.withValues(alpha: 0.1) : const Color(0xFF27272A));
 
   @override
   State<MatrixLoader> createState() => _MatrixLoaderState();
@@ -538,11 +580,13 @@ class _MatrixPainter extends CustomPainter {
     double p2 = p * math.pi * 2;
 
     switch (pattern) {
-      // ── Square patterns ──
+      // ── Semantic Aliases ──
+      case MatrixPattern.diagonalWave:
       case MatrixPattern.square1:
         return math.max(0.0, math.sin((normC - normR + 1) * math.pi - p2));
       case MatrixPattern.square2:
         return math.max(0.0, math.sin(normC * math.pi * 2 - p2));
+      case MatrixPattern.coreRipple:
       case MatrixPattern.square3:
         return (math.sin(dist * 4 - p2) + 1) / 2;
       case MatrixPattern.square4:
@@ -562,6 +606,7 @@ class _MatrixPainter extends CustomPainter {
         );
       case MatrixPattern.square6:
         return ((r + c) % 2 == 0) ? (math.sin(p2 - dist * 3) + 1) / 2 : 0.1;
+      case MatrixPattern.manhattanPulse:
       case MatrixPattern.square7:
         return math.max(0.0, math.sin(manhattan * math.pi * 4 - p2));
       case MatrixPattern.square8:
@@ -575,6 +620,7 @@ class _MatrixPainter extends CustomPainter {
         );
       case MatrixPattern.square10:
         return (math.sin((r * columns + c) * 0.5 - p * 20) + 1) / 2;
+      case MatrixPattern.vortexSpin:
       case MatrixPattern.square11:
         return math.max(0.0, math.sin(pAngle * math.pi * 4 + dist * 3 - p2));
       case MatrixPattern.square12:
@@ -583,6 +629,7 @@ class _MatrixPainter extends CustomPainter {
       case MatrixPattern.square13:
         return math.max(0.0, math.sin(normR * math.pi * 2 - p2)) *
             math.max(0.0, math.sin(normC * math.pi * 2 - p2));
+      case MatrixPattern.spiralCore:
       case MatrixPattern.square14:
         double spiral = pAngle + dist * 2;
         return (math.sin(spiral * math.pi * 2 - p2) + 1) / 2;
@@ -596,9 +643,11 @@ class _MatrixPainter extends CustomPainter {
           0.0,
           math.sin((normR + normC) * math.pi * 2 - p2 * 1.5),
         );
+      case MatrixPattern.sineRibbon:
       case MatrixPattern.square17:
         double wave = math.sin(normC * math.pi * 3 - p2) * 0.3;
         return (normR - 0.5 + wave).abs() < 0.15 ? 1.0 : 0.08;
+      case MatrixPattern.bouncingDiagonal:
       case MatrixPattern.square18:
         return ((c + (p * columns * 2).toInt()) % columns == r % columns)
             ? 1.0
@@ -609,14 +658,17 @@ class _MatrixPainter extends CustomPainter {
         return math.max(0.0, math.sin(pAngle * math.pi * 6 - p2));
 
       // ── Circular patterns ──
+      case MatrixPattern.angularSweep:
       case MatrixPattern.circular1:
         return math.max(0.0, math.sin(pAngle * math.pi * 2 - p2));
+      case MatrixPattern.bullsEye:
       case MatrixPattern.circular2:
         return (math.sin(dist * math.pi * 3 - p2) + 1) / 2;
       case MatrixPattern.circular3:
         return math.max(0.0, math.sin(angle * 2 - p2 + dist * 3));
       case MatrixPattern.circular4:
         return math.max(0.0, math.sin(dist * math.pi * 2 - p * math.pi * 4));
+      case MatrixPattern.dualSpiral:
       case MatrixPattern.circular5:
         double spiral2 = pAngle * 2 + dist * 3;
         return (math.sin(spiral2 * math.pi - p2) + 1) / 2;
@@ -639,6 +691,7 @@ class _MatrixPainter extends CustomPainter {
       case MatrixPattern.circular13:
         return (math.sin(angle * 4 - p2) + math.sin(dist * 4 - p2 * 1.5) + 2) /
             4;
+      case MatrixPattern.ringFlash:
       case MatrixPattern.circular14:
         double ripple = math.sin(dist * math.pi * 5 - p2 * 2);
         return ripple > 0.3 ? 1.0 : 0.08;
@@ -668,6 +721,7 @@ class _MatrixPainter extends CustomPainter {
         return (math.sin((normR + normC * 0.5) * math.pi * 3 - p2) + 1) / 2;
       case MatrixPattern.triangle3:
         return math.max(0.0, math.sin(dist * 5 + angle - p2 * 1.5));
+      case MatrixPattern.rowSweep:
       case MatrixPattern.triangle4:
         return (math.sin(normR * math.pi * 4 - p2) + 1) / 2;
       case MatrixPattern.triangle5:
@@ -675,6 +729,7 @@ class _MatrixPainter extends CustomPainter {
           0.0,
           math.sin(manhattan * math.pi * 3 + angle * 0.5 - p2),
         );
+      case MatrixPattern.zigzagCascade:
       case MatrixPattern.triangle6:
         double zigzag = (c % 2 == 0 ? normR : 1 - normR);
         return (math.sin(zigzag * math.pi * 3 - p2) + 1) / 2;
