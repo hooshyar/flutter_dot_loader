@@ -42,3 +42,5 @@ library;
 
 export 'src/matrix_loader.dart';
 export 'src/triangle_loader.dart';
+export 'src/matrix_text.dart';
+export 'src/matrix_data.dart';

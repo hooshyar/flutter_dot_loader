@@ -89,6 +89,18 @@ enum MatrixPattern {
   custom,
 }
 
+/// The animation playback mode for [MatrixLoader].
+enum MatrixPlayback {
+  /// The animation plays from start to end, then restarts from the beginning.
+  loop,
+
+  /// The animation plays from start to end, then reverses back to the start.
+  bounce,
+
+  /// The animation plays once from start to end and stops.
+  once,
+}
+
 /// A high-performance, zero-dependency dot-matrix loading animation widget.
 ///
 /// [MatrixLoader] renders a rectangular grid of dots animated by one of 60
@@ -196,6 +208,16 @@ class MatrixLoader extends StatefulWidget {
   /// The animation loops indefinitely. Defaults to `1500ms`.
   final Duration duration;
 
+  /// The behavior of the animation loop.
+  ///
+  /// Defaults to [MatrixPlayback.loop].
+  final MatrixPlayback playback;
+
+  /// An optional easing curve to apply to the animation progress.
+  ///
+  /// Defaults to [Curves.linear].
+  final Curve curve;
+
   /// Whether to show a ripple effect when the user hovers over the widget.
   ///
   /// Only has a visible effect on platforms that support a pointer device
@@ -246,6 +268,11 @@ class MatrixLoader extends StatefulWidget {
   /// ```
   final double Function(int row, int col, double progress)? customIntensity;
 
+  /// Called when a specific dot is tapped.
+  ///
+  /// Provides the `row` and `col` of the tapped dot.
+  final void Function(int row, int col)? onDotTapped;
+
   /// Creates a [MatrixLoader].
   ///
   /// All parameters are optional and have sensible defaults. At minimum,
@@ -262,12 +289,15 @@ class MatrixLoader extends StatefulWidget {
     this.dotSize = 4.0,
     this.spacing,
     this.duration = const Duration(milliseconds: 1500),
+    this.playback = MatrixPlayback.loop,
+    this.curve = Curves.linear,
     this.hoverAnimated = true,
     this.opacityBase = 0.08,
     this.opacityMid = 0.34,
     this.opacityPeak = 0.94,
     this.customMask,
     this.customIntensity,
+    this.onDotTapped,
   });
 
   @override
@@ -282,8 +312,34 @@ class _MatrixLoaderState extends State<MatrixLoader>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: widget.duration)
-      ..repeat();
+    _controller = AnimationController(vsync: this, duration: widget.duration);
+    _applyPlayback();
+  }
+
+  @override
+  void didUpdateWidget(covariant MatrixLoader oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.duration != widget.duration) {
+      _controller.duration = widget.duration;
+    }
+    if (oldWidget.playback != widget.playback) {
+      _applyPlayback();
+    }
+  }
+
+  void _applyPlayback() {
+    _controller.stop();
+    switch (widget.playback) {
+      case MatrixPlayback.loop:
+        _controller.repeat();
+        break;
+      case MatrixPlayback.bounce:
+        _controller.repeat(reverse: true);
+        break;
+      case MatrixPlayback.once:
+        _controller.forward(from: 0.0);
+        break;
+    }
   }
 
   @override
@@ -292,40 +348,69 @@ class _MatrixLoaderState extends State<MatrixLoader>
     super.dispose();
   }
 
+  void _handleTap(TapUpDetails details) {
+    if (widget.onDotTapped == null) return;
+    final spacing = widget.spacing ??
+        (widget.size - widget.dotSize * widget.columns) /
+            (widget.columns - 1).clamp(1, 100);
+
+    final totalWidth =
+        (widget.columns * widget.dotSize) + ((widget.columns - 1) * spacing);
+    final totalHeight =
+        (widget.rows * widget.dotSize) + ((widget.rows - 1) * spacing);
+    final offsetX = (widget.size - totalWidth) / 2;
+    final offsetY = (widget.size - totalHeight) / 2;
+
+    final x = details.localPosition.dx - offsetX;
+    final y = details.localPosition.dy - offsetY;
+
+    if (x < 0 || y < 0 || x > totalWidth || y > totalHeight) return;
+
+    final col = (x / (widget.dotSize + spacing)).floor();
+    final row = (y / (widget.dotSize + spacing)).floor();
+
+    if (col >= 0 && col < widget.columns && row >= 0 && row < widget.rows) {
+      widget.onDotTapped!(row, col);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
-      child: SizedBox(
-        width: widget.size,
-        height: widget.size,
-        child: AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) {
-            return CustomPaint(
-              painter: _MatrixPainter(
-                progress: _controller.value,
-                shape: widget.shape,
-                pattern: widget.pattern,
-                columns: widget.columns,
-                rows: widget.rows,
-                activeColor: widget.activeColor,
-                inactiveColor: widget.inactiveColor,
-                dotSize: widget.dotSize,
-                spacing:
-                    widget.spacing ??
-                    (widget.size - widget.dotSize * widget.columns) /
-                        (widget.columns - 1).clamp(1, 100),
-                isHovered: _isHovered && widget.hoverAnimated,
-                opacityBase: widget.opacityBase,
-                opacityMid: widget.opacityMid,
-                opacityPeak: widget.opacityPeak,
-                customMask: widget.customMask,
-                customIntensity: widget.customIntensity,
-              ),
-            );
-          },
+      child: GestureDetector(
+        onTapUp: widget.onDotTapped != null ? _handleTap : null,
+        child: SizedBox(
+          width: widget.size,
+          height: widget.size,
+          child: AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              final curvedProgress = widget.curve.transform(_controller.value);
+              return CustomPaint(
+                painter: _MatrixPainter(
+                  progress: curvedProgress,
+                  shape: widget.shape,
+                  pattern: widget.pattern,
+                  columns: widget.columns,
+                  rows: widget.rows,
+                  activeColor: widget.activeColor,
+                  inactiveColor: widget.inactiveColor,
+                  dotSize: widget.dotSize,
+                  spacing: widget.spacing ??
+                      (widget.size - widget.dotSize * widget.columns) /
+                          (widget.columns - 1).clamp(1, 100),
+                  isHovered: _isHovered && widget.hoverAnimated,
+                  opacityBase: widget.opacityBase,
+                  opacityMid: widget.opacityMid,
+                  opacityPeak: widget.opacityPeak,
+                  customMask: widget.customMask,
+                  customIntensity: widget.customIntensity,
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

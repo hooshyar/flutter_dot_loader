@@ -298,6 +298,8 @@ class _MainNavigationState extends State<MainNavigation> {
     GalleryScreen(),
     PlaygroundScreen(),
     StudioScreen(),
+    TextScreen(),
+    InteractiveScreen(),
   ];
 
   @override
@@ -339,6 +341,16 @@ class _MainNavigationState extends State<MainNavigation> {
             title: 'Studio',
             isActive: _currentIndex == 2,
             onTap: () => setState(() => _currentIndex = 2),
+          ),
+          _NavBarTab(
+            title: 'Text',
+            isActive: _currentIndex == 3,
+            onTap: () => setState(() => _currentIndex = 3),
+          ),
+          _NavBarTab(
+            title: 'Interactive',
+            isActive: _currentIndex == 4,
+            onTap: () => setState(() => _currentIndex = 4),
           ),
           const SizedBox(width: 16),
         ],
@@ -1244,4 +1256,135 @@ class _MiniFramePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _MiniFramePainter old) => true;
+}
+
+// ─── Text Marquee Screen ───
+class TextScreen extends StatefulWidget {
+  const TextScreen({super.key});
+  @override
+  State<TextScreen> createState() => _TextScreenState();
+}
+
+class _TextScreenState extends State<TextScreen> {
+  String _text = "HELLO WORLD";
+  double _speed = 4.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0A0A0C),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: const Color(0xFF1A1A1E)),
+            ),
+            child: MatrixLoader(
+              columns: 24,
+              rows: 7,
+              pattern: MatrixPattern.custom,
+              duration: Duration(milliseconds: (10000 / _speed).round()),
+              customIntensity: MatrixText.scrolling(_text, loopPadding: 24),
+              activeColor: Colors.cyanAccent,
+            ),
+          ),
+          const SizedBox(height: 32),
+          SizedBox(
+            width: 300,
+            child: TextField(
+              onChanged: (val) => setState(() => _text = val),
+              decoration: const InputDecoration(
+                labelText: 'Marquee Text',
+                border: OutlineInputBorder(),
+              ),
+              controller: TextEditingController(text: _text)
+                ..selection = TextSelection.collapsed(offset: _text.length),
+            ),
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: 300,
+            child: Row(
+              children: [
+                const Text('Speed'),
+                Expanded(
+                  child: Slider(
+                    value: _speed,
+                    min: 1.0,
+                    max: 10.0,
+                    onChanged: (val) => setState(() => _speed = val),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Interactive Screen ───
+class InteractiveScreen extends StatefulWidget {
+  const InteractiveScreen({super.key});
+  @override
+  State<InteractiveScreen> createState() => _InteractiveScreenState();
+}
+
+class _InteractiveScreenState extends State<InteractiveScreen> {
+  final List<List<int>> _grid =
+      List.generate(8, (_) => List.generate(8, (_) => 0));
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'TAP THE DOTS TO LIGHT THEM UP',
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 2,
+                color: Colors.white54),
+          ),
+          const SizedBox(height: 32),
+          MatrixLoader(
+            columns: 8,
+            rows: 8,
+            dotSize: 20,
+            spacing: 8,
+            pattern: MatrixPattern.custom,
+            duration: const Duration(seconds: 1),
+            // We just return the static state of our interactive grid
+            customIntensity: (row, col, progress) => _grid[row][col].toDouble(),
+            activeColor: Colors.amberAccent,
+            inactiveColor: const Color(0xFF1A1A1E),
+            onDotTapped: (row, col) {
+              setState(() {
+                _grid[row][col] = _grid[row][col] == 1 ? 0 : 1;
+              });
+            },
+          ),
+          const SizedBox(height: 32),
+          OutlinedButton(
+            onPressed: () {
+              setState(() {
+                for (var r = 0; r < 8; r++) {
+                  for (var c = 0; c < 8; c++) {
+                    _grid[r][c] = 0;
+                  }
+                }
+              });
+            },
+            child: const Text('Clear Pad'),
+          ),
+        ],
+      ),
+    );
+  }
 }

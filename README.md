@@ -72,7 +72,47 @@ const MatrixLoader(
 )
 ```
 
-### 2. Pick from 60 Patterns
+### 2. Scrolling Marquee Text
+
+Use `MatrixText` to automatically convert strings into dot-matrix arrays and scroll them continuously:
+
+```dart
+MatrixLoader(
+  columns: 24,
+  rows: 7, // 7 is required for the default 5x7 font
+  pattern: MatrixPattern.custom,
+  customIntensity: MatrixText.scrolling("HELLO WORLD", loopPadding: 24),
+  duration: const Duration(seconds: 4),
+)
+```
+
+### 3. Interactive Dot Matrix
+
+Use the `onDotTapped` callback to turn the matrix into an interactive touch pad or synthesizer:
+
+```dart
+MatrixLoader(
+  columns: 8,
+  rows: 8,
+  onDotTapped: (row, col) {
+    print("User tapped dot at \$row, \$col");
+  },
+)
+```
+
+### 4. Playback Modes & Easing
+
+By default, the matrix loops forever (`MatrixPlayback.loop`). You can change this to `bounce` (ping-pong) or `once` (play once and stop), and apply any standard Flutter `Curve` to the animation progress:
+
+```dart
+const MatrixLoader(
+  playback: MatrixPlayback.bounce,
+  curve: Curves.easeInOut,
+  // ...
+)
+```
+
+### 5. Pick from 60 Patterns
 
 All patterns are available as named `MatrixPattern` constants:
 
