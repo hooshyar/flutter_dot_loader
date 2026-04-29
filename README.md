@@ -2,7 +2,10 @@
 
 A collection of highly customizable dot-matrix and triangle loaders for Flutter, inspired by the React `matrix` library by `zzzzshawn`.
 
-![Gallery & Studio Demo](https://raw.githubusercontent.com/hooshyar/flutter_dot_loader/main/assets/demo_v2.webp)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/hooshyar/flutter_dot_loader/main/assets/1.gif" width="48%" />
+  <img src="https://raw.githubusercontent.com/hooshyar/flutter_dot_loader/main/assets/2.gif" width="48%" />
+</p>
 
 ## Features
 
