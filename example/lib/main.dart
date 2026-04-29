@@ -284,6 +284,25 @@ class _BlocksLogo extends StatelessWidget {
   }
 }
 
+class GlobalTint extends InheritedWidget {
+  final Color tint;
+  final VoidCallback showPicker;
+
+  const GlobalTint({
+    super.key,
+    required this.tint,
+    required this.showPicker,
+    required super.child,
+  });
+
+  static GlobalTint of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<GlobalTint>()!;
+  }
+
+  @override
+  bool updateShouldNotify(GlobalTint oldWidget) => tint != oldWidget.tint;
+}
+
 // ─── Main Navigation ───
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -293,6 +312,7 @@ class MainNavigation extends StatefulWidget {
 
 class _MainNavigationState extends State<MainNavigation> {
   int _currentIndex = 0;
+  Color _globalTint = Colors.white;
 
   final List<Widget> _pages = const [
     GalleryScreen(),
@@ -301,6 +321,66 @@ class _MainNavigationState extends State<MainNavigation> {
     TextScreen(),
     InteractiveScreen(),
   ];
+
+  void _showColorPicker() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final colors = [
+          Colors.white,
+          Colors.redAccent,
+          Colors.orangeAccent,
+          Colors.amberAccent,
+          Colors.greenAccent,
+          Colors.cyanAccent,
+          Colors.blueAccent,
+          Colors.purpleAccent,
+          Colors.pinkAccent,
+        ];
+        return AlertDialog(
+          backgroundColor: const Color(0xFF0A0A0C),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+          ),
+          title: const Text(
+            'SELECT TINT',
+            style: TextStyle(
+              fontFamily: 'monospace',
+              fontSize: 14,
+              letterSpacing: 2,
+              color: Colors.white,
+            ),
+          ),
+          content: Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: colors.map((c) {
+              return GestureDetector(
+                onTap: () {
+                  setState(() => _globalTint = c);
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: c,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color:
+                          _globalTint == c ? Colors.white : Colors.transparent,
+                      width: 2,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -353,9 +433,29 @@ class _MainNavigationState extends State<MainNavigation> {
             onTap: () => setState(() => _currentIndex = 4),
           ),
           const SizedBox(width: 16),
+          GestureDetector(
+            onTap: _showColorPicker,
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                color: _globalTint,
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white.withValues(alpha: 0.5)),
+              ),
+              child:
+                  const Icon(Icons.color_lens, size: 16, color: Colors.black45),
+            ),
+          ),
+          const SizedBox(width: 8),
         ],
       ),
-      body: _pages[_currentIndex],
+      body: GlobalTint(
+        tint: _globalTint,
+        showPicker: _showColorPicker,
+        child: _pages[_currentIndex],
+      ),
     );
   }
 }
@@ -473,32 +573,51 @@ class GalleryScreen extends StatefulWidget {
 
 class _GalleryScreenState extends State<GalleryScreen> {
   int _selectedTab = 0;
-  final _tabs = const ['All', 'Square', 'Circular', 'Triangle'];
+  final _tabs = const ['all', 'square', 'circular', 'triangle'];
+
+  String _searchQuery = '';
+  bool _isCompact = false;
+  bool _isPaused = false;
+  double _speed = 1.0;
 
   List<_LoaderEntry> get _currentLoaders {
+    List<_LoaderEntry> list;
     switch (_selectedTab) {
       case 1:
-        return _squareLoaders;
+        list = _squareLoaders;
+        break;
       case 2:
-        return _circularLoaders;
+        list = _circularLoaders;
+        break;
       case 3:
-        return _triangleLoaders;
+        list = _triangleLoaders;
+        break;
       default:
-        return [..._squareLoaders, ..._circularLoaders, ..._triangleLoaders];
+        list = [..._squareLoaders, ..._circularLoaders, ..._triangleLoaders];
+        break;
     }
+    if (_searchQuery.isNotEmpty) {
+      list = list
+          .where(
+              (l) => l.name.toLowerCase().contains(_searchQuery.toLowerCase()))
+          .toList();
+    }
+    return list;
   }
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
-    int crossAxisCount = 4;
-    if (isMobile) {
-      crossAxisCount = 2;
-    } else if (screenWidth < 900) {
-      crossAxisCount = 3;
+
+    int crossAxisCount;
+    if (_isCompact) {
+      crossAxisCount = isMobile ? 3 : (screenWidth < 900 ? 5 : 8);
+    } else {
+      crossAxisCount = isMobile ? 2 : (screenWidth < 900 ? 3 : 5);
     }
-    final hPad = isMobile ? 16.0 : 24.0;
+
+    final hPad = isMobile ? 16.0 : 40.0;
 
     return CustomScrollView(
       slivers: [
@@ -506,96 +625,336 @@ class _GalleryScreenState extends State<GalleryScreen> {
           child: Container(
             padding: EdgeInsets.fromLTRB(hPad, isMobile ? 24 : 40, hPad, 0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'DOT MATRIX',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: isMobile ? 20 : 28,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                    letterSpacing: 6,
-                    shadows: [
-                      Shadow(
-                          color: const Color(0xFFFF2222).withValues(alpha: 0.3),
-                          blurRadius: 20)
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 6),
+                // Line 1: § THE SET & click a tile...
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    isMobile ? 15 : 25,
-                    (i) => Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 3),
-                      width: 3,
-                      height: 3,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white
-                            .withValues(alpha: 0.1 + (i % 3) * 0.15),
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '§ THE SET',
+                      style: TextStyle(
+                        fontFamily: 'monospace',
+                        fontSize: 12,
+                        letterSpacing: 2,
+                        color: Colors.white.withValues(alpha: 0.5),
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Loaders for every app',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: isMobile ? 13 : 15,
-                    color: Colors.white.withValues(alpha: 0.4),
-                    letterSpacing: 2,
-                  ),
-                ),
-                SizedBox(height: isMobile ? 20 : 32),
-              ],
-            ),
-          ),
-        ),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: hPad),
-            child: SizedBox(
-              height: 36,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: _tabs.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 6),
-                itemBuilder: (context, index) {
-                  final isSelected = _selectedTab == index;
-                  return GestureDetector(
-                    onTap: () => setState(() => _selectedTab = index),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: isMobile ? 12 : 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? const Color(0xFF1A1A1E)
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                            color: isSelected
-                                ? const Color(0xFF333333)
-                                : Colors.transparent),
+                    if (!isMobile)
+                      Row(
+                        children: [
+                          Text(
+                            'click a tile to copy its SVG, or focus and press ',
+                            style: TextStyle(
+                              fontFamily: 'monospace',
+                              fontSize: 12,
+                              color: Colors.white.withValues(alpha: 0.3),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF1A1A1E),
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.1)),
+                            ),
+                            child: Text(
+                              'c',
+                              style: TextStyle(
+                                fontFamily: 'monospace',
+                                fontSize: 10,
+                                color: Colors.white.withValues(alpha: 0.5),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      child: Text(
-                        _tabs[index],
-                        style: TextStyle(
-                          fontSize: isMobile ? 12 : 13,
-                          fontWeight: FontWeight.w500,
-                          color: isSelected
-                              ? Colors.white
-                              : const Color(0xFF71717A),
+                  ],
+                ),
+                const SizedBox(height: 24),
+
+                // Line 2: Search, Layout toggle, Pause
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 40,
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0A0A0C),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.1)),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.search,
+                                size: 16,
+                                color: Colors.white.withValues(alpha: 0.3)),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: TextField(
+                                onChanged: (val) =>
+                                    setState(() => _searchQuery = val),
+                                style: const TextStyle(
+                                    fontSize: 14, color: Colors.white),
+                                decoration: InputDecoration(
+                                  hintText: 'filter by name...',
+                                  hintStyle: TextStyle(
+                                      color:
+                                          Colors.white.withValues(alpha: 0.3),
+                                      fontSize: 14),
+                                  border: InputBorder.none,
+                                  isDense: true,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF1A1A1E),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                '/',
+                                style: TextStyle(
+                                  fontFamily: 'monospace',
+                                  fontSize: 10,
+                                  color: Colors.white.withValues(alpha: 0.5),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  );
-                },
-              ),
+                    if (!isMobile) ...[
+                      const SizedBox(width: 16),
+                      Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.1)),
+                        ),
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () => setState(() => _isCompact = false),
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: !_isCompact
+                                      ? const Color(0xFF1A1A1E)
+                                      : Colors.transparent,
+                                  borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(5),
+                                      bottomLeft: Radius.circular(5)),
+                                ),
+                                child: Text(
+                                  'comfortable',
+                                  style: TextStyle(
+                                    fontFamily: 'monospace',
+                                    fontSize: 12,
+                                    color: !_isCompact
+                                        ? Colors.white
+                                        : Colors.white.withValues(alpha: 0.4),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                                width: 1,
+                                color: Colors.white.withValues(alpha: 0.1)),
+                            GestureDetector(
+                              onTap: () => setState(() => _isCompact = true),
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: _isCompact
+                                      ? const Color(0xFF1A1A1E)
+                                      : Colors.transparent,
+                                  borderRadius: const BorderRadius.only(
+                                      topRight: Radius.circular(5),
+                                      bottomRight: Radius.circular(5)),
+                                ),
+                                child: Text(
+                                  'compact',
+                                  style: TextStyle(
+                                    fontFamily: 'monospace',
+                                    fontSize: 12,
+                                    color: _isCompact
+                                        ? Colors.white
+                                        : Colors.white.withValues(alpha: 0.4),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      GestureDetector(
+                        onTap: () => setState(() => _isPaused = !_isPaused),
+                        child: Container(
+                          height: 40,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(_isPaused ? Icons.play_arrow : Icons.pause,
+                                  color: Colors.white, size: 18),
+                              const SizedBox(width: 8),
+                              Text(
+                                _isPaused ? 'play all' : 'pause all',
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // Line 3: Filter Pills & Loader Count
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: List.generate(_tabs.length, (index) {
+                        final isSelected = _selectedTab == index;
+                        return GestureDetector(
+                          onTap: () => setState(() => _selectedTab = index),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? const Color(0xFFEFE94B)
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                  color: isSelected
+                                      ? const Color(0xFFEFE94B)
+                                      : Colors.white.withValues(alpha: 0.2)),
+                            ),
+                            child: Text(
+                              _tabs[index],
+                              style: TextStyle(
+                                fontFamily: 'monospace',
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: isSelected
+                                    ? Colors.black
+                                    : Colors.white.withValues(alpha: 0.6),
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                    if (!isMobile)
+                      Text(
+                        '${_currentLoaders.length} loaders',
+                        style: TextStyle(
+                          fontFamily: 'monospace',
+                          fontSize: 12,
+                          color: Colors.white.withValues(alpha: 0.4),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+
+                // Line 4: TINT and SPEED
+                Row(
+                  children: [
+                    Text(
+                      'TINT',
+                      style: TextStyle(
+                        fontFamily: 'monospace',
+                        fontSize: 11,
+                        letterSpacing: 1.5,
+                        color: Colors.white.withValues(alpha: 0.3),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: GlobalTint.of(context).showPicker,
+                      child: Container(
+                        width: 16,
+                        height: 16,
+                        decoration: BoxDecoration(
+                          color: GlobalTint.of(context).tint,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.5),
+                            width: 1,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 32),
+                    Text(
+                      'SPEED',
+                      style: TextStyle(
+                        fontFamily: 'monospace',
+                        fontSize: 11,
+                        letterSpacing: 1.5,
+                        color: Colors.white.withValues(alpha: 0.3),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      width: 120,
+                      child: SliderTheme(
+                        data: SliderThemeData(
+                          trackHeight: 2,
+                          thumbShape: const RoundSliderThumbShape(
+                              enabledThumbRadius: 6),
+                          overlayShape:
+                              const RoundSliderOverlayShape(overlayRadius: 12),
+                          activeTrackColor: Colors.white.withValues(alpha: 0.2),
+                          inactiveTrackColor:
+                              Colors.white.withValues(alpha: 0.1),
+                          thumbColor: Colors.white,
+                        ),
+                        child: Slider(
+                          value: _speed,
+                          min: 0.1,
+                          max: 3.0,
+                          onChanged: (val) => setState(() => _speed = val),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '${_speed.toStringAsFixed(1)}x',
+                      style: TextStyle(
+                        fontFamily: 'monospace',
+                        fontSize: 11,
+                        color: Colors.white.withValues(alpha: 0.8),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
@@ -611,7 +970,12 @@ class _GalleryScreenState extends State<GalleryScreen> {
             ),
             delegate: SliverChildBuilderDelegate(
               (context, index) => _LoaderCard(
-                  entry: _currentLoaders[index], isMobile: isMobile),
+                entry: _currentLoaders[index],
+                isMobile: isMobile,
+                tint: GlobalTint.of(context).tint,
+                speed: _speed,
+                isPaused: _isPaused,
+              ),
               childCount: _currentLoaders.length,
             ),
           ),
@@ -625,7 +989,16 @@ class _GalleryScreenState extends State<GalleryScreen> {
 class _LoaderCard extends StatelessWidget {
   final _LoaderEntry entry;
   final bool isMobile;
-  const _LoaderCard({required this.entry, this.isMobile = false});
+  final Color tint;
+  final double speed;
+  final bool isPaused;
+  const _LoaderCard({
+    required this.entry,
+    this.isMobile = false,
+    this.tint = Colors.white,
+    this.speed = 1.0,
+    this.isPaused = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -647,7 +1020,10 @@ class _LoaderCard extends StatelessWidget {
                 size: isMobile ? 36 : 44,
                 shape: entry.shape,
                 pattern: entry.pattern,
-                activeColor: Colors.white,
+                activeColor: tint,
+                duration: isPaused
+                    ? const Duration(days: 999)
+                    : Duration(milliseconds: (1500 / speed).round()),
               ),
             ),
           ),
@@ -710,7 +1086,8 @@ class _PlaygroundScreenState extends State<PlaygroundScreen> {
     });
   }
 
-  String _generateCode() {
+  String _generateCode(Color tint) {
+    final hex = tint.toARGB32().toRadixString(16).padLeft(8, '0').toUpperCase();
     return '''
 MatrixLoader(
   columns: $_cols,
@@ -720,7 +1097,7 @@ MatrixLoader(
   duration: const Duration(milliseconds: ${(1000 * _speed).toInt()}),
   shape: MatrixShape.${_shape.name},
   pattern: MatrixPattern.${_pattern.name},
-  activeColor: Colors.white,
+  activeColor: Color(0x$hex),
 )''';
   }
 
@@ -771,7 +1148,7 @@ MatrixLoader(
                 duration: Duration(milliseconds: (1000 * _speed).toInt()),
                 shape: _shape,
                 pattern: _pattern,
-                activeColor: Colors.white,
+                activeColor: GlobalTint.of(context).tint,
               ),
             ),
           ),
@@ -798,7 +1175,8 @@ MatrixLoader(
                       label: const Text('Copy',
                           style: TextStyle(color: Colors.white)),
                       onPressed: () {
-                        Clipboard.setData(ClipboardData(text: _generateCode()));
+                        Clipboard.setData(ClipboardData(
+                            text: _generateCode(GlobalTint.of(context).tint)));
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                                 content: Text('Copied to clipboard!')));
@@ -808,7 +1186,7 @@ MatrixLoader(
                 ),
                 const SizedBox(height: 8),
                 SelectableText(
-                  _generateCode(),
+                  _generateCode(GlobalTint.of(context).tint),
                   style: const TextStyle(
                       fontFamily: 'monospace',
                       fontSize: 12,

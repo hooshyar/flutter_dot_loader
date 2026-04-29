@@ -350,7 +350,8 @@ class _MatrixLoaderState extends State<MatrixLoader>
 
   void _handleTap(TapUpDetails details) {
     if (widget.onDotTapped == null) return;
-    final spacing = widget.spacing ??
+    final spacing =
+        widget.spacing ??
         (widget.size - widget.dotSize * widget.columns) /
             (widget.columns - 1).clamp(1, 100);
 
@@ -398,7 +399,8 @@ class _MatrixLoaderState extends State<MatrixLoader>
                   activeColor: widget.activeColor,
                   inactiveColor: widget.inactiveColor,
                   dotSize: widget.dotSize,
-                  spacing: widget.spacing ??
+                  spacing:
+                      widget.spacing ??
                       (widget.size - widget.dotSize * widget.columns) /
                           (widget.columns - 1).clamp(1, 100),
                   isHovered: _isHovered && widget.hoverAnimated,

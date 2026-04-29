@@ -5,6 +5,12 @@ homepage: https://github.com/hooshyar/flutter_dot_loader
 repository: https://github.com/hooshyar/flutter_dot_loader
 issue_tracker: https://github.com/hooshyar/flutter_dot_loader/issues
 
+screenshots:
+  - description: "Gallery of 60 dot-matrix loader patterns"
+    path: assets/1.gif
+  - description: "Interactive Dot Matrix Studio editor"
+    path: assets/2.gif
+
 environment:
   sdk: ^3.11.4
   flutter: ">=1.17.0"

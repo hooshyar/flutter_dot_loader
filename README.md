@@ -10,8 +10,8 @@
 Choose from **60 unique math-driven patterns** or build your own **frame-by-frame pixel animations** — all rendered natively via `CustomPainter` with no external dependencies.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/hooshyar/flutter_dot_loader/main/assets/1.gif" width="48%" alt="Gallery of 60 dot-matrix loader patterns" />
-  <img src="https://raw.githubusercontent.com/hooshyar/flutter_dot_loader/main/assets/2.gif" width="48%" alt="Interactive Dot Matrix Studio editor" />
+  <img src="assets/1.gif" width="48%" alt="Gallery of 60 dot-matrix loader patterns" />
+  <img src="assets/2.gif" width="48%" alt="Interactive Dot Matrix Studio editor" />
 </p>
 
 ---

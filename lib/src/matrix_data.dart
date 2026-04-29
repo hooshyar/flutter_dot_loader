@@ -1,4 +1,3 @@
-
 /// Utility class to parse and generate compressed string representations
 /// of matrix frames, useful for saving, loading, or exporting animations
 /// from the Dot Matrix Studio.
@@ -14,7 +13,7 @@ class MatrixData {
   /// ```
   static List<List<int>> decode(String data) {
     if (data.isEmpty) return [];
-    
+
     return data.split('|').map((rowStr) {
       return rowStr.split('').map((char) => char == '1' ? 1 : 0).toList();
     }).toList();
@@ -30,10 +29,12 @@ class MatrixData {
   /// ```
   static String encode(List<List<int>> grid) {
     if (grid.isEmpty) return "";
-    
-    return grid.map((row) {
-      return row.map((val) => val == 1 ? '1' : '0').join('');
-    }).join('|');
+
+    return grid
+        .map((row) {
+          return row.map((val) => val == 1 ? '1' : '0').join('');
+        })
+        .join('|');
   }
 
   /// Parses a string of multiple frames separated by commas.

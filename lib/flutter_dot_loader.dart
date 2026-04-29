@@ -39,7 +39,6 @@
 /// grid clipping options, and [TriangleLoader] for the geometric alternative.
 library;
 
-
 export 'src/matrix_loader.dart';
 export 'src/triangle_loader.dart';
 export 'src/matrix_text.dart';
