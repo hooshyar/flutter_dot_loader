@@ -22,28 +22,40 @@ enum MatrixShape { square, circular, triangle, custom }
 enum MatrixPattern {
   /// Alias for [square1]
   diagonalWave,
+
   /// Alias for [square3]
   coreRipple,
+
   /// Alias for [square7]
   manhattanPulse,
+
   /// Alias for [square11]
   vortexSpin,
+
   /// Alias for [square14]
   spiralCore,
+
   /// Alias for [square17]
   sineRibbon,
+
   /// Alias for [square18]
   bouncingDiagonal,
+
   /// Alias for [circular1]
   angularSweep,
+
   /// Alias for [circular2]
   bullsEye,
+
   /// Alias for [circular5]
   dualSpiral,
+
   /// Alias for [circular14]
   ringFlash,
+
   /// Alias for [triangle4]
   rowSweep,
+
   /// Alias for [triangle6]
   zigzagCascade,
 
@@ -148,10 +160,10 @@ enum MatrixPlayback {
 /// ```
 ///
 /// ## AI-Agent Usage
-/// 
+///
 /// For the easiest implementation in AI chat apps, use the [DotLoader] wrapper
 /// or providing just the [color] parameter:
-/// 
+///
 /// ```dart
 /// MatrixLoader(color: Colors.blue)
 /// ```
@@ -186,7 +198,8 @@ enum MatrixPlayback {
 /// layer on each frame — it does not call `setState` on the widget tree.
 ///
 /// See also:
-/// - [MatrixPattern], which enumerates all 61 available patterns.
+/// - [MatrixPattern], which enumerates all 74 available patterns
+///   (60 numeric + 13 semantic aliases + [MatrixPattern.custom]).
 /// - [MatrixShape], which controls grid clipping.
 /// - [TriangleLoader], a companion geometric loading animation.
 class MatrixLoader extends StatefulWidget {
@@ -215,13 +228,22 @@ class MatrixLoader extends StatefulWidget {
 
   /// The color of active (fully lit) dots.
   ///
-  /// Defaults to [Colors.white].
+  /// Defaults to [Colors.white]. Ignored when [color] is non-null.
   final Color activeColor;
 
   /// The color of inactive (fully dimmed) dots.
   ///
-  /// Defaults to `Color(0xFF27272A)`.
+  /// Defaults to `Color(0xFF27272A)`. Ignored when [color] is non-null —
+  /// in that case the inactive color is automatically derived from [color]
+  /// at 10% alpha.
   final Color inactiveColor;
+
+  /// A single color that automatically derives both [activeColor] and
+  /// [inactiveColor] (the latter at 10% alpha).
+  ///
+  /// Convenient for AI-friendly, one-liner usage. When non-null, takes
+  /// precedence over [activeColor] and [inactiveColor].
+  final Color? color;
 
   /// The width and height of the widget's bounding box in logical pixels.
   ///
@@ -313,18 +335,18 @@ class MatrixLoader extends StatefulWidget {
   ///
   /// All parameters are optional and have sensible defaults. At minimum,
   /// provide [activeColor] and [inactiveColor] to match your app's theme.
-  /// 
-  /// Alternatively, provide a single [color] to automatically set both 
-  /// active and inactive colors.
-  MatrixLoader({
+  ///
+  /// Alternatively, provide a single [color] to automatically derive both
+  /// [activeColor] and [inactiveColor] (the latter at 10% alpha).
+  const MatrixLoader({
     super.key,
     this.shape = MatrixShape.square,
     this.pattern = MatrixPattern.square1,
     this.columns = 5,
     this.rows = 5,
-    Color? activeColor,
-    Color? inactiveColor,
-    Color? color,
+    this.activeColor = Colors.white,
+    this.inactiveColor = const Color(0xFF27272A),
+    this.color,
     this.size = 64,
     this.dotSize = 4.0,
     this.spacing,
@@ -338,9 +360,7 @@ class MatrixLoader extends StatefulWidget {
     this.customMask,
     this.customIntensity,
     this.onDotTapped,
-  })  : activeColor = color ?? activeColor ?? Colors.white,
-        inactiveColor = inactiveColor ?? 
-            (color != null ? color.withValues(alpha: 0.1) : const Color(0xFF27272A));
+  });
 
   @override
   State<MatrixLoader> createState() => _MatrixLoaderState();
@@ -431,6 +451,10 @@ class _MatrixLoaderState extends State<MatrixLoader>
             animation: _controller,
             builder: (context, child) {
               final curvedProgress = widget.curve.transform(_controller.value);
+              final effectiveActive = widget.color ?? widget.activeColor;
+              final effectiveInactive = widget.color != null
+                  ? widget.color!.withValues(alpha: 0.1)
+                  : widget.inactiveColor;
               return CustomPaint(
                 painter: _MatrixPainter(
                   progress: curvedProgress,
@@ -438,8 +462,8 @@ class _MatrixLoaderState extends State<MatrixLoader>
                   pattern: widget.pattern,
                   columns: widget.columns,
                   rows: widget.rows,
-                  activeColor: widget.activeColor,
-                  inactiveColor: widget.inactiveColor,
+                  activeColor: effectiveActive,
+                  inactiveColor: effectiveInactive,
                   dotSize: widget.dotSize,
                   spacing:
                       widget.spacing ??

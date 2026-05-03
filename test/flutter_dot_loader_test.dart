@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_dot_loader/flutter_dot_loader.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('MatrixLoader', () {
@@ -118,11 +118,43 @@ void main() {
 
   group('MatrixPattern', () {
     test(
-      'has 61 values (20 square + 20 circular + 20 triangle + 1 custom)',
+      'has 74 values (20 square + 20 circular + 20 triangle + 13 aliases + 1 custom)',
       () {
-        expect(MatrixPattern.values.length, 61);
+        expect(MatrixPattern.values.length, 74);
       },
     );
+
+    test('semantic aliases resolve to working patterns', () {
+      // Sanity-check a handful of aliases that the README advertises.
+      expect(MatrixPattern.values, contains(MatrixPattern.vortexSpin));
+      expect(MatrixPattern.values, contains(MatrixPattern.bullsEye));
+      expect(MatrixPattern.values, contains(MatrixPattern.diagonalWave));
+    });
+  });
+
+  group('DotLoader', () {
+    testWidgets('renders with default parameters', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(body: Center(child: DotLoader())),
+        ),
+      );
+      expect(find.byType(DotLoader), findsOneWidget);
+      expect(find.bySubtype<MatrixLoader>(), findsOneWidget);
+    });
+
+    testWidgets('accepts a single color and stays const-constructable', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: Center(child: DotLoader(color: Colors.blue)),
+          ),
+        ),
+      );
+      expect(find.byType(DotLoader), findsOneWidget);
+    });
   });
 
   group('MatrixShape', () {

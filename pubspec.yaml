@@ -1,9 +1,16 @@
 name: flutter_dot_loader
 description: "A highly customizable, high-performance dot-matrix and LED loading animation package for Flutter with 60 math patterns and custom frame support."
-version: 0.0.3
+version: 0.0.4
 homepage: https://github.com/hooshyar/flutter_dot_loader
 repository: https://github.com/hooshyar/flutter_dot_loader
 issue_tracker: https://github.com/hooshyar/flutter_dot_loader/issues
+
+topics:
+  - animation
+  - loader
+  - loading
+  - widget
+  - ui
 
 screenshots:
   - description: "Gallery of 60 dot-matrix loader patterns"
@@ -20,9 +27,9 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
-  flutter_lints: ^6.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

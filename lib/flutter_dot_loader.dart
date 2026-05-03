@@ -27,8 +27,8 @@
 /// ```
 library;
 
-export 'src/matrix_loader.dart';
-export 'src/triangle_loader.dart';
-export 'src/matrix_text.dart';
-export 'src/matrix_data.dart';
 export 'src/dot_loader.dart';
+export 'src/matrix_data.dart';
+export 'src/matrix_loader.dart';
+export 'src/matrix_text.dart';
+export 'src/triangle_loader.dart';

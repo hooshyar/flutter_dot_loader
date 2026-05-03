@@ -1,3 +1,13 @@
+## 0.0.4
+
+- fix: restore `const` constructors on `MatrixLoader` and `DotLoader` so the documented `const` usage in the README and tests actually compiles
+- fix: replace deprecated `withOpacity` with `withValues(alpha:)` (Flutter 3.27+)
+- chore: tighten `analysis_options.yaml` (strict-casts/inference, deprecation warnings, sorted directives & dependencies)
+- chore: add pub.dev `topics:` for discoverability (`animation`, `loader`, `loading`, `widget`, `ui`)
+- docs: add `AGENTS.md` with copy-paste recipes and a decision tree for AI coding agents
+- docs: README quick-start now leads with `DotLoader(color: …)` for the AI-chat use case
+- test: cover `DotLoader` defaults and the `color` shorthand; bump pattern-count assertion to 74
+
 ## 0.0.3
 
 - feat: added DotLoader simplified wrapper
