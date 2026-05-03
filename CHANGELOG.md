@@ -1,3 +1,7 @@
+## 0.0.5
+
+- fix: replace portrait animated-GIF pubspec screenshots with static landscape PNGs (`assets/screenshot_gallery.png`, `assets/screenshot_studio.png`) so pub.dev's screenshot pipeline renders thumbnails correctly. The animated GIFs remain in the README and are unchanged.
+
 ## 0.0.4
 
 - fix: restore `const` constructors on `MatrixLoader` and `DotLoader` so the documented `const` usage in the README and tests actually compiles

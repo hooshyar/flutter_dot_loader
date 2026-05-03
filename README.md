@@ -38,7 +38,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_dot_loader: ^0.0.4
+  flutter_dot_loader: ^0.0.5
 ```
 
 Or run:

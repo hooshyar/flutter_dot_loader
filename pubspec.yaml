@@ -1,6 +1,6 @@
 name: flutter_dot_loader
 description: "A highly customizable, high-performance dot-matrix and LED loading animation package for Flutter with 60 math patterns and custom frame support."
-version: 0.0.4
+version: 0.0.5
 homepage: https://github.com/hooshyar/flutter_dot_loader
 repository: https://github.com/hooshyar/flutter_dot_loader
 issue_tracker: https://github.com/hooshyar/flutter_dot_loader/issues
@@ -14,9 +14,9 @@ topics:
 
 screenshots:
   - description: "Gallery of 60 dot-matrix loader patterns"
-    path: assets/1.gif
+    path: assets/screenshot_gallery.png
   - description: "Interactive Dot Matrix Studio editor"
-    path: assets/2.gif
+    path: assets/screenshot_studio.png
 
 environment:
   sdk: ^3.11.4
