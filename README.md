@@ -145,7 +145,7 @@ MatrixPattern.triangle4  // Row Sweep
 MatrixPattern.triangle8  // Column Wave
 ```
 
-### 3. Control Size and Shape
+### 6. Control Size and Shape
 
 Use `MatrixShape` to clip the dot grid into a different geometry:
 
@@ -161,7 +161,7 @@ const MatrixLoader(
 
 Available shapes: `MatrixShape.square`, `MatrixShape.circular`, `MatrixShape.triangle`, `MatrixShape.custom`.
 
-### 4. Triangle Loader
+### 7. Triangle Loader
 
 A separate, fully independent geometric loader using a grid of equilateral triangles:
 

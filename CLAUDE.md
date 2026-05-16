@@ -56,13 +56,13 @@ The public API is exported from `lib/flutter_dot_loader.dart`. The package is in
 1. For each `(row, col)`, compute a raw intensity `[0..1]` — either via the built-in `_calculateIntensity` switch (one big switch over all `MatrixPattern` values) or via `customIntensity(row, col, progress)`.
 2. If hovered, OR-merge a radial sine ripple on top.
 3. Run the value through the **three-tier LED remap** (`_remapOpacity`): piecewise linear `opacityBase → opacityMid → opacityPeak` (defaults `0.08 / 0.34 / 0.94`). This is what gives the "glowing LED" look — do not flatten it without understanding the visual impact.
-4. `Color.lerp(inactiveColor.withOpacity(opacityBase), activeColor, remapped)` produces the final dot color.
+4. `Color.lerp(inactiveColor.withValues(alpha: opacityBase), activeColor, remapped)` produces the final dot color. Note: this package uses `withValues(alpha:)` (Flutter 3.27+), never the deprecated `withOpacity`.
 
-When **adding a new pattern**, add it to the `MatrixPattern` enum *and* its case in `_calculateIntensity`. Update the test that asserts `MatrixPattern.values.length == 61` (`test/flutter_dot_loader_test.dart`). Semantic aliases (e.g. `vortexSpin`) share a `case` block with their numeric counterpart (`square11`).
+When **adding a new pattern**, add it to the `MatrixPattern` enum *and* its case in `_calculateIntensity`. Update the test that asserts `MatrixPattern.values.length == 74` (`test/flutter_dot_loader_test.dart`) — 60 numeric (20 square + 20 circular + 20 triangle) + 13 semantic aliases + 1 `custom`. Semantic aliases (e.g. `vortexSpin`) share a `case` block with their numeric counterpart (`square11`).
 
-### Constructors are non-`const`
+### Constructors are `const` — color derivation happens in `build()`
 
-`MatrixLoader` and `DotLoader` constructors are intentionally **not** `const` — they derive `inactiveColor` from `color` at construction time (see commit `4f35018`). Don't re-add `const` without removing that derivation.
+`MatrixLoader` and `DotLoader` constructors **are** `const`. The `color` shorthand still works because the active/inactive derivation runs at render time inside `_MatrixLoaderState.build()` (see `matrix_loader.dart:454-456`), not at construction. So `const DotLoader(color: Colors.blue)` is valid and is the documented quick-start. Do not remove `const` from these constructors — the v0.0.4 CHANGELOG entry and the `accepts a single color and stays const-constructable` test both depend on it.
 
 ## Releasing
 
