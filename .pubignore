@@ -1,0 +1,42 @@
+# .pubignore — files excluded from `flutter pub publish`.
+#
+# pub uses .gitignore by default; the presence of this file overrides that.
+# Anything listed here is dropped from the published archive even if it's
+# checked into git.
+
+# --- Internal docs and tooling that ship no value to package consumers ---
+/CLAUDE.md
+/SPECS.md
+/tool/
+/doc/
+
+# --- Mirror of .gitignore patterns we still want excluded from pub ---
+# (When .pubignore is present, it fully replaces .gitignore for archive
+# content, so we have to re-list anything that matters.)
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Flutter/Dart/Pub
+/pubspec.lock
+**/doc/api/
+.dart_tool/
+.flutter-plugins-dependencies
+/build/
+/coverage/
+
+# Claude Code local session state
+.claude/

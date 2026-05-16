@@ -25,6 +25,12 @@
 
 ## Done
 
+### Tick 10 — 2026-05-16
+- [x] **Published archive size: 3 MB → 1 MB (-67%)**. Two changes:
+  - Deleted unreferenced duplicate `1.gif` (472 KB) and `2.gif` (1 MB) from the repo root — README always pointed at the `assets/` copies; the root files were leftover dead weight.
+  - Added `.pubignore` to exclude internal maintenance files (`CLAUDE.md`, `SPECS.md`, `tool/`, `doc/`) from the published bundle. Replicates the relevant `.gitignore` patterns since `.pubignore` fully overrides `.gitignore` for pub bundling.
+- [x] Verified the drift test still passes — it reads `doc/font_preview.md` from the working tree, not from the published archive, so the exclusion is safe.
+
 ### Tick 9 — 2026-05-16
 - [x] **pubspec.yaml description rewritten** (137 → 154 chars, within pub.dev's 60–180 sweet spot). New copy: "Customizable dot-matrix and LED loading animations for Flutter — 60 patterns, scrolling marquee text, custom pixel frames, AI chat indicator. Zero deps." Surfaces the four post-0.0.5 capabilities + the AI-chat positioning the README now leads with.
 - [x] **pubspec topics tightened** from generic (`animation`, `loader`, `loading`, `widget`, `ui`) to high-signal niche (`loader`, `animation`, `dot-matrix`, `led`, `pixel-art`). Maximum 5 topics on pub.dev, so each one matters; dropping `loading`/`widget`/`ui` (duplicative or generic) makes room for `dot-matrix`/`led`/`pixel-art` (specific, low-noise queries).
@@ -90,7 +96,6 @@
 - [ ] **Add a "Used in" or "Inspiration" section** to README — concrete demo links boost click-through and credibility.
 - [ ] **Verify pub.dev "Likes" / pub points** — manual check, queue any score-recovering fixes.
 - [ ] **Add `screenshots:` alt-text accessibility check** — pub.dev renders these in card previews.
-- [ ] **Exclude `tool/` and `doc/` from the published archive** via a `.pubignore` file. Currently `tool/font_preview.dart`, `tool/generate_font_preview.dart`, and `doc/font_preview.md` are bundled (~3 KB + 33 KB) but provide zero value to consumers — they're maintenance tooling.
 
 ### P1 — feature completeness
 - [ ] **`MatrixText` Arabic-Indic / Persian digit glyphs** (٠–٩, ۰–۹) — useful for RTL audiences. (Latin punctuation done in tick 2.)

@@ -1,5 +1,14 @@
 ## Unreleased
 
+- chore(package): published archive size dropped from 3 MB to 1 MB (-67%).
+  Two changes:
+  1. Deleted unreferenced duplicate `1.gif` (472 KB) and `2.gif` (1 MB) from
+     the repo root — the canonical copies have always lived in `assets/` and
+     the README points there.
+  2. Added a `.pubignore` to exclude internal maintenance files from the
+     published bundle: `CLAUDE.md`, `SPECS.md`, `tool/`, `doc/`. None of
+     these ship value to package consumers; they're roadmap, generator
+     scripts, and the auto-generated font preview.
 - chore(pubspec): description rewritten (154 chars) to reflect every post-0.0.5
   capability — scrolling marquee text, custom pixel frames, AI chat indicator —
   while staying in pub.dev's 60–180 sweet spot.
