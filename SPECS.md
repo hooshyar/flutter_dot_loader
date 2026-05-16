@@ -12,7 +12,7 @@
 
 ## Current state — v0.0.5 + unreleased (2026-05-16)
 
-- 30/30 tests passing; `flutter analyze` clean; `dart format` clean; CI green on main
+- 31/31 tests passing; `flutter analyze` clean; `dart format` clean; CI green on main
 - Example app builds for web (`flutter build web --release` succeeds; Wasm dry-run passes)
 - 77 `MatrixPattern` values (60 numeric + 16 semantic aliases + 1 `custom`)
 - 4 `MatrixShape` values (square, circular, triangle, custom)
@@ -24,6 +24,14 @@
 - Static PNG screenshots in `assets/` rendering correctly on pub.dev
 
 ## Done
+
+### Tick 8 — 2026-05-16
+- [x] **Visual-verification artifact**: new `doc/font_preview.md` is an auto-generated ASCII-art preview of every glyph in the `MatrixText` 5×7 font (`●` lit, `·` dim). 69 glyphs, grouped by category (letters / digits / whitespace / punctuation / brackets). Closes the visual gap flagged in tick 3's reflection.
+- [x] **Pure-Dart generator under `tool/`**: `tool/font_preview.dart` (renderer) + `tool/generate_font_preview.dart` (CLI). Runs as `dart run tool/generate_font_preview.dart` with no Flutter dependency.
+- [x] **Drift test** asserts `doc/font_preview.md` matches what the source would generate now — any glyph change without a re-run fails CI with a helpful regenerate-this-command message. Total tests: 31 (was 30).
+- [x] **Cleanup**: removed `lib/src/matrix_text.dart`'s unused circular self-import of the umbrella library; the file is now pure Dart.
+- [x] Documented in AGENTS.md §6 (Maintenance commands + Font preview artifact) and CLAUDE.md MatrixText description.
+- [x] Visually audited risky tick-2 glyphs (`$`, `@`, `%`, `&`) — all legible. Worth shipping.
 
 ### Tick 7 — 2026-05-16
 - [x] **Three new semantic aliases**: `sonarPing` (= `circular4`, outward radial pulse), `pinwheel` (= `circular15`, 4-arm rotating sweep), `columnWave` (= `triangle8`, horizontal column scan). All names cover AI-agent search niches that weren't reachable before (a developer asking for "radar/sonar loader" or "pinwheel animation" now finds an exact name match).
@@ -84,7 +92,7 @@
 
 ### P2 — polish
 - [ ] **Doc comments**: every public field on `MatrixLoader` has a doc — verify no gaps.
-- [ ] **Marquee README screenshot** — visually demonstrate the new `MatrixText.scrolling("LOADING: 42%")` capability since the charset just expanded.
+- [ ] **Marquee README screenshot** — a real rasterized image (in addition to the ASCII-art preview shipped in tick 8) would help pub.dev visitors who scan visually.
 - [ ] **README example image**: capture a fresh gallery screenshot if the studio gained features.
 
 ### Done in tick 2 (moved up from P2)

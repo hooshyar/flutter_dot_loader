@@ -46,7 +46,7 @@ The public API is exported from `lib/flutter_dot_loader.dart`. The package is in
 
 ### Helper modules
 
-- **`MatrixText`** (`lib/src/matrix_text.dart`) — built-in 5×7 pixel font (A–Z, 0–9, a few punctuation glyphs). `MatrixText.scrolling(text)` returns a `customIntensity` callback that scrolls text horizontally; the matrix must be exactly **7 rows tall** for the default font to render correctly.
+- **`MatrixText`** (`lib/src/matrix_text.dart`) — built-in 5×7 pixel font (A–Z, 0–9, 33 punctuation/symbol glyphs). `MatrixText.scrolling(text)` returns a `customIntensity` callback that scrolls text horizontally; the matrix must be exactly **7 rows tall** for the default font to render correctly. Pure Dart — no Flutter imports, so it's safe to use from `tool/` scripts. The canonical visual preview is `doc/font_preview.md`, regenerated via `dart run tool/generate_font_preview.dart`; a test asserts the file stays in sync with the source map.
 - **`MatrixData`** (`lib/src/matrix_data.dart`) — encode/decode 2D `0/1` grids to compact pipe-delimited strings (e.g. `"101|010|101"`). Used by the example app's Studio editor for save/load.
 
 ### The intensity → opacity pipeline

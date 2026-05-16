@@ -1,7 +1,8 @@
-import 'package:flutter_dot_loader/flutter_dot_loader.dart';
-
 /// A utility to generate frame data and scrolling animations from text strings
-/// for use with [MatrixLoader] and [MatrixPattern.custom].
+/// for use with `MatrixLoader` and `MatrixPattern.custom`.
+///
+/// Pure Dart — no Flutter dependency, so it's safe to call from `tool/`
+/// scripts or other non-Flutter contexts.
 class MatrixText {
   /// Basic 5x7 pixel font.
   ///

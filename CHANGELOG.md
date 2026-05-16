@@ -1,5 +1,14 @@
 ## Unreleased
 
+- docs: new `doc/font_preview.md` — auto-generated ASCII-art preview of every
+  glyph in the 5×7 `MatrixText` font. Pure Dart generator under
+  `tool/generate_font_preview.dart`; a drift test fails if the artifact stops
+  matching `matrix_text.dart`, so every glyph change forces a visible diff in
+  review.
+- chore: `lib/src/matrix_text.dart` no longer pulls in
+  `package:flutter_dot_loader/flutter_dot_loader.dart` (it never used any
+  Flutter or library types). The file is now pure Dart, which is what lets
+  the new `tool/` scripts import it without dragging in `dart:ui`.
 - feat: three new semantic aliases on `MatrixPattern` —
   `sonarPing` (alias for `circular4`, a pure outward radial pulse),
   `pinwheel` (alias for `circular15`, a 4-arm rotating sweep), and

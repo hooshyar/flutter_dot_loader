@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dot_loader/flutter_dot_loader.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../tool/font_preview.dart' show renderFontPreviewMarkdown;
 
 void main() {
   group('MatrixLoader', () {
@@ -283,6 +286,27 @@ void main() {
       final cb = MatrixText.scrolling('');
       expect(cb(0, 0, 0.0), 0.0);
     });
+
+    test(
+      'font preview artifact (doc/font_preview.md) is in sync with the source',
+      () {
+        final expected = renderFontPreviewMarkdown();
+        final file = File('doc/font_preview.md');
+        expect(
+          file.existsSync(),
+          isTrue,
+          reason:
+              'doc/font_preview.md is missing. Run: dart run tool/generate_font_preview.dart',
+        );
+        final actual = file.readAsStringSync();
+        if (actual != expected) {
+          fail(
+            'doc/font_preview.md has drifted from MatrixText. Regenerate '
+            'by running: dart run tool/generate_font_preview.dart',
+          );
+        }
+      },
+    );
   });
 
   group('onComplete callback', () {

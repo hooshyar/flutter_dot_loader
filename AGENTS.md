@@ -240,14 +240,26 @@ pattern, so `vortexSpin` and `square11` are identical at runtime.
 ## 6. Maintenance commands (run from repo root)
 
 ```sh
-flutter pub get                      # install
-flutter analyze                      # must be clean before a release
-flutter test                         # 12 tests, all must pass
-flutter pub publish --dry-run        # validate before bumping pubspec
+flutter pub get                                # install
+flutter analyze                                # must be clean before a release
+flutter test                                   # 31 tests, all must pass
+flutter pub publish --dry-run                  # validate before bumping pubspec
+dart run tool/generate_font_preview.dart       # regenerate doc/font_preview.md
+                                               # (after editing MatrixText glyphs)
 ```
 
 The example app in `example/` has its own `pubspec.yaml`. Bump it only when
 its dependencies need a new package version.
+
+### Font preview artifact
+
+`doc/font_preview.md` is the canonical visual preview of every `MatrixText`
+glyph rendered as `●`/`·` ASCII art. It's auto-generated — never hand-edit it.
+
+If you add or change a glyph in `lib/src/matrix_text.dart`, the
+`MatrixText font preview artifact is in sync with the source` test will
+fail until you re-run `dart run tool/generate_font_preview.dart`. This is
+the project's visual-verification gate for the 5×7 font.
 
 ---
 
