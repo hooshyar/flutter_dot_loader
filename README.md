@@ -125,6 +125,18 @@ const MatrixLoader(
 )
 ```
 
+For finite `once` animations — splash screens, post-loading transitions — hook `onComplete` to know when the play-through ends:
+
+```dart
+MatrixLoader(
+  playback: MatrixPlayback.once,
+  duration: const Duration(seconds: 2),
+  onComplete: () => Navigator.of(context).pushReplacementNamed('/home'),
+)
+```
+
+The callback only fires for `MatrixPlayback.once`. It's stale-run-guarded: if the widget is disposed or the playback mode changes before completion, `onComplete` will not be called.
+
 ### 5. Pick from 60 Patterns
 
 All patterns are available as named `MatrixPattern` constants:

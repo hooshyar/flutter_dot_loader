@@ -331,6 +331,27 @@ class MatrixLoader extends StatefulWidget {
   /// Provides the `row` and `col` of the tapped dot.
   final void Function(int row, int col)? onDotTapped;
 
+  /// Called once when [playback] is [MatrixPlayback.once] and the animation
+  /// reaches the end of its single play-through.
+  ///
+  /// Use this to hand off control after a finite splash / loading animation —
+  /// e.g. navigate to the next screen, hide the loader, or kick off a follow-up
+  /// task. Fires from inside the [AnimationController]'s completion future, so
+  /// it's safe to call `setState`, `Navigator.push`, etc. from the callback.
+  ///
+  /// Has no effect for [MatrixPlayback.loop] or [MatrixPlayback.bounce], which
+  /// play indefinitely. If [playback] is later switched to [MatrixPlayback.once]
+  /// via [State.setState], the callback fires when that new play-through ends.
+  ///
+  /// ```dart
+  /// MatrixLoader(
+  ///   playback: MatrixPlayback.once,
+  ///   duration: const Duration(seconds: 2),
+  ///   onComplete: () => Navigator.of(context).pushReplacementNamed('/home'),
+  /// )
+  /// ```
+  final VoidCallback? onComplete;
+
   /// Creates a [MatrixLoader].
   ///
   /// All parameters are optional and have sensible defaults. At minimum,
@@ -360,6 +381,7 @@ class MatrixLoader extends StatefulWidget {
     this.customMask,
     this.customIntensity,
     this.onDotTapped,
+    this.onComplete,
   });
 
   @override
@@ -370,6 +392,11 @@ class _MatrixLoaderState extends State<MatrixLoader>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   bool _isHovered = false;
+
+  /// Bumped every time [_applyPlayback] starts a new run. Used to ignore
+  /// completion futures from prior runs (e.g. when the widget restarts a
+  /// `once` animation or switches playback mid-flight).
+  int _runId = 0;
 
   @override
   void initState() {
@@ -391,6 +418,7 @@ class _MatrixLoaderState extends State<MatrixLoader>
 
   void _applyPlayback() {
     _controller.stop();
+    final runId = ++_runId;
     switch (widget.playback) {
       case MatrixPlayback.loop:
         _controller.repeat();
@@ -399,7 +427,13 @@ class _MatrixLoaderState extends State<MatrixLoader>
         _controller.repeat(reverse: true);
         break;
       case MatrixPlayback.once:
-        _controller.forward(from: 0.0);
+        _controller.forward(from: 0.0).then((_) {
+          // Drop stale completions: dispose, replay, or playback-mode change
+          // bumps `_runId`, so only the freshest run fires the callback.
+          if (!mounted || runId != _runId) return;
+          if (_controller.status != AnimationStatus.completed) return;
+          widget.onComplete?.call();
+        });
         break;
     }
   }

@@ -12,7 +12,7 @@
 
 ## Current state — v0.0.5 + unreleased (2026-05-16)
 
-- 25/25 tests passing; `flutter analyze` clean; `dart format` clean; CI green on main
+- 29/29 tests passing; `flutter analyze` clean; `dart format` clean; CI green on main
 - Example app builds for web (`flutter build web --release` succeeds; Wasm dry-run passes)
 - 74 `MatrixPattern` values (60 numeric + 13 semantic aliases + 1 `custom`)
 - 4 `MatrixShape` values (square, circular, triangle, custom)
@@ -24,6 +24,12 @@
 - Static PNG screenshots in `assets/` rendering correctly on pub.dev
 
 ## Done
+
+### Tick 4 — 2026-05-16
+- [x] **`MatrixLoader.onComplete` callback** for `MatrixPlayback.once`. Real API gap closed: apps can now hand off after a finite splash/intro animation. Stale-run-guarded against dispose and mid-flight playback changes (uses an internal `_runId` to drop stale `TickerFuture` completions).
+- [x] +4 widget tests: fires once on `once`, does NOT fire on `loop`/`bounce`, safe to dispose mid-flight. Total: 29 (was 25).
+- [x] README §4 extended with `onComplete` recipe; AGENTS.md §2.7 added; cheat-sheet row added.
+- [x] CHANGELOG `Unreleased` entry.
 
 ### Tick 3 — 2026-05-16
 - [x] Confirmed tick-2 CI run passed
@@ -59,7 +65,6 @@
 
 ### P1 — feature completeness
 - [ ] **Add semantic alias for `circular15` (`pulseGrid`?), `triangle1` (`apexCascade`?)** — the 13 current aliases are uneven coverage. Pick 3–5 more high-readability ones.
-- [ ] **`AnimationStatusListener` callback** so users can hook into `bounce`/`once` completion (currently no way to be notified when `once` finishes).
 - [ ] **`MatrixText` Arabic-Indic / Persian digit glyphs** (٠–٩, ۰–۹) — useful for RTL audiences. (Latin punctuation done in tick 2.)
 
 ### P2 — polish

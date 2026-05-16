@@ -264,6 +264,98 @@ void main() {
     });
   });
 
+  group('onComplete callback', () {
+    testWidgets('fires once when MatrixPlayback.once finishes', (tester) async {
+      var fireCount = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: MatrixLoader(
+                playback: MatrixPlayback.once,
+                duration: const Duration(milliseconds: 100),
+                onComplete: () => fireCount++,
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(fireCount, 0);
+      // Pump well past the animation duration to let the completion future
+      // settle on the event loop.
+      await tester.pump(const Duration(milliseconds: 50));
+      await tester.pump(const Duration(milliseconds: 80));
+      await tester.pumpAndSettle();
+      expect(fireCount, 1);
+    });
+
+    testWidgets('does NOT fire for MatrixPlayback.loop', (tester) async {
+      var fireCount = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: MatrixLoader(
+                playback: MatrixPlayback.loop,
+                duration: const Duration(milliseconds: 50),
+                onComplete: () => fireCount++,
+              ),
+            ),
+          ),
+        ),
+      );
+      // Drive several frames forward; loop must NOT trigger completion.
+      await tester.pump(const Duration(milliseconds: 60));
+      await tester.pump(const Duration(milliseconds: 60));
+      await tester.pump(const Duration(milliseconds: 60));
+      expect(fireCount, 0);
+    });
+
+    testWidgets('does NOT fire for MatrixPlayback.bounce', (tester) async {
+      var fireCount = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: MatrixLoader(
+                playback: MatrixPlayback.bounce,
+                duration: const Duration(milliseconds: 50),
+                onComplete: () => fireCount++,
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 60));
+      await tester.pump(const Duration(milliseconds: 60));
+      await tester.pump(const Duration(milliseconds: 60));
+      expect(fireCount, 0);
+    });
+
+    testWidgets('safe to dispose mid-flight without firing', (tester) async {
+      var fireCount = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: MatrixLoader(
+                playback: MatrixPlayback.once,
+                duration: const Duration(milliseconds: 200),
+                onComplete: () => fireCount++,
+              ),
+            ),
+          ),
+        ),
+      );
+      // Replace the widget tree before the animation completes.
+      await tester.pump(const Duration(milliseconds: 50));
+      await tester.pumpWidget(const MaterialApp(home: SizedBox.shrink()));
+      // Let any pending TickerFuture drain.
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(fireCount, 0);
+    });
+  });
+
   group('MatrixData JSON helpers', () {
     final sampleGrid = [
       [1, 0, 1],

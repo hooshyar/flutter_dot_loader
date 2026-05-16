@@ -1,5 +1,11 @@
 ## Unreleased
 
+- feat: `MatrixLoader.onComplete` callback — fires once when
+  `MatrixPlayback.once` finishes a play-through. Closes the loop on finite
+  splash / loading animations so apps can navigate, transition, or hand off
+  state when the animation ends. Has no effect for `loop` / `bounce` modes.
+  Stale-run-guarded: if the widget is disposed or the playback mode changes
+  before completion, the callback does not fire.
 - feat: `MatrixData` now has JSON helpers for shipping frames over Firebase
   Remote Config, Firestore, app config, or any other JSON channel. Four new
   methods: `MatrixData.toJson(grid)` / `fromJson(map)` for a single frame and

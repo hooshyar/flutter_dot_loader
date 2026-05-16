@@ -137,6 +137,29 @@ For a single static grid (sprite / dot-matrix logo), use `MatrixData.toJson` /
 so future readers can branch on it; `framesFromJson` also accepts the legacy
 comma-joined string in the `frames` field for backwards compatibility.
 
+### 2.7 Splash / loading handoff (`once` + `onComplete`)
+
+When the user wants a finite intro animation that hands off to the next screen,
+use `MatrixPlayback.once` together with `onComplete`. The callback is
+stale-run-guarded — safe to navigate from, safe to leave wired up across
+rebuilds.
+
+```dart
+MatrixLoader(
+  columns: 8,
+  rows: 8,
+  playback: MatrixPlayback.once,
+  duration: const Duration(seconds: 2),
+  curve: Curves.easeInOut,
+  pattern: MatrixPattern.bullsEye,
+  activeColor: Colors.cyanAccent,
+  onComplete: () => Navigator.of(context).pushReplacementNamed('/home'),
+)
+```
+
+`onComplete` is a no-op for `loop` and `bounce` (those modes play indefinitely),
+so it's safe to leave on a generic loader widget that may be reconfigured.
+
 ---
 
 ## 3. Parameter cheat sheet
@@ -153,6 +176,7 @@ Only the parameters you actually need to know to make good choices.
 | `pattern`         | Pick from 60 named patterns or use semantic aliases (see §4).           |
 | `playback`        | `loop` (default), `bounce` (ping-pong), `once` (finite).                |
 | `curve`           | Any `Curve`. Use `Curves.easeInOut` for finite `once` plays.            |
+| `onComplete`      | `VoidCallback` — fires when `playback: once` finishes. Use for splash → home transitions. No-op for `loop` / `bounce`. Stale-run-guarded. |
 | `customMask`      | `MatrixShape.custom` only. Returns whether dot at (r, c) renders.       |
 | `customIntensity` | `MatrixPattern.custom` only. Returns 0.0–1.0 for dot brightness.        |
 
