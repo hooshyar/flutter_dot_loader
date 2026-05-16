@@ -1,5 +1,13 @@
 ## Unreleased
 
+- feat: `MatrixData` now has JSON helpers for shipping frames over Firebase
+  Remote Config, Firestore, app config, or any other JSON channel. Four new
+  methods: `MatrixData.toJson(grid)` / `fromJson(map)` for a single frame and
+  `MatrixData.framesToJson(frames)` / `framesFromJson(map)` for an animation.
+  Output is a `Map<String, dynamic>` (callers pass it through `dart:convert`'s
+  `jsonEncode` — the package itself stays zero-dep). The frames payload is
+  versioned (`MatrixData.jsonSchemaVersion`), and `framesFromJson` also accepts
+  the legacy comma-joined string for backwards compatibility.
 - feat: `MatrixText` font now covers all common UI punctuation and symbols —
   `, ; : ' " - _ + = / \ * # @ $ % & | ^ ~ \` ( ) [ ] { } < >` in addition to
   the previously supported `. ! ?`. Real-world strings like `"Loading: 42%"`,

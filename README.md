@@ -239,6 +239,27 @@ MatrixLoader(
 )
 ```
 
+### Ship Frames as JSON (Firebase / Remote Config)
+
+Need to push new animations to your app without releasing a new build? `MatrixData`'s JSON helpers serialize frames into a compact, versioned `Map<String, dynamic>` that you can store in Firebase Remote Config, Firestore, an `.env`, or any other JSON channel:
+
+```dart
+import 'dart:convert';
+import 'package:flutter_dot_loader/flutter_dot_loader.dart';
+
+// On your build pipeline / studio:
+final payload = MatrixData.framesToJson(frames);
+final body = jsonEncode(payload);
+// → {"version":1,"rows":3,"cols":3,"frames":["010|111|010","101|010|101"]}
+
+// In the app (e.g. Firebase Remote Config string):
+final frames = MatrixData.framesFromJson(
+  jsonDecode(body) as Map<String, dynamic>,
+);
+```
+
+Single-frame helpers (`MatrixData.toJson` / `fromJson`) are also available for sprites or static dot-matrix logos. The package stays zero-dependency: you bring `dart:convert`.
+
 ---
 
 ## 🎛️ Full API Reference

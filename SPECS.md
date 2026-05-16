@@ -12,17 +12,26 @@
 
 ## Current state — v0.0.5 + unreleased (2026-05-16)
 
-- 18/18 tests passing; `flutter analyze` clean; `dart format` clean; CI green on main
+- 25/25 tests passing; `flutter analyze` clean; `dart format` clean; CI green on main
 - Example app builds for web (`flutter build web --release` succeeds; Wasm dry-run passes)
 - 74 `MatrixPattern` values (60 numeric + 13 semantic aliases + 1 `custom`)
 - 4 `MatrixShape` values (square, circular, triangle, custom)
 - 3 widgets: `MatrixLoader`, `DotLoader`, `TriangleLoader`
 - 5 helper classes: `MatrixText`, `MatrixData`, `MatrixPattern`, `MatrixShape`, `MatrixPlayback`
 - `MatrixText` font: A–Z + 0–9 + 33 punctuation/symbol glyphs (full UI text coverage)
+- `MatrixData` JSON helpers: `toJson`, `fromJson`, `framesToJson`, `framesFromJson`, `jsonSchemaVersion` — frames serialize to a versioned compact JSON shape, package stays zero-dep
 - Zero runtime dependencies (Flutter SDK only)
 - Static PNG screenshots in `assets/` rendering correctly on pub.dev
 
 ## Done
+
+### Tick 3 — 2026-05-16
+- [x] Confirmed tick-2 CI run passed
+- [x] **`MatrixData` JSON helpers shipped**: `toJson` / `fromJson` for a single grid, `framesToJson` / `framesFromJson` for animations, `jsonSchemaVersion = 1`. Unlocks Firebase Remote Config / Firestore frame delivery.
+- [x] `framesFromJson` is backwards-compatible: also accepts legacy comma-joined `String` in the `frames` field.
+- [x] +7 tests: round-trip single + multi, empty grid, missing/bad input ArgumentErrors, `dart:convert` end-to-end. Total: 25 (was 18).
+- [x] README new section "Ship Frames as JSON (Firebase / Remote Config)" with full example.
+- [x] CHANGELOG `Unreleased` entry added (matches release-discipline rule).
 
 ### Tick 2 — 2026-05-16
 - [x] Confirmed tick-1 CI run passed (analyze + format + test + dry-run publish, 1m34s)
@@ -51,7 +60,6 @@
 ### P1 — feature completeness
 - [ ] **Add semantic alias for `circular15` (`pulseGrid`?), `triangle1` (`apexCascade`?)** — the 13 current aliases are uneven coverage. Pick 3–5 more high-readability ones.
 - [ ] **`AnimationStatusListener` callback** so users can hook into `bounce`/`once` completion (currently no way to be notified when `once` finishes).
-- [ ] **`MatrixData.toJson()` / `fromJson()`** — many apps want to ship custom frames in app config / Firebase.
 - [ ] **`MatrixText` Arabic-Indic / Persian digit glyphs** (٠–٩, ۰–۹) — useful for RTL audiences. (Latin punctuation done in tick 2.)
 
 ### P2 — polish

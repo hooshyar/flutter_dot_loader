@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dot_loader/flutter_dot_loader.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -259,6 +261,91 @@ void main() {
     test('scrolling callback returns a function and handles empty text', () {
       final cb = MatrixText.scrolling('');
       expect(cb(0, 0, 0.0), 0.0);
+    });
+  });
+
+  group('MatrixData JSON helpers', () {
+    final sampleGrid = [
+      [1, 0, 1],
+      [0, 1, 0],
+      [1, 0, 1],
+    ];
+    final sampleFrames = [
+      sampleGrid,
+      [
+        [0, 0, 0],
+        [1, 1, 1],
+        [0, 0, 0],
+      ],
+    ];
+
+    test('toJson produces rows/cols/data and round-trips through fromJson', () {
+      final json = MatrixData.toJson(sampleGrid);
+      expect(json['rows'], 3);
+      expect(json['cols'], 3);
+      expect(json['data'], '101|010|101');
+      expect(MatrixData.fromJson(json), sampleGrid);
+    });
+
+    test('toJson handles an empty grid', () {
+      final json = MatrixData.toJson(<List<int>>[]);
+      expect(json['rows'], 0);
+      expect(json['cols'], 0);
+      expect(json['data'], '');
+    });
+
+    test(
+      'fromJson throws ArgumentError when "data" is missing or wrong type',
+      () {
+        expect(
+          () => MatrixData.fromJson(<String, dynamic>{}),
+          throwsArgumentError,
+        );
+        expect(
+          () => MatrixData.fromJson(<String, dynamic>{'data': 42}),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test('framesToJson includes schema version and round-trips', () {
+      final json = MatrixData.framesToJson(sampleFrames);
+      expect(json['version'], MatrixData.jsonSchemaVersion);
+      expect(json['rows'], 3);
+      expect(json['cols'], 3);
+      expect(json['frames'], isA<List<String>>());
+      expect(json['frames'], ['101|010|101', '000|111|000']);
+      expect(MatrixData.framesFromJson(json), sampleFrames);
+    });
+
+    test('framesFromJson accepts legacy comma-joined string in "frames"', () {
+      final legacy = <String, dynamic>{
+        'version': 1,
+        'rows': 3,
+        'cols': 3,
+        'frames': '101|010|101,000|111|000',
+      };
+      expect(MatrixData.framesFromJson(legacy), sampleFrames);
+    });
+
+    test('framesFromJson throws ArgumentError on missing/bad "frames"', () {
+      expect(
+        () => MatrixData.framesFromJson(<String, dynamic>{}),
+        throwsArgumentError,
+      );
+      expect(
+        () => MatrixData.framesFromJson(<String, dynamic>{
+          'frames': [123, 456],
+        }),
+        throwsArgumentError,
+      );
+    });
+
+    test('json output is dart:convert-encodable end-to-end', () {
+      final mapOut = MatrixData.framesToJson(sampleFrames);
+      final encoded = jsonEncode(mapOut);
+      final decoded = jsonDecode(encoded) as Map<String, dynamic>;
+      expect(MatrixData.framesFromJson(decoded), sampleFrames);
     });
   });
 }

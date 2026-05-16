@@ -111,6 +111,32 @@ MatrixLoader(
 )
 ```
 
+### 2.6 Ship frames via JSON (Firebase / Remote Config / app config)
+
+When the user wants animations driven by data they push at runtime rather than
+bake into the binary, point them at `MatrixData`'s JSON helpers. Output is a
+plain `Map<String, dynamic>`; `dart:convert` handles the rest. The package
+itself stays zero-dep.
+
+```dart
+import 'dart:convert';
+import 'package:flutter_dot_loader/flutter_dot_loader.dart';
+
+// Producer side (build script, studio, admin tool)
+final body = jsonEncode(MatrixData.framesToJson(frames));
+// {"version":1,"rows":3,"cols":3,"frames":["010|111|010","101|010|101"]}
+
+// Consumer side (the Flutter app)
+final frames = MatrixData.framesFromJson(
+  jsonDecode(body) as Map<String, dynamic>,
+);
+```
+
+For a single static grid (sprite / dot-matrix logo), use `MatrixData.toJson` /
+`MatrixData.fromJson`. The frames payload includes `MatrixData.jsonSchemaVersion`
+so future readers can branch on it; `framesFromJson` also accepts the legacy
+comma-joined string in the `frames` field for backwards compatibility.
+
 ---
 
 ## 3. Parameter cheat sheet
