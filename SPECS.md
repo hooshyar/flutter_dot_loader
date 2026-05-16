@@ -10,17 +10,28 @@
 4. **Quality bar** — `flutter analyze` clean, all tests passing, no deprecated API usage.
 5. **SEO** — GitHub repo description + topics, README has keyword-rich intro, pub.dev `topics:` populated, `flutter:` plugin metadata complete.
 
-## Current state — v0.0.5 (2026-05-16)
+## Current state — v0.0.5 + unreleased (2026-05-16)
 
-- 12/12 tests passing; `flutter analyze` clean
+- 18/18 tests passing; `flutter analyze` clean; `dart format` clean; CI green on main
+- Example app builds for web (`flutter build web --release` succeeds; Wasm dry-run passes)
 - 74 `MatrixPattern` values (60 numeric + 13 semantic aliases + 1 `custom`)
 - 4 `MatrixShape` values (square, circular, triangle, custom)
 - 3 widgets: `MatrixLoader`, `DotLoader`, `TriangleLoader`
 - 5 helper classes: `MatrixText`, `MatrixData`, `MatrixPattern`, `MatrixShape`, `MatrixPlayback`
+- `MatrixText` font: A–Z + 0–9 + 33 punctuation/symbol glyphs (full UI text coverage)
 - Zero runtime dependencies (Flutter SDK only)
 - Static PNG screenshots in `assets/` rendering correctly on pub.dev
 
 ## Done
+
+### Tick 2 — 2026-05-16
+- [x] Confirmed tick-1 CI run passed (analyze + format + test + dry-run publish, 1m34s)
+- [x] **`MatrixText` charset expanded** from `. ! ?` to 33 glyphs covering all common UI punctuation/symbols — strings like `"Loading: 42%"`, `"12/24"`, `"Don't quit"`, `"a@b.com"` now render fully
+- [x] New API: `MatrixText.supportedCharacters` getter for input validation
+- [x] +6 tests asserting full coverage, glyph shape invariants, fallback-to-space, lowercase normalization
+- [x] Verified example app builds for web (`flutter build web --release` succeeds)
+- [x] CHANGELOG `Unreleased` section staged (awaiting Hooshyar's release-version decision)
+- [x] README + AGENTS.md marquee sections reference the expanded charset
 
 ### Tick 1 — 2026-05-16
 - [x] Baseline: 12/12 tests pass, analyze clean, 0 open issues, 0 open PRs
@@ -41,13 +52,17 @@
 - [ ] **Add semantic alias for `circular15` (`pulseGrid`?), `triangle1` (`apexCascade`?)** — the 13 current aliases are uneven coverage. Pick 3–5 more high-readability ones.
 - [ ] **`AnimationStatusListener` callback** so users can hook into `bounce`/`once` completion (currently no way to be notified when `once` finishes).
 - [ ] **`MatrixData.toJson()` / `fromJson()`** — many apps want to ship custom frames in app config / Firebase.
-- [ ] **`MatrixText` charset coverage**: extend the 5×7 font with `: . , ? ! - + / *` and Arabic-Indic digits at minimum.
+- [ ] **`MatrixText` Arabic-Indic / Persian digit glyphs** (٠–٩, ۰–۹) — useful for RTL audiences. (Latin punctuation done in tick 2.)
 
 ### P2 — polish
-- [ ] **Example app**: ensure it builds clean for web (`flutter build web --release` in `example/`). Capture fresh gallery screenshot if anything visual changed.
 - [ ] **`README.md` "Why this package?"** — 3-bullet comparison vs `loading_animation_widget`, `flutter_spinkit`, `lottie` to position clearly.
 - [ ] **Doc comments**: every public field on `MatrixLoader` has a doc — verify no gaps.
-- [ ] **CI**: add a tiny GH Actions workflow running `flutter analyze` + `flutter test` on PRs.
+- [ ] **Marquee README screenshot** — visually demonstrate the new `MatrixText.scrolling("LOADING: 42%")` capability since the charset just expanded.
+- [ ] **README example image**: capture a fresh gallery screenshot if the studio gained features.
+
+### Done in tick 2 (moved up from P2)
+- [x] Example app builds clean for web (verified via `flutter build web --release`).
+- [x] CI workflow exists and is green (`.github/workflows/ci.yml`: analyze + format + test + dry-run publish).
 
 ### P3 — research / open questions
 - [ ] Is there an opportunity for an `AdaptiveDotLoader` that picks pattern by `MediaQuery.platformBrightness` and `Theme.of(context).colorScheme.primary` automatically?

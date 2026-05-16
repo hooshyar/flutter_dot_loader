@@ -1,3 +1,16 @@
+## Unreleased
+
+- feat: `MatrixText` font now covers all common UI punctuation and symbols —
+  `, ; : ' " - _ + = / \ * # @ $ % & | ^ ~ \` ( ) [ ] { } < >` in addition to
+  the previously supported `. ! ?`. Real-world strings like `"Loading: 42%"`,
+  `"12/24"`, `"Don't quit"`, `"a@b.com"` now render fully.
+- feat: `MatrixText.supportedCharacters` getter exposes the font's coverage
+  set so apps can validate user input before encoding.
+- docs: README + AGENTS reference the expanded charset.
+- test: add MatrixText group asserting full charset coverage, glyph shape
+  invariants (7 rows × 5 cols of `0`/`1`), fallback-to-space behavior, and
+  lowercase normalization. Total test count: 18.
+
 ## 0.0.5
 
 - fix: replace portrait animated-GIF pubspec screenshots with static landscape PNGs (`assets/screenshot_gallery.png`, `assets/screenshot_studio.png`) so pub.dev's screenshot pipeline renders thumbnails correctly. The animated GIFs remain in the README and are unchanged.

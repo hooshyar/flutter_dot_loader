@@ -92,10 +92,12 @@ MatrixLoader(
   columns: 24,
   rows: 7, // 7 is required for the default 5x7 font
   pattern: MatrixPattern.custom,
-  customIntensity: MatrixText.scrolling("HELLO WORLD", loopPadding: 24),
+  customIntensity: MatrixText.scrolling("LOADING: 42%", loopPadding: 24),
   duration: const Duration(seconds: 4),
 )
 ```
+
+The built-in 5×7 font covers **A–Z, 0–9**, and the punctuation / symbols you actually need for UI text: `` . , ; : ! ? ' " ` - _ + = / \ * # @ $ % & | ^ ~ ( ) [ ] { } < > ``. Lowercase letters are auto-upper-cased; unsupported characters render as a blank space. Inspect `MatrixText.supportedCharacters` to validate input.
 
 ### 3. Interactive Dot Matrix
 

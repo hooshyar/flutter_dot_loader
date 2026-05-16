@@ -162,4 +162,103 @@ void main() {
       expect(MatrixShape.values.length, 4);
     });
   });
+
+  group('MatrixText', () {
+    test(
+      'supportedCharacters covers letters, digits, and common punctuation',
+      () {
+        final set = MatrixText.supportedCharacters;
+        // Letters and digits
+        for (final c in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.split('')) {
+          expect(set, contains(c), reason: 'missing glyph for $c');
+        }
+        // Common UI punctuation that real apps need
+        for (final c in [
+          ' ',
+          '.',
+          ',',
+          '!',
+          '?',
+          ':',
+          ';',
+          '-',
+          '_',
+          '+',
+          '=',
+          '/',
+          '\\',
+          '*',
+          '#',
+          '@',
+          r'$',
+          '%',
+          '&',
+          '|',
+          '^',
+          '~',
+          '`',
+          "'",
+          '"',
+          '(',
+          ')',
+          '[',
+          ']',
+          '{',
+          '}',
+          '<',
+          '>',
+        ]) {
+          expect(
+            set,
+            contains(c),
+            reason: 'missing glyph for "$c" — needed for real UI text',
+          );
+        }
+      },
+    );
+
+    test('each glyph is exactly 7 rows of 5 columns', () {
+      for (final c in MatrixText.supportedCharacters) {
+        final glyph = MatrixText.getChar(c);
+        expect(glyph.length, 7, reason: 'glyph "$c" must have 7 rows');
+        for (var r = 0; r < 7; r++) {
+          expect(
+            glyph[r].length,
+            5,
+            reason: 'row $r of glyph "$c" must be 5 columns wide',
+          );
+          expect(
+            RegExp(r'^[01]+$').hasMatch(glyph[r]),
+            isTrue,
+            reason: 'glyph "$c" row $r must be 0s and 1s only',
+          );
+        }
+      }
+    });
+
+    test('encode("Hi: 42%") produces a non-empty 7-row grid', () {
+      final grid = MatrixText.encode('Hi: 42%');
+      expect(grid.length, 7);
+      expect(grid[0].length, greaterThan(0));
+      // 7 chars × 5 cols + 6 inter-char gaps = 41 cols
+      expect(grid[0].length, 41);
+    });
+
+    test('lowercase input is upper-cased before lookup', () {
+      expect(MatrixText.getChar('a'), MatrixText.getChar('A'));
+      expect(MatrixText.getChar('z'), MatrixText.getChar('Z'));
+    });
+
+    test('unsupported character falls back to space (blank 5×7)', () {
+      // U+2603 SNOWMAN — definitely not in the font.
+      final glyph = MatrixText.getChar('☃');
+      expect(glyph, MatrixText.getChar(' '));
+      expect(glyph.every((row) => row == '00000'), isTrue);
+    });
+
+    test('scrolling callback returns a function and handles empty text', () {
+      final cb = MatrixText.scrolling('');
+      expect(cb(0, 0, 0.0), 0.0);
+    });
+  });
 }

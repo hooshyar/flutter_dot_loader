@@ -57,7 +57,10 @@ const MatrixLoader(
 ### 2.3 Scrolling marquee
 
 `MatrixText.scrolling` returns a ready-made `customIntensity` callback. The
-matrix **must be exactly 7 rows tall** to fit the built-in 5×7 font.
+matrix **must be exactly 7 rows tall** to fit the built-in 5×7 font. The font
+covers `A–Z`, `0–9`, and the punctuation / symbols you actually need for UI
+text (full set: `` . , ; : ! ? ' " ` - _ + = / \ * # @ $ % & | ^ ~ ( ) [ ] { } < > ``).
+Lowercase is auto-upper-cased; anything else renders as a blank.
 
 ```dart
 MatrixLoader(
@@ -65,7 +68,7 @@ MatrixLoader(
   rows: 7,
   pattern: MatrixPattern.custom,
   duration: const Duration(seconds: 4),
-  customIntensity: MatrixText.scrolling('HELLO WORLD', loopPadding: 24),
+  customIntensity: MatrixText.scrolling('LOADING: 42%', loopPadding: 24),
   activeColor: Colors.amberAccent,
 )
 ```
