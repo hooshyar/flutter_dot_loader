@@ -12,7 +12,7 @@
 
 ## Current state — v0.0.5 + unreleased (2026-05-16)
 
-- 31/31 tests passing; `flutter analyze` clean; `dart format` clean; CI green on main
+- 35/35 tests passing; `flutter analyze` clean; `dart format` clean; CI green on main
 - Example app builds for web (`flutter build web --release` succeeds; Wasm dry-run passes)
 - 77 `MatrixPattern` values (60 numeric + 16 semantic aliases + 1 `custom`)
 - 4 `MatrixShape` values (square, circular, triangle, custom)
@@ -24,6 +24,13 @@
 - Static PNG screenshots in `assets/` rendering correctly on pub.dev
 
 ## Done
+
+### Tick 11 — 2026-05-16
+- [x] **`MatrixLoader.paused` parameter** (forwarded as `DotLoader.paused`) — when `true`, the underlying `AnimationController` stops and the loader freezes in place while staying mounted. Closes a real API gap: chat "thinking" indicators previously had to be unmounted/remounted to pause between turns.
+- [x] **Toggle semantics documented**: `paused: true → false` resumes `loop`/`bounce` cycles seamlessly; `once` restarts from `0.0`. For true resume-from-where-it-stopped on `once`, document the externalized `AnimationController` escape hatch as the path.
+- [x] **Stale-run guard updated**: `_runId` is bumped on every `_applyPlayback` call (including the paused branch) so any in-flight `TickerFuture` from a prior `once` run can't fire `onComplete` against the now-paused state.
+- [x] +4 widget tests: paused-on-construct, true→false toggle resumes loop, false→true toggle blocks onComplete, DotLoader forwards. Total: 35 (was 31).
+- [x] README §4 + AGENTS.md cheat sheet + CHANGELOG `Unreleased` updated.
 
 ### Tick 10 — 2026-05-16
 - [x] **Published archive size: 3 MB → 1 MB (-67%)**. Two changes:

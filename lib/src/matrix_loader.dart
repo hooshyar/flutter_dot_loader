@@ -340,6 +340,32 @@ class MatrixLoader extends StatefulWidget {
   /// Provides the `row` and `col` of the tapped dot.
   final void Function(int row, int col)? onDotTapped;
 
+  /// Whether the animation is paused.
+  ///
+  /// When `true`, the underlying [AnimationController] is stopped — the loader
+  /// keeps its current visual state but no longer advances. When `false`
+  /// (the default), the animation runs according to [playback].
+  ///
+  /// Toggling `paused` from `true` to `false` re-applies [playback]:
+  ///   * [MatrixPlayback.loop] / [MatrixPlayback.bounce] resume their cycle
+  ///     (visually seamless since those modes are infinite anyway).
+  ///   * [MatrixPlayback.once] restarts from progress `0.0` and will fire
+  ///     [onComplete] when the new play-through finishes. (For true
+  ///     resume-from-where-it-stopped semantics on `once`, hand in your own
+  ///     `AnimationController` — out of scope for this widget.)
+  ///
+  /// Useful for chat "thinking" indicators that should freeze between turns,
+  /// branded loaders behind a settled state, or saving CPU on off-screen
+  /// loaders.
+  ///
+  /// ```dart
+  /// MatrixLoader(
+  ///   playback: MatrixPlayback.loop,
+  ///   paused: !isAwaitingResponse, // freeze when the chat is idle
+  /// )
+  /// ```
+  final bool paused;
+
   /// Called once when [playback] is [MatrixPlayback.once] and the animation
   /// reaches the end of its single play-through.
   ///
@@ -382,6 +408,7 @@ class MatrixLoader extends StatefulWidget {
     this.spacing,
     this.duration = const Duration(milliseconds: 1500),
     this.playback = MatrixPlayback.loop,
+    this.paused = false,
     this.curve = Curves.linear,
     this.hoverAnimated = true,
     this.opacityBase = 0.08,
@@ -420,14 +447,18 @@ class _MatrixLoaderState extends State<MatrixLoader>
     if (oldWidget.duration != widget.duration) {
       _controller.duration = widget.duration;
     }
-    if (oldWidget.playback != widget.playback) {
+    if (oldWidget.playback != widget.playback ||
+        oldWidget.paused != widget.paused) {
       _applyPlayback();
     }
   }
 
   void _applyPlayback() {
     _controller.stop();
+    // Bump the run id even when paused so any in-flight `once` completion
+    // future from a prior run can't fire against this stopped state.
     final runId = ++_runId;
+    if (widget.paused) return;
     switch (widget.playback) {
       case MatrixPlayback.loop:
         _controller.repeat();

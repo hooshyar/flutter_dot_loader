@@ -178,6 +178,7 @@ Only the parameters you actually need to know to make good choices.
 | `dotSize`         | Diameter of each dot. `4.0` reads as a small loader, `8.0` as a banner. |
 | `pattern`         | Pick from 60 named patterns or use semantic aliases (see §4).           |
 | `playback`        | `loop` (default), `bounce` (ping-pong), `once` (finite).                |
+| `paused`          | `bool` — when `true`, the controller stops and the loader freezes in place. Useful for chat indicators that rest between turns. Toggling back to `false` resumes `loop`/`bounce` seamlessly; `once` restarts from `0.0`. |
 | `curve`           | Any `Curve`. Use `Curves.easeInOut` for finite `once` plays.            |
 | `onComplete`      | `VoidCallback` — fires when `playback: once` finishes. Use for splash → home transitions. No-op for `loop` / `bounce`. Stale-run-guarded. |
 | `customMask`      | `MatrixShape.custom` only. Returns whether dot at (r, c) renders.       |

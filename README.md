@@ -163,6 +163,17 @@ MatrixLoader(
 
 The callback only fires for `MatrixPlayback.once`. It's stale-run-guarded: if the widget is disposed or the playback mode changes before completion, `onComplete` will not be called.
 
+To **freeze** the animation without unmounting the loader, set `paused: true`. Useful for chat "thinking" indicators that should rest between turns:
+
+```dart
+DotLoader(
+  color: Colors.blue,
+  paused: !isAwaitingResponse, // freeze when the chat is idle
+)
+```
+
+Toggling `paused` back to `false` resumes `loop`/`bounce` cycles seamlessly; for `once` mode it restarts from progress `0.0`.
+
 ### 5. Pick from 60 Patterns
 
 All patterns are available as named `MatrixPattern` constants:

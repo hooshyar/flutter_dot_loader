@@ -41,5 +41,6 @@ class DotLoader extends MatrixLoader {
     super.size = 64.0,
     super.duration = const Duration(milliseconds: 1500),
     super.curve = Curves.linear,
+    super.paused,
   });
 }

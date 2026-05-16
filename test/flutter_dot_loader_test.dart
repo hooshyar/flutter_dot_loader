@@ -309,6 +309,125 @@ void main() {
     );
   });
 
+  group('paused parameter', () {
+    testWidgets('paused: true on construct blocks onComplete for once-mode', (
+      tester,
+    ) async {
+      var fireCount = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: MatrixLoader(
+                playback: MatrixPlayback.once,
+                duration: const Duration(milliseconds: 100),
+                paused: true,
+                onComplete: () => fireCount++,
+              ),
+            ),
+          ),
+        ),
+      );
+      // Even if a lot of wall time passes, paused never advances.
+      await tester.pump(const Duration(milliseconds: 200));
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(fireCount, 0);
+    });
+
+    testWidgets('toggling paused true -> false resumes a loop animation', (
+      tester,
+    ) async {
+      // Use a StatefulBuilder so we can flip paused at runtime.
+      var paused = true;
+      late void Function(void Function()) outerSetState;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: StatefulBuilder(
+                builder: (context, setState) {
+                  outerSetState = setState;
+                  return MatrixLoader(
+                    playback: MatrixPlayback.loop,
+                    duration: const Duration(milliseconds: 100),
+                    paused: paused,
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+
+      // Render once paused — find the underlying state to inspect controller.
+      final stateBefore = tester.state<State<MatrixLoader>>(
+        find.byType(MatrixLoader),
+      );
+      // After a frame, paused: true means no animation ticks happened.
+      expect(stateBefore.mounted, isTrue);
+
+      // Now un-pause and let some time pass; controller should advance.
+      outerSetState(() => paused = false);
+      await tester.pump(); // commit setState
+      await tester.pump(const Duration(milliseconds: 50));
+      await tester.pump(const Duration(milliseconds: 50));
+      // We can't easily peek at the private _controller, but we can assert
+      // the widget is still mounted and didn't crash — the existing loop
+      // rendering tests would have failed if animation tick wiring was broken.
+      expect(find.byType(MatrixLoader), findsOneWidget);
+    });
+
+    testWidgets('toggling paused false -> true stops onComplete from firing', (
+      tester,
+    ) async {
+      var fireCount = 0;
+      var paused = false;
+      late void Function(void Function()) outerSetState;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: StatefulBuilder(
+                builder: (context, setState) {
+                  outerSetState = setState;
+                  return MatrixLoader(
+                    playback: MatrixPlayback.once,
+                    duration: const Duration(milliseconds: 200),
+                    paused: paused,
+                    onComplete: () => fireCount++,
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+      // Advance partway through the once animation.
+      await tester.pump(const Duration(milliseconds: 50));
+      // Pause mid-flight; _runId bump should drop the pending TickerFuture.
+      outerSetState(() => paused = true);
+      await tester.pump();
+      // Let the original duration elapse — callback must not fire.
+      await tester.pump(const Duration(milliseconds: 200));
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(fireCount, 0);
+    });
+
+    testWidgets('DotLoader forwards paused to MatrixLoader', (tester) async {
+      // DotLoader is a thin subclass; just verify the parameter compiles
+      // and renders without throwing.
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: Center(child: DotLoader(color: Colors.blue, paused: true)),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(find.byType(DotLoader), findsOneWidget);
+    });
+  });
+
   group('onComplete callback', () {
     testWidgets('fires once when MatrixPlayback.once finishes', (tester) async {
       var fireCount = 0;

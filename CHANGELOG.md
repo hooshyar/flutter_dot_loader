@@ -1,5 +1,12 @@
 ## Unreleased
 
+- feat: `MatrixLoader.paused` (forwarded as `DotLoader.paused`) — when `true`,
+  the underlying `AnimationController` stops and the loader freezes in place
+  while staying mounted. Toggling back to `false` resumes `loop`/`bounce`
+  cycles seamlessly; `once` restarts from progress `0.0`. The `_runId`
+  stale-run guard also blocks any in-flight `once` `onComplete` from firing
+  after a pause. Useful for chat "thinking" indicators between turns, branded
+  loaders behind settled state, and CPU savings on off-screen loaders.
 - chore(package): published archive size dropped from 3 MB to 1 MB (-67%).
   Two changes:
   1. Deleted unreferenced duplicate `1.gif` (472 KB) and `2.gif` (1 MB) from
