@@ -370,21 +370,26 @@ A geometric loader using a tessellated grid of equilateral triangles.
 
 These are some standout patterns and what they look like:
 
-| Pattern | Name (informal) | Style |
+| Numeric pattern | Semantic alias | Style |
 |---|---|---|
-| `square1` | Diagonal Wave | Smooth diagonal sine sweep |
-| `square3` | Core Ripple | Radial ripple from center |
-| `square7` | Manhattan Pulse | Diamond-shaped wave expansion |
-| `square11` | Vortex Spin | Rotating angular spiral |
-| `square14` | Spiral Core | Archimedean spiral |
-| `square17` | Sine Ribbon | Horizontal undulating ribbon |
-| `square18` | Bouncing Diagonal | Diagonal scanner line |
-| `circular1` | Angular Sweep | Clockwise scan line |
-| `circular2` | Bull's Eye | Concentric expanding rings |
-| `circular5` | Dual Spiral | Two interleaved spirals |
-| `circular14` | Ring Flash | Bright ring flashing outward |
-| `triangle4` | Row Sweep | Horizontal row scan |
-| `triangle6` | Zigzag Cascade | Column zigzag alternation |
+| `square1` | `diagonalWave` | Smooth diagonal sine sweep |
+| `square3` | `coreRipple` | Radial ripple from center |
+| `square7` | `manhattanPulse` | Diamond-shaped wave expansion |
+| `square11` | `vortexSpin` | Rotating angular spiral |
+| `square14` | `spiralCore` | Archimedean spiral |
+| `square17` | `sineRibbon` | Horizontal undulating ribbon |
+| `square18` | `bouncingDiagonal` | Diagonal scanner line |
+| `circular1` | `angularSweep` | Clockwise scan line |
+| `circular2` | `bullsEye` | Concentric expanding rings |
+| `circular4` | `sonarPing` | Pure outward radial pulse — sonar / radar feel |
+| `circular5` | `dualSpiral` | Two interleaved spirals |
+| `circular14` | `ringFlash` | Bright ring flashing outward |
+| `circular15` | `pinwheel` | 4-arm rotating sweep with radial offset |
+| `triangle4` | `rowSweep` | Horizontal row scan |
+| `triangle6` | `zigzagCascade` | Column zigzag alternation |
+| `triangle8` | `columnWave` | Wave traveling along columns (horizontal column scan) |
+
+Use the semantic alias instead of the numeric counterpart when the code should communicate intent at a glance — they're identical at runtime.
 
 ---
 

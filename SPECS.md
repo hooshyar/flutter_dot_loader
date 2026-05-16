@@ -12,9 +12,9 @@
 
 ## Current state — v0.0.5 + unreleased (2026-05-16)
 
-- 29/29 tests passing; `flutter analyze` clean; `dart format` clean; CI green on main
+- 30/30 tests passing; `flutter analyze` clean; `dart format` clean; CI green on main
 - Example app builds for web (`flutter build web --release` succeeds; Wasm dry-run passes)
-- 74 `MatrixPattern` values (60 numeric + 13 semantic aliases + 1 `custom`)
+- 77 `MatrixPattern` values (60 numeric + 16 semantic aliases + 1 `custom`)
 - 4 `MatrixShape` values (square, circular, triangle, custom)
 - 3 widgets: `MatrixLoader`, `DotLoader`, `TriangleLoader`
 - 5 helper classes: `MatrixText`, `MatrixData`, `MatrixPattern`, `MatrixShape`, `MatrixPlayback`
@@ -24,6 +24,12 @@
 - Static PNG screenshots in `assets/` rendering correctly on pub.dev
 
 ## Done
+
+### Tick 7 — 2026-05-16
+- [x] **Three new semantic aliases**: `sonarPing` (= `circular4`, outward radial pulse), `pinwheel` (= `circular15`, 4-arm rotating sweep), `columnWave` (= `triangle8`, horizontal column scan). All names cover AI-agent search niches that weren't reachable before (a developer asking for "radar/sonar loader" or "pinwheel animation" now finds an exact name match).
+- [x] Aliases wired as case fallthroughs in `_calculateIntensity`, so they're identical at runtime to their numeric counterparts (no math change, zero risk).
+- [x] Pattern-count test bumped 74 → 77; +1 widget test asserts the three new aliases render without throwing. Total: 30 (was 29).
+- [x] README cheat sheet retitled "Semantic alias" column, expanded from 13 → 16 rows; AGENTS.md alias table mirrored; AGENTS.md pitfall #2 count bumped; CLAUDE.md pattern count bumped; memory file refreshed.
 
 ### Tick 6 — 2026-05-16
 - [x] **README "🎯 When to use this package" section** added between Features and Installation. Positively names the 6 use cases (`DotLoader`, `MatrixLoader`+patterns, marquee, sprites, splash+`onComplete`, Firebase JSON) and honestly redirects 3 categories (circular progress arc, Lottie, skeleton) to `CircularProgressIndicator` / `lottie` / `shimmer`. Mirrors AGENTS.md §7 so positioning is consistent across both docs.
@@ -74,7 +80,6 @@
 - [ ] **Add `screenshots:` alt-text accessibility check** — pub.dev renders these in card previews.
 
 ### P1 — feature completeness
-- [ ] **Add semantic alias for `circular15` (`pulseGrid`?), `triangle1` (`apexCascade`?)** — the 13 current aliases are uneven coverage. Pick 3–5 more high-readability ones.
 - [ ] **`MatrixText` Arabic-Indic / Persian digit glyphs** (٠–٩, ۰–۹) — useful for RTL audiences. (Latin punctuation done in tick 2.)
 
 ### P2 — polish

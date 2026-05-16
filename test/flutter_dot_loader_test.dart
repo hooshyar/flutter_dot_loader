@@ -120,9 +120,9 @@ void main() {
 
   group('MatrixPattern', () {
     test(
-      'has 74 values (20 square + 20 circular + 20 triangle + 13 aliases + 1 custom)',
+      'has 77 values (20 square + 20 circular + 20 triangle + 16 aliases + 1 custom)',
       () {
-        expect(MatrixPattern.values.length, 74);
+        expect(MatrixPattern.values.length, 77);
       },
     );
 
@@ -131,6 +131,27 @@ void main() {
       expect(MatrixPattern.values, contains(MatrixPattern.vortexSpin));
       expect(MatrixPattern.values, contains(MatrixPattern.bullsEye));
       expect(MatrixPattern.values, contains(MatrixPattern.diagonalWave));
+      // Tick 7 additions.
+      expect(MatrixPattern.values, contains(MatrixPattern.sonarPing));
+      expect(MatrixPattern.values, contains(MatrixPattern.pinwheel));
+      expect(MatrixPattern.values, contains(MatrixPattern.columnWave));
+    });
+
+    testWidgets('new aliases render without throwing', (tester) async {
+      for (final p in const [
+        MatrixPattern.sonarPing,
+        MatrixPattern.pinwheel,
+        MatrixPattern.columnWave,
+      ]) {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Center(child: MatrixLoader(pattern: p)),
+            ),
+          ),
+        );
+        expect(find.byType(MatrixLoader), findsOneWidget);
+      }
     });
   });
 

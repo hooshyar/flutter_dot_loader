@@ -1,5 +1,11 @@
 ## Unreleased
 
+- feat: three new semantic aliases on `MatrixPattern` —
+  `sonarPing` (alias for `circular4`, a pure outward radial pulse),
+  `pinwheel` (alias for `circular15`, a 4-arm rotating sweep), and
+  `columnWave` (alias for `triangle8`, a horizontal column scan). Total
+  semantic aliases now 16; total enum values 77. README cheat sheet and
+  AGENTS.md alias table reflect the additions.
 - feat: `MatrixLoader.onComplete` callback — fires once when
   `MatrixPlayback.once` finishes a play-through. Closes the loop on finite
   splash / loading animations so apps can navigate, transition, or hand off

@@ -47,17 +47,26 @@ enum MatrixPattern {
   /// Alias for [circular2]
   bullsEye,
 
+  /// Alias for [circular4] — a pure outward radial pulse like a sonar / radar ping
+  sonarPing,
+
   /// Alias for [circular5]
   dualSpiral,
 
   /// Alias for [circular14]
   ringFlash,
 
+  /// Alias for [circular15] — a 4-arm rotating sweep that reads as a pinwheel
+  pinwheel,
+
   /// Alias for [triangle4]
   rowSweep,
 
   /// Alias for [triangle6]
   zigzagCascade,
+
+  /// Alias for [triangle8] — wave traveling along columns (horizontal column scan)
+  columnWave,
 
   // Predefined square patterns
   square1,
@@ -724,6 +733,7 @@ class _MatrixPainter extends CustomPainter {
         return (math.sin(dist * math.pi * 3 - p2) + 1) / 2;
       case MatrixPattern.circular3:
         return math.max(0.0, math.sin(angle * 2 - p2 + dist * 3));
+      case MatrixPattern.sonarPing:
       case MatrixPattern.circular4:
         return math.max(0.0, math.sin(dist * math.pi * 2 - p * math.pi * 4));
       case MatrixPattern.dualSpiral:
@@ -753,6 +763,7 @@ class _MatrixPainter extends CustomPainter {
       case MatrixPattern.circular14:
         double ripple = math.sin(dist * math.pi * 5 - p2 * 2);
         return ripple > 0.3 ? 1.0 : 0.08;
+      case MatrixPattern.pinwheel:
       case MatrixPattern.circular15:
         return (math.sin(pAngle * math.pi * 4 - p2 + dist * 2) + 1) / 2;
       case MatrixPattern.circular16:
@@ -793,6 +804,7 @@ class _MatrixPainter extends CustomPainter {
         return (math.sin(zigzag * math.pi * 3 - p2) + 1) / 2;
       case MatrixPattern.triangle7:
         return math.max(0.0, math.sin(angle * 3 + normR * 3 - p2));
+      case MatrixPattern.columnWave:
       case MatrixPattern.triangle8:
         return (math.sin(normC * math.pi * 5 - p2 + normR * 2) + 1) / 2;
       case MatrixPattern.triangle9:

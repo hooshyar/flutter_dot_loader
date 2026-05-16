@@ -191,21 +191,24 @@ The 60 numeric patterns (`square1…square20`, `circular1…circular20`,
 `triangle1…triangle20`) are stable but opaque. Prefer the **semantic aliases**
 when the user describes a vibe — they read naturally in code:
 
-| Alias               | What it looks like                              |
-| ------------------- | ----------------------------------------------- |
-| `diagonalWave`      | Smooth diagonal sine sweep (default)            |
-| `coreRipple`        | Radial ripple from the centre                   |
-| `manhattanPulse`    | Diamond-shaped wave expansion                   |
-| `vortexSpin`        | Rotating angular spiral                         |
-| `spiralCore`        | Archimedean spiral                              |
-| `sineRibbon`        | Horizontal undulating ribbon                    |
-| `bouncingDiagonal`  | Diagonal scanner line                           |
-| `angularSweep`      | Clockwise scan line (good with circular shape)  |
-| `bullsEye`          | Concentric expanding rings                      |
-| `dualSpiral`        | Two interleaved spirals                         |
-| `ringFlash`         | Bright ring flashing outward                    |
-| `rowSweep`          | Horizontal row scan                             |
-| `zigzagCascade`     | Column zigzag alternation                       |
+| Alias               | What it looks like                                        |
+| ------------------- | --------------------------------------------------------- |
+| `diagonalWave`      | Smooth diagonal sine sweep (default)                      |
+| `coreRipple`        | Radial ripple from the centre                             |
+| `manhattanPulse`    | Diamond-shaped wave expansion                             |
+| `vortexSpin`        | Rotating angular spiral                                   |
+| `spiralCore`        | Archimedean spiral                                        |
+| `sineRibbon`        | Horizontal undulating ribbon                              |
+| `bouncingDiagonal`  | Diagonal scanner line                                     |
+| `angularSweep`      | Clockwise scan line (good with circular shape)            |
+| `bullsEye`          | Concentric expanding rings                                |
+| `sonarPing`         | Pure outward radial pulse — sonar / radar feel            |
+| `dualSpiral`        | Two interleaved spirals                                   |
+| `ringFlash`         | Bright ring flashing outward                              |
+| `pinwheel`          | 4-arm rotating sweep with radial offset                   |
+| `rowSweep`          | Horizontal row scan                                       |
+| `zigzagCascade`     | Column zigzag alternation                                 |
+| `columnWave`        | Wave traveling along columns (horizontal column scan)     |
 
 Aliases share their case in the painter switch with the underlying numeric
 pattern, so `vortexSpin` and `square11` are identical at runtime.
@@ -219,7 +222,7 @@ pattern, so `vortexSpin` and `square11` are identical at runtime.
    on `withOpacity`.
 2. **Don't add a new pattern without bumping the count test.**
    `test/flutter_dot_loader_test.dart` asserts
-   `MatrixPattern.values.length == 74` (60 numeric + 13 aliases + `custom`).
+   `MatrixPattern.values.length == 77` (60 numeric + 16 aliases + `custom`).
    Update this number if you change the enum.
 3. **`MatrixText.scrolling` requires `rows: 7`.** Anything else clips the
    font glyphs silently.

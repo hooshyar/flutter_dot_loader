@@ -58,7 +58,7 @@ The public API is exported from `lib/flutter_dot_loader.dart`. The package is in
 3. Run the value through the **three-tier LED remap** (`_remapOpacity`): piecewise linear `opacityBase → opacityMid → opacityPeak` (defaults `0.08 / 0.34 / 0.94`). This is what gives the "glowing LED" look — do not flatten it without understanding the visual impact.
 4. `Color.lerp(inactiveColor.withValues(alpha: opacityBase), activeColor, remapped)` produces the final dot color. Note: this package uses `withValues(alpha:)` (Flutter 3.27+), never the deprecated `withOpacity`.
 
-When **adding a new pattern**, add it to the `MatrixPattern` enum *and* its case in `_calculateIntensity`. Update the test that asserts `MatrixPattern.values.length == 74` (`test/flutter_dot_loader_test.dart`) — 60 numeric (20 square + 20 circular + 20 triangle) + 13 semantic aliases + 1 `custom`. Semantic aliases (e.g. `vortexSpin`) share a `case` block with their numeric counterpart (`square11`).
+When **adding a new pattern**, add it to the `MatrixPattern` enum *and* its case in `_calculateIntensity`. Update the test that asserts `MatrixPattern.values.length == 77` (`test/flutter_dot_loader_test.dart`) — 60 numeric (20 square + 20 circular + 20 triangle) + 16 semantic aliases + 1 `custom`. Semantic aliases (e.g. `vortexSpin`) share a `case` block with their numeric counterpart (`square11`).
 
 ### Constructors are `const` — color derivation happens in `build()`
 
