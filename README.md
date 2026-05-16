@@ -35,6 +35,29 @@ From a 3-dot "thinking…" indicator for AI chats to a 60-pattern LED matrix wit
 
 ---
 
+## 🎯 When to use this package
+
+`flutter_dot_loader` is built around a specific aesthetic: the look and feel of a real LED dot-matrix display — discrete on/off dots arranged in a grid, animated with math or your own pixel frames. Reach for it when:
+
+- You want a "thinking…" / chat / AI loading indicator with more character than a default spinner. → `DotLoader(color: …)`
+- You want a branded, retro / arcade / billboard-style loading visual. → `MatrixLoader` with one of 60 patterns
+- You want a marquee that scrolls live text like `"LOADING: 42%"`. → `MatrixLoader` + `MatrixText.scrolling`
+- You want pixel-art sprites or frame-by-frame animations. → `MatrixLoader` + `MatrixPattern.custom`
+- You want a finite splash / intro animation that hands off to a route. → `MatrixPlayback.once` + `onComplete`
+- You want to drive animations from Firebase Remote Config / Firestore. → `MatrixData.framesToJson`
+
+### When something else is a better fit
+
+To stay sharp, this package intentionally **does not** try to be everything. If you actually want:
+
+- **A circular progress arc or generic spinner** → use Flutter's built-in [`CircularProgressIndicator`](https://api.flutter.dev/flutter/material/CircularProgressIndicator-class.html) or a dedicated spinner package.
+- **Vector / After-Effects–style animations** → use [`lottie`](https://pub.dev/packages/lottie).
+- **Content-placeholder skeletons** (shimmer over a card layout) → use [`shimmer`](https://pub.dev/packages/shimmer) or [`skeletonizer`](https://pub.dev/packages/skeletonizer).
+
+Sticking to scope is what keeps `flutter_dot_loader` small, fast, and zero-dependency.
+
+---
+
 ## 📦 Installation
 
 Add to your `pubspec.yaml`:

@@ -25,6 +25,10 @@
 
 ## Done
 
+### Tick 6 — 2026-05-16
+- [x] **README "🎯 When to use this package" section** added between Features and Installation. Positively names the 6 use cases (`DotLoader`, `MatrixLoader`+patterns, marquee, sprites, splash+`onComplete`, Firebase JSON) and honestly redirects 3 categories (circular progress arc, Lottie, skeleton) to `CircularProgressIndicator` / `lottie` / `shimmer`. Mirrors AGENTS.md §7 so positioning is consistent across both docs.
+- [x] Newcomer pass: scanned for stale numbers/claims (60-pattern phrasing, `withOpacity`, version refs) — all current. Section numbering 0–7 in Quick Start is consistent.
+
 ### Tick 5 — 2026-05-16
 - [x] **README elevator pitch refreshed**: subhead now leads with the AI-chat "thinking" use case alongside the 60-pattern LED matrix, and ends on the zero-deps positioning.
 - [x] **Features table expanded from 9 → 12 rows** so the four post-0.0.5 capabilities are visible at first glance: AI-chat indicator, marquee text (30+ punctuation glyphs), Firebase/Remote Config JSON helpers, `onComplete` playback callback.
@@ -74,7 +78,6 @@
 - [ ] **`MatrixText` Arabic-Indic / Persian digit glyphs** (٠–٩, ۰–۹) — useful for RTL audiences. (Latin punctuation done in tick 2.)
 
 ### P2 — polish
-- [ ] **`README.md` "Why this package?"** — 3-bullet comparison vs `loading_animation_widget`, `flutter_spinkit`, `lottie` to position clearly.
 - [ ] **Doc comments**: every public field on `MatrixLoader` has a doc — verify no gaps.
 - [ ] **Marquee README screenshot** — visually demonstrate the new `MatrixText.scrolling("LOADING: 42%")` capability since the charset just expanded.
 - [ ] **README example image**: capture a fresh gallery screenshot if the studio gained features.
