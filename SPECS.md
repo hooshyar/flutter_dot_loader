@@ -25,6 +25,11 @@
 
 ## Done
 
+### Tick 9 — 2026-05-16
+- [x] **pubspec.yaml description rewritten** (137 → 154 chars, within pub.dev's 60–180 sweet spot). New copy: "Customizable dot-matrix and LED loading animations for Flutter — 60 patterns, scrolling marquee text, custom pixel frames, AI chat indicator. Zero deps." Surfaces the four post-0.0.5 capabilities + the AI-chat positioning the README now leads with.
+- [x] **pubspec topics tightened** from generic (`animation`, `loader`, `loading`, `widget`, `ui`) to high-signal niche (`loader`, `animation`, `dot-matrix`, `led`, `pixel-art`). Maximum 5 topics on pub.dev, so each one matters; dropping `loading`/`widget`/`ui` (duplicative or generic) makes room for `dot-matrix`/`led`/`pixel-art` (specific, low-noise queries).
+- [x] Verified via `flutter pub publish --dry-run` — description and topic format validate; no new warnings.
+
 ### Tick 8 — 2026-05-16
 - [x] **Visual-verification artifact**: new `doc/font_preview.md` is an auto-generated ASCII-art preview of every glyph in the `MatrixText` 5×7 font (`●` lit, `·` dim). 69 glyphs, grouped by category (letters / digits / whitespace / punctuation / brackets). Closes the visual gap flagged in tick 3's reflection.
 - [x] **Pure-Dart generator under `tool/`**: `tool/font_preview.dart` (renderer) + `tool/generate_font_preview.dart` (CLI). Runs as `dart run tool/generate_font_preview.dart` with no Flutter dependency.
@@ -82,10 +87,10 @@
 ## Queued (priority order)
 
 ### P0 — discoverability and trust
-- [ ] **pub.dev description**: pubspec says "60 math patterns" — accurate but could add "AI chat thinking-indicator" angle for searchability without overpromising. Confirm whether to broaden, then update.
 - [ ] **Add a "Used in" or "Inspiration" section** to README — concrete demo links boost click-through and credibility.
 - [ ] **Verify pub.dev "Likes" / pub points** — manual check, queue any score-recovering fixes.
 - [ ] **Add `screenshots:` alt-text accessibility check** — pub.dev renders these in card previews.
+- [ ] **Exclude `tool/` and `doc/` from the published archive** via a `.pubignore` file. Currently `tool/font_preview.dart`, `tool/generate_font_preview.dart`, and `doc/font_preview.md` are bundled (~3 KB + 33 KB) but provide zero value to consumers — they're maintenance tooling.
 
 ### P1 — feature completeness
 - [ ] **`MatrixText` Arabic-Indic / Persian digit glyphs** (٠–٩, ۰–۹) — useful for RTL audiences. (Latin punctuation done in tick 2.)

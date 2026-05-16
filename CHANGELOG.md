@@ -1,5 +1,12 @@
 ## Unreleased
 
+- chore(pubspec): description rewritten (154 chars) to reflect every post-0.0.5
+  capability — scrolling marquee text, custom pixel frames, AI chat indicator —
+  while staying in pub.dev's 60–180 sweet spot.
+- chore(pubspec): topics tightened from `animation, loader, loading, widget, ui`
+  to `loader, animation, dot-matrix, led, pixel-art`. The dropped generics had
+  high noise on pub.dev's topic-search; the new ones map directly to the
+  package's niche.
 - docs: new `doc/font_preview.md` — auto-generated ASCII-art preview of every
   glyph in the 5×7 `MatrixText` font. Pure Dart generator under
   `tool/generate_font_preview.dart`; a drift test fails if the artifact stops
