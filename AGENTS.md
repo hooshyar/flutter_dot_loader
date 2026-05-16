@@ -16,11 +16,14 @@ Humans are welcome to read it too — it's intentionally short and prescriptive.
 
 ```
 User wants…                                        → Use
-─────────────────────────────────────────────────────────────────
+─────────────────────────────────────────────────────────────────────────
 "thinking dots" / "loading…" / chat indicator      → DotLoader
 a specific named pattern (vortex, ripple, etc.)    → MatrixLoader
-arbitrary pixel art / scrolling text / sprites     → MatrixLoader + MatrixPattern.custom
+arbitrary pixel art / sprites                      → MatrixLoader + MatrixPattern.custom
+scrolling marquee text ("LOADING: 42%")            → MatrixLoader + MatrixText.scrolling
 geometric / triangular loading visual              → TriangleLoader
+splash / intro animation that hands off to a route → MatrixLoader + MatrixPlayback.once + onComplete
+animations driven by Firebase Remote Config        → MatrixData.framesToJson / framesFromJson
 ```
 
 If unsure, start with `DotLoader(color: …)` — it's a one-liner with sensible

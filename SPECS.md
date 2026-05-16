@@ -25,6 +25,12 @@
 
 ## Done
 
+### Tick 5 — 2026-05-16
+- [x] **README elevator pitch refreshed**: subhead now leads with the AI-chat "thinking" use case alongside the 60-pattern LED matrix, and ends on the zero-deps positioning.
+- [x] **Features table expanded from 9 → 12 rows** so the four post-0.0.5 capabilities are visible at first glance: AI-chat indicator, marquee text (30+ punctuation glyphs), Firebase/Remote Config JSON helpers, `onComplete` playback callback.
+- [x] **Discovery / SEO block** expanded with new keyword phrases (`AI chat loader`, `chat typing indicator`, `marquee text`, `splash screen`, `firebase remote config animation`).
+- [x] **AGENTS.md decision tree** now lists 7 user-intent → widget mappings (was 4); covers marquee, splash handoff, Remote Config.
+
 ### Tick 4 — 2026-05-16
 - [x] **`MatrixLoader.onComplete` callback** for `MatrixPlayback.once`. Real API gap closed: apps can now hand off after a finite splash/intro animation. Stale-run-guarded against dispose and mid-flight playback changes (uses an internal `_runId` to drop stale `TickerFuture` completions).
 - [x] +4 widget tests: fires once on `once`, does NOT fire on `loop`/`bounce`, safe to dispose mid-flight. Total: 29 (was 25).
