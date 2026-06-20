@@ -207,8 +207,8 @@ enum MatrixPlayback {
 /// layer on each frame — it does not call `setState` on the widget tree.
 ///
 /// See also:
-/// - [MatrixPattern], which enumerates all 74 available patterns
-///   (60 numeric + 13 semantic aliases + [MatrixPattern.custom]).
+/// - [MatrixPattern], which enumerates all 77 available patterns
+///   (60 numeric + 16 semantic aliases + [MatrixPattern.custom]).
 /// - [MatrixShape], which controls grid clipping.
 /// - [TriangleLoader], a companion geometric loading animation.
 class MatrixLoader extends StatefulWidget {

@@ -21,7 +21,7 @@ From a 3-dot "thinking…" indicator for AI chats to a 60-pattern LED matrix wit
 | Feature | Description |
 |---|---|
 | 💬 **AI-chat "thinking" indicator** | One-liner `DotLoader(color: …)` for chat / AI apps — sensible defaults, `const`-constructable |
-| 🎨 **60 Built-in Patterns** | 20 Square, 20 Circular, and 20 Triangle math-driven animations + 13 semantic aliases (`vortexSpin`, `bullsEye`, `coreRipple`…) |
+| 🎨 **60 Built-in Patterns** | 20 Square, 20 Circular, and 20 Triangle math-driven animations + 16 semantic aliases (`vortexSpin`, `bullsEye`, `coreRipple`…) |
 | 🖥️ **LED Dot-Matrix Feel** | Three-tier opacity remapping for a realistic glowing LED display effect |
 | 🧩 **Custom Frames** | Drive every dot from your own data (`customIntensity`) — sprites, Tetris, scrolling text |
 | 📝 **Scrolling Marquee Text** | Built-in 5×7 font covers A–Z, 0–9, and 30+ punctuation/symbols (e.g. `"LOADING: 42%"`, `"a@b.com"`) |
