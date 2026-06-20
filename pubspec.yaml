@@ -1,6 +1,6 @@
 name: flutter_dot_loader
 description: "Customizable dot-matrix and LED loading animations for Flutter — 60 patterns, scrolling marquee text, custom pixel frames, AI chat indicator. Zero deps."
-version: 0.0.5
+version: 0.0.6
 homepage: https://github.com/hooshyar/flutter_dot_loader
 repository: https://github.com/hooshyar/flutter_dot_loader
 issue_tracker: https://github.com/hooshyar/flutter_dot_loader/issues

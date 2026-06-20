@@ -1,4 +1,4 @@
-## Unreleased
+## 0.0.6
 
 - feat: `MatrixLoader.semanticLabel` (forwarded as `DotLoader.semanticLabel`) —
   wraps the loader in a `Semantics` node so screen readers announce it.
