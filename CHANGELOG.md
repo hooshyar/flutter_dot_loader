@@ -1,5 +1,30 @@
 ## Unreleased
 
+- feat: `MatrixLoader.semanticLabel` (forwarded as `DotLoader.semanticLabel`) —
+  wraps the loader in a `Semantics` node so screen readers announce it.
+  Defaults to `'Loading'`; pass `null` to opt out when a parent already provides
+  a live-region label.
+- fix: auto-spacing now fits the grid inside `size` along the *limiting* axis
+  (`max(columns, rows)`) instead of width only. Tall grids (more rows than
+  columns) previously overflowed the `SizedBox`; square grids and `DotLoader`
+  are visually unchanged. Spacing is also clamped to be non-negative so an
+  oversized `dotSize` can't produce negative spacing. The `_resolveSpacing`
+  helper is now shared between painting and tap hit-testing (they previously
+  duplicated the formula).
+- fix: the `MatrixShape.triangle` mask clamps its row/column denominators
+  (matching `_calculateIntensity`), so a single-row or single-column triangle
+  grid no longer divides by zero and renders `NaN`.
+- chore(package): exclude `assets/*.gif` (~1.6 MB of README-only demo GIFs)
+  from the published archive via `.pubignore`, and point the README `<img>`
+  tags at absolute `raw.githubusercontent.com` URLs so they still render on
+  pub.dev and GitHub. The static PNG screenshots stay in the package because
+  pubspec's `screenshots:` requires them.
+- fix(pubspec): raise the Flutter constraint from `>=1.17.0` to `>=3.27.0` —
+  the package calls `Color.withValues(alpha:)`, which only exists in Flutter
+  3.27+, so the old lower bound was unsatisfiable in practice.
+- docs: corrected stale pattern-count copy (`74`/`13 aliases` → `77`/`16
+  aliases`) in the `MatrixLoader` class doc and the README feature table to
+  match the enum and the count test.
 - feat: `MatrixLoader.paused` (forwarded as `DotLoader.paused`) — when `true`,
   the underlying `AnimationController` stops and the loader freezes in place
   while staying mounted. Toggling back to `false` resumes `loop`/`bounce`

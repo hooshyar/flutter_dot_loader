@@ -387,6 +387,14 @@ class MatrixLoader extends StatefulWidget {
   /// ```
   final VoidCallback? onComplete;
 
+  /// The semantics label announced by assistive technologies (e.g. screen
+  /// readers) for this loader.
+  ///
+  /// Defaults to `'Loading'`. Set to `null` to omit the [Semantics] wrapper
+  /// entirely — useful when a parent widget already provides a more specific
+  /// live-region label.
+  final String? semanticLabel;
+
   /// Creates a [MatrixLoader].
   ///
   /// All parameters are optional and have sensible defaults. At minimum,
@@ -418,6 +426,7 @@ class MatrixLoader extends StatefulWidget {
     this.customIntensity,
     this.onDotTapped,
     this.onComplete,
+    this.semanticLabel = 'Loading',
   });
 
   @override
@@ -484,12 +493,26 @@ class _MatrixLoaderState extends State<MatrixLoader>
     super.dispose();
   }
 
+  /// Resolves the gap between adjacent dots.
+  ///
+  /// When [MatrixLoader.spacing] is provided it is used verbatim. Otherwise the
+  /// gap is auto-calculated to fit the grid inside [MatrixLoader.size] along the
+  /// *limiting* axis — `max(columns, rows)` — so non-square grids (e.g. tall
+  /// grids with more rows than columns) stay inside the box instead of
+  /// overflowing. For square grids and the wide-short [DotLoader] this is
+  /// identical to the previous column-only formula. Clamped to be non-negative
+  /// so an oversized [MatrixLoader.dotSize] never produces negative spacing.
+  double _resolveSpacing() {
+    if (widget.spacing != null) return widget.spacing!;
+    final maxCount = math.max(widget.columns, widget.rows);
+    if (maxCount <= 1) return 0.0;
+    final gap = (widget.size - widget.dotSize * maxCount) / (maxCount - 1);
+    return math.max(0.0, gap);
+  }
+
   void _handleTap(TapUpDetails details) {
     if (widget.onDotTapped == null) return;
-    final spacing =
-        widget.spacing ??
-        (widget.size - widget.dotSize * widget.columns) /
-            (widget.columns - 1).clamp(1, 100);
+    final spacing = _resolveSpacing();
 
     final totalWidth =
         (widget.columns * widget.dotSize) + ((widget.columns - 1) * spacing);
@@ -513,7 +536,7 @@ class _MatrixLoaderState extends State<MatrixLoader>
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
+    Widget result = MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: GestureDetector(
@@ -539,10 +562,7 @@ class _MatrixLoaderState extends State<MatrixLoader>
                   activeColor: effectiveActive,
                   inactiveColor: effectiveInactive,
                   dotSize: widget.dotSize,
-                  spacing:
-                      widget.spacing ??
-                      (widget.size - widget.dotSize * widget.columns) /
-                          (widget.columns - 1).clamp(1, 100),
+                  spacing: _resolveSpacing(),
                   isHovered: _isHovered && widget.hoverAnimated,
                   opacityBase: widget.opacityBase,
                   opacityMid: widget.opacityMid,
@@ -556,6 +576,18 @@ class _MatrixLoaderState extends State<MatrixLoader>
         ),
       ),
     );
+
+    // Expose the loader to assistive technologies. A loading indicator should
+    // announce itself; callers can pass `semanticLabel: null` to opt out (e.g.
+    // when a parent already provides the live-region label).
+    if (widget.semanticLabel != null) {
+      result = Semantics(
+        label: widget.semanticLabel,
+        container: true,
+        child: result,
+      );
+    }
+    return result;
   }
 }
 
@@ -639,14 +671,23 @@ class _MatrixPainter extends CustomPainter {
     }
   }
 
+  // Intensity-domain knees for the three-tier LED curve. These are fixed
+  // breakpoints in the *input* intensity range [0..1]; they are intentionally
+  // independent of the configurable opacity *outputs*
+  // (opacityBase / opacityMid / opacityPeak), which is why they're literals
+  // here rather than derived from those fields.
+  static const double _kneeLow = 0.08;
+  static const double _kneeMid = 0.34;
+
   double _remapOpacity(double val) {
-    if (val <= 0.08) return (val / 0.08) * opacityBase;
-    if (val <= 0.34) {
+    if (val <= _kneeLow) return (val / _kneeLow) * opacityBase;
+    if (val <= _kneeMid) {
       return opacityBase +
-          ((val - 0.08) / (0.34 - 0.08)) * (opacityMid - opacityBase);
+          ((val - _kneeLow) / (_kneeMid - _kneeLow)) *
+              (opacityMid - opacityBase);
     }
     return opacityMid +
-        ((val - 0.34) / (1.0 - 0.34)) * (opacityPeak - opacityMid);
+        ((val - _kneeMid) / (1.0 - _kneeMid)) * (opacityPeak - opacityMid);
   }
 
   bool _isInMask(int r, int c) {
@@ -658,8 +699,10 @@ class _MatrixPainter extends CustomPainter {
       return math.sqrt(dr * dr + dc * dc) <= (math.min(rows, columns) / 2.0);
     }
     if (shape == MatrixShape.triangle) {
-      double normR = r / (rows - 1);
-      double normC = c / (columns - 1);
+      // Clamp the denominators (matching _calculateIntensity) so a single-row
+      // or single-column triangle grid can't divide by zero and produce NaN.
+      double normR = r / (rows - 1).clamp(1, 100);
+      double normC = c / (columns - 1).clamp(1, 100);
       return normC >= (0.5 - normR * 0.5) && normC <= (0.5 + normR * 0.5);
     }
     return true;

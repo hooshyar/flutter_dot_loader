@@ -10,6 +10,13 @@
 /tool/
 /doc/
 
+# --- README demo GIFs (~1.6 MB) ---
+# These are only used by the README's <img> tags, which now reference absolute
+# raw.githubusercontent.com URLs, so the GIFs never need to be in the published
+# archive. The static PNG screenshots in assets/ are kept because pubspec.yaml's
+# `screenshots:` section requires them to be in the package.
+/assets/*.gif
+
 # --- Mirror of .gitignore patterns we still want excluded from pub ---
 # (When .pubignore is present, it fully replaces .gitignore for archive
 # content, so we have to re-list anything that matters.)

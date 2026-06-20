@@ -604,4 +604,89 @@ void main() {
       expect(MatrixData.framesFromJson(decoded), sampleFrames);
     });
   });
+
+  group('layout robustness', () {
+    testWidgets('tall grid (rows > columns) renders without overflow', (
+      tester,
+    ) async {
+      // Auto-spacing previously fit width only, so a tall grid overflowed the
+      // SizedBox. It should now fit inside `size` and not raise overflow errors.
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: MatrixLoader(columns: 2, rows: 12, size: 64, dotSize: 4),
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 16));
+      expect(find.byType(MatrixLoader), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('single-row triangle shape renders without NaN crash', (
+      tester,
+    ) async {
+      // The triangle mask divides by (rows - 1) / (columns - 1); a single row
+      // or column must not divide by zero.
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: MatrixLoader(
+                shape: MatrixShape.triangle,
+                rows: 1,
+                columns: 1,
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 16));
+      expect(find.byType(MatrixLoader), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+  });
+
+  group('semantics', () {
+    testWidgets('exposes a default "Loading" semantics label', (tester) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(body: Center(child: MatrixLoader())),
+        ),
+      );
+      expect(find.bySemanticsLabel('Loading'), findsOneWidget);
+      handle.dispose();
+    });
+
+    testWidgets('semanticLabel: null omits the Semantics wrapper', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: Center(child: MatrixLoader(semanticLabel: null)),
+          ),
+        ),
+      );
+      expect(find.bySemanticsLabel('Loading'), findsNothing);
+      handle.dispose();
+    });
+
+    testWidgets('custom semanticLabel is honored', (tester) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: Center(child: MatrixLoader(semanticLabel: 'Thinking')),
+          ),
+        ),
+      );
+      expect(find.bySemanticsLabel('Thinking'), findsOneWidget);
+      handle.dispose();
+    });
+  });
 }

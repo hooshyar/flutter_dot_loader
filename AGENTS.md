@@ -181,6 +181,7 @@ Only the parameters you actually need to know to make good choices.
 | `paused`          | `bool` — when `true`, the controller stops and the loader freezes in place. Useful for chat indicators that rest between turns. Toggling back to `false` resumes `loop`/`bounce` seamlessly; `once` restarts from `0.0`. |
 | `curve`           | Any `Curve`. Use `Curves.easeInOut` for finite `once` plays.            |
 | `onComplete`      | `VoidCallback` — fires when `playback: once` finishes. Use for splash → home transitions. No-op for `loop` / `bounce`. Stale-run-guarded. |
+| `semanticLabel`   | `String?` — screen-reader label. Defaults to `'Loading'`; pass `null` to opt out when a parent provides its own live-region label. |
 | `customMask`      | `MatrixShape.custom` only. Returns whether dot at (r, c) renders.       |
 | `customIntensity` | `MatrixPattern.custom` only. Returns 0.0–1.0 for dot brightness.        |
 

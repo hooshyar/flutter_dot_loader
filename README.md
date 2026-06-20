@@ -10,8 +10,8 @@
 From a 3-dot "thinking…" indicator for AI chats to a 60-pattern LED matrix with custom pixel frames — pick the right loader in one line, render natively via `CustomPainter`, ship with **zero external dependencies**.
 
 <p align="center">
-  <img src="assets/1.gif" width="48%" alt="Gallery of 60 dot-matrix loader patterns" />
-  <img src="assets/2.gif" width="48%" alt="Interactive Dot Matrix Studio editor" />
+  <img src="https://raw.githubusercontent.com/hooshyar/flutter_dot_loader/main/assets/1.gif" width="48%" alt="Gallery of 60 dot-matrix loader patterns" />
+  <img src="https://raw.githubusercontent.com/hooshyar/flutter_dot_loader/main/assets/2.gif" width="48%" alt="Interactive Dot Matrix Studio editor" />
 </p>
 
 ---

@@ -20,7 +20,8 @@ screenshots:
 
 environment:
   sdk: ^3.11.4
-  flutter: ">=1.17.0"
+  # The package calls Color.withValues(alpha:), which requires Flutter 3.27+.
+  flutter: ">=3.27.0"
 
 dependencies:
   flutter:
