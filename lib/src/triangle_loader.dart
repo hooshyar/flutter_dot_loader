@@ -61,6 +61,15 @@ class TriangleLoader extends StatefulWidget {
   /// the triangle edges are drawn (wireframe mode).
   final bool wireframe;
 
+  /// The [Semantics.label] announced by screen readers for this loader.
+  ///
+  /// When non-null, the loader is wrapped in a [Semantics] node with this
+  /// label so assistive technologies (TalkBack, VoiceOver) can describe it —
+  /// e.g. `'Loading'`. When `null` (the default), no semantics node is added
+  /// and the loader is treated as purely decorative, mirroring
+  /// [ProgressIndicator.semanticsLabel]'s convention.
+  final String? semanticsLabel;
+
   /// Creates a [TriangleLoader].
   const TriangleLoader({
     super.key,
@@ -69,6 +78,7 @@ class TriangleLoader extends StatefulWidget {
     this.triangleSize = 30.0,
     this.duration = const Duration(seconds: 4),
     this.wireframe = false,
+    this.semanticsLabel,
   });
 
   @override
@@ -94,22 +104,32 @@ class _TriangleLoaderState extends State<TriangleLoader>
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: widget.size,
-      height: widget.size,
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, child) {
-          return CustomPaint(
-            painter: _TrianglePainter(
-              progress: _controller.value,
-              color: widget.color,
-              triangleSize: widget.triangleSize,
-              wireframe: widget.wireframe,
-            ),
-          );
-        },
+    // RepaintBoundary keeps the per-frame repaint confined to this subtree
+    // instead of dirtying ancestor layers ~60 times a second.
+    final Widget loader = RepaintBoundary(
+      child: SizedBox(
+        width: widget.size,
+        height: widget.size,
+        child: AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) {
+            return CustomPaint(
+              painter: _TrianglePainter(
+                progress: _controller.value,
+                color: widget.color,
+                triangleSize: widget.triangleSize,
+                wireframe: widget.wireframe,
+              ),
+            );
+          },
+        ),
       ),
+    );
+    if (widget.semanticsLabel == null) return loader;
+    return Semantics(
+      label: widget.semanticsLabel,
+      container: true,
+      child: loader,
     );
   }
 }

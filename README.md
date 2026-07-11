@@ -9,6 +9,8 @@
 
 From a 3-dot "thinking…" indicator for AI chats to a 60-pattern LED matrix with custom pixel frames — pick the right loader in one line, render natively via `CustomPainter`, ship with **zero external dependencies**.
 
+### ▶️ [Try the live demo](https://hooshyar.github.io/flutter_dot_loader/) — browse all 60 patterns, tweak every knob, and draw your own frames right in the browser.
+
 <p align="center">
   <img src="assets/1.gif" width="48%" alt="Gallery of 60 dot-matrix loader patterns" />
   <img src="assets/2.gif" width="48%" alt="Interactive Dot Matrix Studio editor" />
@@ -29,6 +31,7 @@ From a 3-dot "thinking…" indicator for AI chats to a 60-pattern LED matrix wit
 | ▶️ **Playback Control** | `loop`, `bounce`, or `once` modes + easing curves + an `onComplete` callback for splash-screen handoffs |
 | 🔵 **Three Shapes + Custom Masks** | Clip the dot grid to a Square, Circle, or Triangle — or supply a `customMask` for any arbitrary shape |
 | 🖱️ **Hover Ripple** | Optional interactive ripple on web and desktop on mouse hover |
+| ♿ **Accessible** | `semanticsLabel` announces the loader to TalkBack / VoiceOver — same convention as Flutter's `ProgressIndicator` |
 | 🎛️ **Fully Configurable** | Grid size, dot size, spacing, colors, opacity levels, and duration |
 | ⚡ **Zero Dependencies** | Pure Flutter — built entirely with `CustomPainter`. No third-party packages |
 | 🌍 **All Platforms** | Android, iOS, Web, macOS, Windows, and Linux |
@@ -64,7 +67,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_dot_loader: ^0.0.5
+  flutter_dot_loader: ^1.0.0
 ```
 
 Or run:
@@ -173,6 +176,19 @@ DotLoader(
 ```
 
 Toggling `paused` back to `false` resumes `loop`/`bounce` cycles seamlessly; for `once` mode it restarts from progress `0.0`.
+
+### 4½. Accessibility
+
+Loaders are invisible to screen readers by default (they're decorative). When a loader communicates real state — "the assistant is thinking", "content is loading" — give it a `semanticsLabel` so TalkBack and VoiceOver announce it:
+
+```dart
+const DotLoader(
+  color: Colors.blue,
+  semanticsLabel: 'Assistant is thinking',
+)
+```
+
+Available on `MatrixLoader`, `DotLoader`, and `TriangleLoader`; follows the same convention as Flutter's `ProgressIndicator.semanticsLabel`.
 
 ### 5. Pick from 60 Patterns
 
@@ -335,6 +351,7 @@ The primary widget for dot-matrix loading animations.
 | `opacityPeak` | `double` | `0.94` | Maximum opacity for fully lit dots |
 | `customMask` | `bool Function(int row, int col)?` | `null` | Custom function to determine if a dot is rendered |
 | `customIntensity` | `double Function(int row, int col, double progress)?` | `null` | Custom function to drive dot intensity (use with `MatrixPattern.custom`) |
+| `semanticsLabel` | `String?` | `null` | Label announced by screen readers; `null` = decorative (no semantics node) |
 
 ### `MatrixShape` Enum
 
@@ -374,6 +391,7 @@ A geometric loader using a tessellated grid of equilateral triangles.
 | `triangleSize` | `double` | `30.0` | Side length of each equilateral triangle |
 | `duration` | `Duration` | `4s` | Duration of one animation cycle |
 | `wireframe` | `bool` | `false` | If `true`, renders only triangle outlines |
+| `semanticsLabel` | `String?` | `null` | Label announced by screen readers; `null` = decorative (no semantics node) |
 
 ---
 
@@ -405,6 +423,8 @@ Use the semantic alias instead of the numeric counterpart when the code should c
 ---
 
 ## 🛠️ Interactive Example App
+
+**[▶ Try it live in your browser](https://hooshyar.github.io/flutter_dot_loader/)** — no install needed.
 
 The included `example/` app is a **full-featured, studio-grade playground**:
 

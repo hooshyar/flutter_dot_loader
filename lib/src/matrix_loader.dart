@@ -387,6 +387,20 @@ class MatrixLoader extends StatefulWidget {
   /// ```
   final VoidCallback? onComplete;
 
+  /// The [Semantics.label] announced by screen readers for this loader.
+  ///
+  /// When non-null, the loader is wrapped in a [Semantics] node with this
+  /// label so assistive technologies (TalkBack, VoiceOver) can describe it —
+  /// e.g. `'Loading'` or `'Assistant is thinking'`. When `null` (the
+  /// default), no semantics node is added and the loader is treated as
+  /// purely decorative, mirroring [ProgressIndicator.semanticsLabel]'s
+  /// convention.
+  ///
+  /// ```dart
+  /// MatrixLoader(semanticsLabel: 'Loading') // announced by screen readers
+  /// ```
+  final String? semanticsLabel;
+
   /// Creates a [MatrixLoader].
   ///
   /// All parameters are optional and have sensible defaults. At minimum,
@@ -418,6 +432,7 @@ class MatrixLoader extends StatefulWidget {
     this.customIntensity,
     this.onDotTapped,
     this.onComplete,
+    this.semanticsLabel,
   });
 
   @override
@@ -513,48 +528,60 @@ class _MatrixLoaderState extends State<MatrixLoader>
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: GestureDetector(
-        onTapUp: widget.onDotTapped != null ? _handleTap : null,
-        child: SizedBox(
-          width: widget.size,
-          height: widget.size,
-          child: AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) {
-              final curvedProgress = widget.curve.transform(_controller.value);
-              final effectiveActive = widget.color ?? widget.activeColor;
-              final effectiveInactive = widget.color != null
-                  ? widget.color!.withValues(alpha: 0.1)
-                  : widget.inactiveColor;
-              return CustomPaint(
-                painter: _MatrixPainter(
-                  progress: curvedProgress,
-                  shape: widget.shape,
-                  pattern: widget.pattern,
-                  columns: widget.columns,
-                  rows: widget.rows,
-                  activeColor: effectiveActive,
-                  inactiveColor: effectiveInactive,
-                  dotSize: widget.dotSize,
-                  spacing:
-                      widget.spacing ??
-                      (widget.size - widget.dotSize * widget.columns) /
-                          (widget.columns - 1).clamp(1, 100),
-                  isHovered: _isHovered && widget.hoverAnimated,
-                  opacityBase: widget.opacityBase,
-                  opacityMid: widget.opacityMid,
-                  opacityPeak: widget.opacityPeak,
-                  customMask: widget.customMask,
-                  customIntensity: widget.customIntensity,
-                ),
-              );
-            },
+    // RepaintBoundary keeps the per-frame repaint confined to this subtree
+    // instead of dirtying ancestor layers ~60 times a second.
+    final Widget loader = RepaintBoundary(
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        child: GestureDetector(
+          onTapUp: widget.onDotTapped != null ? _handleTap : null,
+          child: SizedBox(
+            width: widget.size,
+            height: widget.size,
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                final curvedProgress = widget.curve.transform(
+                  _controller.value,
+                );
+                final effectiveActive = widget.color ?? widget.activeColor;
+                final effectiveInactive = widget.color != null
+                    ? widget.color!.withValues(alpha: 0.1)
+                    : widget.inactiveColor;
+                return CustomPaint(
+                  painter: _MatrixPainter(
+                    progress: curvedProgress,
+                    shape: widget.shape,
+                    pattern: widget.pattern,
+                    columns: widget.columns,
+                    rows: widget.rows,
+                    activeColor: effectiveActive,
+                    inactiveColor: effectiveInactive,
+                    dotSize: widget.dotSize,
+                    spacing:
+                        widget.spacing ??
+                        (widget.size - widget.dotSize * widget.columns) /
+                            (widget.columns - 1).clamp(1, 100),
+                    isHovered: _isHovered && widget.hoverAnimated,
+                    opacityBase: widget.opacityBase,
+                    opacityMid: widget.opacityMid,
+                    opacityPeak: widget.opacityPeak,
+                    customMask: widget.customMask,
+                    customIntensity: widget.customIntensity,
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),
+    );
+    if (widget.semanticsLabel == null) return loader;
+    return Semantics(
+      label: widget.semanticsLabel,
+      container: true,
+      child: loader,
     );
   }
 }

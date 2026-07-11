@@ -428,6 +428,69 @@ void main() {
     });
   });
 
+  group('semanticsLabel', () {
+    testWidgets('MatrixLoader exposes a semantics node when label is set', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: Center(child: MatrixLoader(semanticsLabel: 'Loading')),
+          ),
+        ),
+      );
+      expect(find.bySemanticsLabel('Loading'), findsOneWidget);
+      handle.dispose();
+    });
+
+    testWidgets('MatrixLoader adds no semantics node when label is null', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        const MaterialApp(home: Scaffold(body: Center(child: MatrixLoader()))),
+      );
+      expect(find.bySemanticsLabel('Loading'), findsNothing);
+      handle.dispose();
+    });
+
+    testWidgets('DotLoader forwards semanticsLabel to MatrixLoader', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: DotLoader(
+                color: Colors.blue,
+                semanticsLabel: 'Assistant is thinking',
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.bySemanticsLabel('Assistant is thinking'), findsOneWidget);
+      handle.dispose();
+    });
+
+    testWidgets('TriangleLoader exposes a semantics node when label is set', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: Center(child: TriangleLoader(semanticsLabel: 'Loading')),
+          ),
+        ),
+      );
+      expect(find.bySemanticsLabel('Loading'), findsOneWidget);
+      handle.dispose();
+    });
+  });
+
   group('onComplete callback', () {
     testWidgets('fires once when MatrixPlayback.once finishes', (tester) async {
       var fireCount = 0;

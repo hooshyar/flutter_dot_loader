@@ -1,5 +1,19 @@
-## Unreleased
+## 1.0.0
 
+First stable release. The API surface (`MatrixLoader`, `DotLoader`,
+`TriangleLoader`, `MatrixText`, `MatrixData`) is considered stable and will
+follow semver from here on.
+
+- feat: `semanticsLabel` on `MatrixLoader`, `DotLoader`, and `TriangleLoader` —
+  when set, the loader is wrapped in a `Semantics` node so screen readers
+  (TalkBack / VoiceOver) announce it (e.g. `'Loading'`, `'Assistant is
+  thinking'`). Defaults to `null` (decorative, no semantics node), mirroring
+  Flutter's own `ProgressIndicator.semanticsLabel` convention.
+- perf: all loaders now wrap their painting subtree in a `RepaintBoundary`,
+  so the per-frame repaint stays confined to the loader instead of dirtying
+  ancestor layers ~60 times a second.
+- docs: live web demo of the example app (gallery / playground / studio) now
+  hosted on GitHub Pages and linked from the README.
 - feat: `MatrixLoader.paused` (forwarded as `DotLoader.paused`) — when `true`,
   the underlying `AnimationController` stops and the loader freezes in place
   while staying mounted. Toggling back to `false` resumes `loop`/`bounce`

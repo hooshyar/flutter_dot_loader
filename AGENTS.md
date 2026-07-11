@@ -183,6 +183,7 @@ Only the parameters you actually need to know to make good choices.
 | `onComplete`      | `VoidCallback` — fires when `playback: once` finishes. Use for splash → home transitions. No-op for `loop` / `bounce`. Stale-run-guarded. |
 | `customMask`      | `MatrixShape.custom` only. Returns whether dot at (r, c) renders.       |
 | `customIntensity` | `MatrixPattern.custom` only. Returns 0.0–1.0 for dot brightness.        |
+| `semanticsLabel`  | `String?` — set when the loader conveys real state (e.g. `'Assistant is thinking'`) so TalkBack/VoiceOver announce it. Leave `null` for purely decorative loaders. Available on all three widgets. |
 
 ---
 
