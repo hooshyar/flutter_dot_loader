@@ -16,7 +16,7 @@ and adoption, plus a few real bugs found while reading the code.
 | Open issues / PRs | 1 issue (#1, per-dot size, from WD-J, 2026-05-31, no reply yet) / 0 PRs |
 | CI on `main` | **Red since the 1.0.0 commit.** `dart format --set-exit-if-changed` fails on `test/flutter_dot_loader_test.dart` |
 | Analyzer | `flutter analyze`: no issues (Flutter 3.47.5 stable) |
-| Tests | 35 widget/unit tests in one file (see section 6 for the run result) |
+| Tests | 39 tests, all passing (one 670-line file). Line coverage 74.3% overall; `matrix_loader.dart` 61% (painter/pattern math, hover and tap paths mostly unexercised); the other files are 92-100% |
 | Runtime deps | none (Flutter SDK only) |
 | Dev deps | `flutter_lints ^6.0.0` (latest 6.0.0). `flutter pub outdated`: all direct deps current. Only transitive SDK-pinned packages lag (`material_color_utilities`, `test_api`), which nobody can fix from here |
 | Example app | `flutter_lints ^5.0.0`, one major behind (6.0.0 is latest) |
@@ -149,4 +149,5 @@ handoff, tap-to-dot interactivity, opt-in semantics, and a `RepaintBoundary`.
 - `flutter pub outdated`: all direct and dev deps current, and `flutter_lints` 6.0.0 is the latest stable on pub.dev.
 - `flutter analyze`: no issues.
 - `dart format --set-exit-if-changed .`: **fails** (1 file), matching the red CI run.
-- `flutter test --coverage`: see the task summary. The machine was heavily loaded by parallel test runs during this pass.
+- `flutter test --coverage`: 39/39 pass; line coverage 74.3% (378/509). The weakest file is `matrix_loader.dart` at 61%.
+- P2-2 target: raise `matrix_loader.dart` coverage to 85% or more with tests for the tap hit-test, hover, and per-pattern intensity bounds (0..1).
