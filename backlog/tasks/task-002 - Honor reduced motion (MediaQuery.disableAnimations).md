@@ -1,7 +1,7 @@
 ---
 id: TASK-002
 title: Honor reduced motion (MediaQuery.disableAnimations)
-status: To Do
+status: Done
 priority: high
 labels: [improvement-plan-2026-09]
 created_date: '2026-09-24'
@@ -18,3 +18,7 @@ Acceptance criteria:
 - [ ] Widget tests for on/off; README a11y row + CHANGELOG updated
 
 See docs/IMPROVEMENT-PLAN-2026-09.md (P0-2).
+
+## Final Summary
+
+`respectReducedMotion` (default true) on MatrixLoader, DotLoader and TriangleLoader with runtime reaction and tests. Ships in 1.1.0.

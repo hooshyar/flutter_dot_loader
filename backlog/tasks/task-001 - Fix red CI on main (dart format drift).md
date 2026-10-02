@@ -1,7 +1,7 @@
 ---
 id: TASK-001
 title: Fix red CI on main (dart format drift)
-status: To Do
+status: Done
 priority: high
 labels: [improvement-plan-2026-09]
 created_date: '2026-09-24'
@@ -19,3 +19,7 @@ Acceptance criteria:
 - [ ] Ship as 1.0.1
 
 See docs/IMPROVEMENT-PLAN-2026-09.md (P0-1, B1, B5, B6).
+
+## Final Summary
+
+Formatting fixed with the resolved package config, CI badge and README alias count (16) added, pubspec boilerplate removed. Included in 1.1.0 rather than a separate 1.0.1.

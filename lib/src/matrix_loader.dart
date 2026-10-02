@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 /// The geometric shape used to mask (clip) the dot grid in a [MatrixLoader].
@@ -254,10 +255,23 @@ class MatrixLoader extends StatefulWidget {
   /// precedence over [activeColor] and [inactiveColor].
   final Color? color;
 
-  /// The width and height of the widget's bounding box in logical pixels.
+  /// The square shorthand for the widget's bounding box in logical pixels.
   ///
-  /// Defaults to `64.0`.
+  /// Acts as the fallback for [width] and [height]: a `size` of `64` is the
+  /// same as `width: 64, height: 64`. Defaults to `64.0`.
   final double size;
+
+  /// The width of the widget's bounding box in logical pixels.
+  ///
+  /// When `null` (the default), falls back to [size].
+  final double? width;
+
+  /// The height of the widget's bounding box in logical pixels.
+  ///
+  /// When `null` (the default), falls back to [size]. [DotLoader] overrides
+  /// this fallback so the box height is derived from [rows] instead, which
+  /// keeps the default 3x1 indicator text-height friendly.
+  final double? height;
 
   /// The diameter of each individual dot in logical pixels.
   ///
@@ -266,8 +280,8 @@ class MatrixLoader extends StatefulWidget {
 
   /// The gap between adjacent dots in logical pixels.
   ///
-  /// If `null` (the default), the spacing is automatically calculated so the
-  /// full grid fits exactly within [size].
+  /// If `null` (the default), the spacing is automatically calculated per
+  /// axis so the full grid fits exactly within the bounding box.
   final double? spacing;
 
   /// Duration of one complete animation cycle.
@@ -317,6 +331,32 @@ class MatrixLoader extends StatefulWidget {
   /// customMask: (row, col) => (row + col) % 2 == 0, // checkerboard
   /// ```
   final bool Function(int row, int col)? customMask;
+
+  /// Optional per-dot size callback, mirroring [customMask].
+  ///
+  /// Called for every dot with its `row` and `col` and returns a scale factor
+  /// applied to [dotSize]: `1.0` keeps the normal diameter, `0.5` halves it and
+  /// `0` (or any negative value) hides the dot. When `null` (the default) every
+  /// dot uses [dotSize].
+  ///
+  /// Only painting is affected. Tap hit-testing ([onDotTapped]) and the
+  /// auto-spacing calculation keep using the unscaled [dotSize], so a shrunk
+  /// dot still reports taps in its original cell.
+  ///
+  /// ```dart
+  /// customDotSize: (row, col) => col == 1 ? 1.5 : 0.8, // fat middle column
+  /// ```
+  final double Function(int row, int col)? customDotSize;
+
+  /// Whether the loader honours the operating system's "reduce motion" setting.
+  ///
+  /// When `true` (the default) and `MediaQuery.maybeDisableAnimationsOf`
+  /// reports `true`, the animation ticker is stopped and a single static frame
+  /// is painted (the frame at progress `0.5`, or the final frame for
+  /// [MatrixPlayback.once], in which case [onComplete] fires once right away).
+  /// The loader reacts when the setting changes at runtime. Set to `false` to
+  /// always animate.
+  final bool respectReducedMotion;
 
   /// A callback to drive the light intensity of each dot from your own data.
   ///
@@ -418,6 +458,8 @@ class MatrixLoader extends StatefulWidget {
     this.inactiveColor = const Color(0xFF27272A),
     this.color,
     this.size = 64,
+    this.width,
+    this.height,
     this.dotSize = 4.0,
     this.spacing,
     this.duration = const Duration(milliseconds: 1500),
@@ -429,6 +471,8 @@ class MatrixLoader extends StatefulWidget {
     this.opacityMid = 0.34,
     this.opacityPeak = 0.94,
     this.customMask,
+    this.customDotSize,
+    this.respectReducedMotion = true,
     this.customIntensity,
     this.onDotTapped,
     this.onComplete,
@@ -449,6 +493,9 @@ class _MatrixLoaderState extends State<MatrixLoader>
   /// `once` animation or switches playback mid-flight).
   int _runId = 0;
 
+  /// Whether the OS asks for reduced motion (and this widget honours it).
+  bool _reduceMotion = false;
+
   @override
   void initState() {
     super.initState();
@@ -457,8 +504,27 @@ class _MatrixLoaderState extends State<MatrixLoader>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _syncReducedMotion();
+  }
+
+  void _syncReducedMotion() {
+    final reduce =
+        widget.respectReducedMotion &&
+        (MediaQuery.maybeDisableAnimationsOf(context) ?? false);
+    if (reduce != _reduceMotion) {
+      _reduceMotion = reduce;
+      _applyPlayback();
+    }
+  }
+
+  @override
   void didUpdateWidget(covariant MatrixLoader oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (oldWidget.respectReducedMotion != widget.respectReducedMotion) {
+      _syncReducedMotion();
+    }
     if (oldWidget.duration != widget.duration) {
       _controller.duration = widget.duration;
     }
@@ -474,6 +540,18 @@ class _MatrixLoaderState extends State<MatrixLoader>
     // future from a prior run can't fire against this stopped state.
     final runId = ++_runId;
     if (widget.paused) return;
+    if (_reduceMotion) {
+      // Static representative frame: mid-cycle, or the end frame for `once`.
+      final isOnce = widget.playback == MatrixPlayback.once;
+      _controller.value = isOnce ? 1.0 : 0.5;
+      if (isOnce) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted || runId != _runId) return;
+          widget.onComplete?.call();
+        });
+      }
+      return;
+    }
     switch (widget.playback) {
       case MatrixPlayback.loop:
         _controller.repeat();
@@ -499,27 +577,41 @@ class _MatrixLoaderState extends State<MatrixLoader>
     super.dispose();
   }
 
+  double get _boxWidth => widget.width ?? widget.size;
+
+  double get _boxHeight => widget.height ?? widget.size;
+
+  /// Horizontal gap between adjacent dots so the grid fits [_boxWidth].
+  double get _spacingH =>
+      widget.spacing ??
+      (_boxWidth - widget.dotSize * widget.columns) /
+          (widget.columns - 1).clamp(1, 100);
+
+  /// Vertical gap between adjacent dots so the grid fits [_boxHeight].
+  double get _spacingV =>
+      widget.spacing ??
+      (_boxHeight - widget.dotSize * widget.rows) /
+          (widget.rows - 1).clamp(1, 100);
+
   void _handleTap(TapUpDetails details) {
     if (widget.onDotTapped == null) return;
-    final spacing =
-        widget.spacing ??
-        (widget.size - widget.dotSize * widget.columns) /
-            (widget.columns - 1).clamp(1, 100);
+    final spacingH = _spacingH;
+    final spacingV = _spacingV;
 
     final totalWidth =
-        (widget.columns * widget.dotSize) + ((widget.columns - 1) * spacing);
+        (widget.columns * widget.dotSize) + ((widget.columns - 1) * spacingH);
     final totalHeight =
-        (widget.rows * widget.dotSize) + ((widget.rows - 1) * spacing);
-    final offsetX = (widget.size - totalWidth) / 2;
-    final offsetY = (widget.size - totalHeight) / 2;
+        (widget.rows * widget.dotSize) + ((widget.rows - 1) * spacingV);
+    final offsetX = (_boxWidth - totalWidth) / 2;
+    final offsetY = (_boxHeight - totalHeight) / 2;
 
     final x = details.localPosition.dx - offsetX;
     final y = details.localPosition.dy - offsetY;
 
     if (x < 0 || y < 0 || x > totalWidth || y > totalHeight) return;
 
-    final col = (x / (widget.dotSize + spacing)).floor();
-    final row = (y / (widget.dotSize + spacing)).floor();
+    final col = (x / (widget.dotSize + spacingH)).floor();
+    final row = (y / (widget.dotSize + spacingV)).floor();
 
     if (col >= 0 && col < widget.columns && row >= 0 && row < widget.rows) {
       widget.onDotTapped!(row, col);
@@ -537,8 +629,8 @@ class _MatrixLoaderState extends State<MatrixLoader>
         child: GestureDetector(
           onTapUp: widget.onDotTapped != null ? _handleTap : null,
           child: SizedBox(
-            width: widget.size,
-            height: widget.size,
+            width: _boxWidth,
+            height: _boxHeight,
             child: AnimatedBuilder(
               animation: _controller,
               builder: (context, child) {
@@ -559,15 +651,14 @@ class _MatrixLoaderState extends State<MatrixLoader>
                     activeColor: effectiveActive,
                     inactiveColor: effectiveInactive,
                     dotSize: widget.dotSize,
-                    spacing:
-                        widget.spacing ??
-                        (widget.size - widget.dotSize * widget.columns) /
-                            (widget.columns - 1).clamp(1, 100),
+                    spacingH: _spacingH,
+                    spacingV: _spacingV,
                     isHovered: _isHovered && widget.hoverAnimated,
                     opacityBase: widget.opacityBase,
                     opacityMid: widget.opacityMid,
                     opacityPeak: widget.opacityPeak,
                     customMask: widget.customMask,
+                    customDotSize: widget.customDotSize,
                     customIntensity: widget.customIntensity,
                   ),
                 );
@@ -595,12 +686,14 @@ class _MatrixPainter extends CustomPainter {
   final Color activeColor;
   final Color inactiveColor;
   final double dotSize;
-  final double spacing;
+  final double spacingH;
+  final double spacingV;
   final bool isHovered;
   final double opacityBase;
   final double opacityMid;
   final double opacityPeak;
   final bool Function(int row, int col)? customMask;
+  final double Function(int row, int col)? customDotSize;
   final double Function(int row, int col, double progress)? customIntensity;
 
   _MatrixPainter({
@@ -612,12 +705,14 @@ class _MatrixPainter extends CustomPainter {
     required this.activeColor,
     required this.inactiveColor,
     required this.dotSize,
-    required this.spacing,
+    required this.spacingH,
+    required this.spacingV,
     required this.isHovered,
     required this.opacityBase,
     required this.opacityMid,
     required this.opacityPeak,
     this.customMask,
+    this.customDotSize,
     this.customIntensity,
   });
 
@@ -625,8 +720,8 @@ class _MatrixPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..style = PaintingStyle.fill;
 
-    final totalWidth = (columns * dotSize) + ((columns - 1) * spacing);
-    final totalHeight = (rows * dotSize) + ((rows - 1) * spacing);
+    final totalWidth = (columns * dotSize) + ((columns - 1) * spacingH);
+    final totalHeight = (rows * dotSize) + ((rows - 1) * spacingV);
     final offset = Offset(
       (size.width - totalWidth) / 2,
       (size.height - totalHeight) / 2,
@@ -636,8 +731,8 @@ class _MatrixPainter extends CustomPainter {
       for (int c = 0; c < columns; c++) {
         if (!_isInMask(r, c)) continue;
 
-        final x = offset.dx + c * (dotSize + spacing) + dotSize / 2;
-        final y = offset.dy + r * (dotSize + spacing) + dotSize / 2;
+        final x = offset.dx + c * (dotSize + spacingH) + dotSize / 2;
+        final y = offset.dy + r * (dotSize + spacingV) + dotSize / 2;
 
         double intensity =
             (pattern == MatrixPattern.custom && customIntensity != null)
@@ -661,7 +756,9 @@ class _MatrixPainter extends CustomPainter {
           remapped,
         )!;
 
-        canvas.drawCircle(Offset(x, y), dotSize / 2, paint);
+        final scale = customDotSize?.call(r, c) ?? 1.0;
+        if (scale <= 0) continue;
+        canvas.drawCircle(Offset(x, y), dotSize * scale / 2, paint);
       }
     }
   }
@@ -685,8 +782,9 @@ class _MatrixPainter extends CustomPainter {
       return math.sqrt(dr * dr + dc * dc) <= (math.min(rows, columns) / 2.0);
     }
     if (shape == MatrixShape.triangle) {
-      double normR = r / (rows - 1);
-      double normC = c / (columns - 1);
+      // clamp guards against division by zero on 1-row or 1-column grids.
+      double normR = r / (rows - 1).clamp(1, 100);
+      double normC = c / (columns - 1).clamp(1, 100);
       return normC >= (0.5 - normR * 0.5) && normC <= (0.5 + normR * 0.5);
     }
     return true;

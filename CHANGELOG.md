@@ -1,3 +1,36 @@
+## 1.1.0
+
+- feat: `width` and `height` on `MatrixLoader`, `DotLoader`, and
+  `TriangleLoader`. `size` remains as the square shorthand and existing call
+  sites render identically; each new parameter falls back to `size` when not
+  set.
+- fix: auto dot spacing is now computed per axis, so grids with
+  `rows > columns` (for example `columns: 1, rows: 5, size: 64`) no longer
+  paint outside the widget's bounding box. Tap hit-testing shares the same
+  geometry.
+- feat: `DotLoader` derives its box height from `rows` and `dotSize` when
+  `height` is not given, so the default 3x1 indicator takes a
+  text-height-friendly box instead of a 64x64 square. Pass `height` to
+  restore an explicit box.
+- fix: `MatrixShape.triangle` no longer divides by zero on 1-row or 1-column
+  grids (previously the mask produced NaN comparisons and rendered nothing).
+- feat: `respectReducedMotion` (default `true`) on `MatrixLoader`, `DotLoader`
+  and `TriangleLoader`. When `MediaQuery.disableAnimationsOf` is true the
+  ticker stops and one static frame is painted (the end frame for
+  `MatrixPlayback.once`, which fires `onComplete` once). Reacts to runtime
+  changes of the setting.
+- feat: `customDotSize: double Function(int row, int col)?` on `MatrixLoader`
+  and `DotLoader` scales or hides individual dots (answers issue #1). Painting
+  only; hit-testing and auto-spacing keep using `dotSize`.
+- feat: AI-state presets `DotLoader.typing()`, `.thinking()`, `.searching()`
+  and `.generating()` with curated grids, patterns, durations and default
+  semantics labels.
+- docs: CI badge, "Works great with" chat-bubble recipe, README alias count
+  (16), hero GIFs referenced by absolute URL and excluded from the pub
+  archive, pubspec boilerplate removed, dart format drift fixed (CI green again).
+- test: widget coverage for `rows > columns`, 1xN, Nx1, and 1-row triangle
+  grids asserting painted bounds stay inside the widget.
+
 ## 1.0.0
 
 First stable release. The API surface (`MatrixLoader`, `DotLoader`,

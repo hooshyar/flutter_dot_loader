@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 /// A loading animation widget that renders a tessellated grid of equilateral
@@ -40,10 +41,31 @@ class TriangleLoader extends StatefulWidget {
   /// Defaults to [Colors.indigoAccent].
   final Color color;
 
-  /// The width and height of the widget's bounding box in logical pixels.
+  /// The square shorthand for the widget's bounding box in logical pixels.
   ///
-  /// The triangle grid is drawn to fill this area. Defaults to `200.0`.
+  /// The triangle grid is drawn to fill this area. Acts as the fallback for
+  /// [width] and [height]: a `size` of `200` is the same as
+  /// `width: 200, height: 200`. Defaults to `200.0`.
   final double size;
+
+  /// The width of the widget's bounding box in logical pixels.
+  ///
+  /// When `null` (the default), falls back to [size].
+  final double? width;
+
+  /// The height of the widget's bounding box in logical pixels.
+  ///
+  /// When `null` (the default), falls back to [size].
+  final double? height;
+
+  /// Whether the loader honours the operating system's "reduce motion"
+  /// setting.
+  ///
+  /// When `true` (the default) and `MediaQuery.maybeDisableAnimationsOf`
+  /// reports `true`, the animation stops and a single static frame is painted.
+  /// Reacts to the setting changing at runtime. Set to `false` to always
+  /// animate.
+  final bool respectReducedMotion;
 
   /// The side length of each equilateral triangle in logical pixels.
   ///
@@ -75,6 +97,9 @@ class TriangleLoader extends StatefulWidget {
     super.key,
     this.color = Colors.indigoAccent,
     this.size = 200,
+    this.width,
+    this.height,
+    this.respectReducedMotion = true,
     this.triangleSize = 30.0,
     this.duration = const Duration(seconds: 4),
     this.wireframe = false,
@@ -97,6 +122,33 @@ class _TriangleLoaderState extends State<TriangleLoader>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _syncReducedMotion();
+  }
+
+  @override
+  void didUpdateWidget(covariant TriangleLoader oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.respectReducedMotion != widget.respectReducedMotion) {
+      _syncReducedMotion();
+    }
+  }
+
+  void _syncReducedMotion() {
+    final reduce =
+        widget.respectReducedMotion &&
+        (MediaQuery.maybeDisableAnimationsOf(context) ?? false);
+    if (reduce) {
+      _controller
+        ..stop()
+        ..value = 0.5;
+    } else if (!_controller.isAnimating) {
+      _controller.repeat();
+    }
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -108,8 +160,8 @@ class _TriangleLoaderState extends State<TriangleLoader>
     // instead of dirtying ancestor layers ~60 times a second.
     final Widget loader = RepaintBoundary(
       child: SizedBox(
-        width: widget.size,
-        height: widget.size,
+        width: widget.width ?? widget.size,
+        height: widget.height ?? widget.size,
         child: AnimatedBuilder(
           animation: _controller,
           builder: (context, child) {

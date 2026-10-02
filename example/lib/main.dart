@@ -41,7 +41,7 @@ class _BlocksLogo extends StatelessWidget {
       [0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0]
+      [0, 0, 0, 0, 0, 0],
     ],
     // 2. L-block appears
     [
@@ -51,7 +51,7 @@ class _BlocksLogo extends StatelessWidget {
       [0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0]
+      [0, 0, 0, 0, 0, 0],
     ],
     // 3. L-block falls
     [
@@ -61,7 +61,7 @@ class _BlocksLogo extends StatelessWidget {
       [1, 1, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0]
+      [0, 0, 0, 0, 0, 0],
     ],
     // 4. L-block falls
     [
@@ -71,7 +71,7 @@ class _BlocksLogo extends StatelessWidget {
       [1, 0, 0, 0, 0, 0],
       [1, 1, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0]
+      [0, 0, 0, 0, 0, 0],
     ],
     // 5. L-block falls
     [
@@ -81,7 +81,7 @@ class _BlocksLogo extends StatelessWidget {
       [1, 0, 0, 0, 0, 0],
       [1, 0, 0, 0, 0, 0],
       [1, 1, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0]
+      [0, 0, 0, 0, 0, 0],
     ],
     // 6. L-block hits bottom
     [
@@ -91,7 +91,7 @@ class _BlocksLogo extends StatelessWidget {
       [0, 0, 0, 0, 0, 0],
       [1, 0, 0, 0, 0, 0],
       [1, 0, 0, 0, 0, 0],
-      [1, 1, 0, 0, 0, 0]
+      [1, 1, 0, 0, 0, 0],
     ],
 
     // 7. Square appears
@@ -102,7 +102,7 @@ class _BlocksLogo extends StatelessWidget {
       [0, 0, 0, 0, 0, 0],
       [1, 0, 0, 0, 0, 0],
       [1, 0, 0, 0, 0, 0],
-      [1, 1, 0, 0, 0, 0]
+      [1, 1, 0, 0, 0, 0],
     ],
     // 8. Square falls
     [
@@ -112,7 +112,7 @@ class _BlocksLogo extends StatelessWidget {
       [0, 0, 0, 0, 0, 0],
       [1, 0, 0, 0, 0, 0],
       [1, 0, 0, 0, 0, 0],
-      [1, 1, 0, 0, 0, 0]
+      [1, 1, 0, 0, 0, 0],
     ],
     // 9. Square falls
     [
@@ -122,7 +122,7 @@ class _BlocksLogo extends StatelessWidget {
       [0, 0, 0, 1, 1, 0],
       [1, 0, 0, 0, 0, 0],
       [1, 0, 0, 0, 0, 0],
-      [1, 1, 0, 0, 0, 0]
+      [1, 1, 0, 0, 0, 0],
     ],
     // 10. Square hits bottom
     [
@@ -132,7 +132,7 @@ class _BlocksLogo extends StatelessWidget {
       [0, 0, 0, 0, 0, 0],
       [1, 0, 0, 1, 1, 0],
       [1, 0, 0, 1, 1, 0],
-      [1, 1, 0, 0, 0, 0]
+      [1, 1, 0, 0, 0, 0],
     ],
 
     // 11. Line appears
@@ -143,7 +143,7 @@ class _BlocksLogo extends StatelessWidget {
       [0, 0, 0, 0, 0, 0],
       [1, 0, 0, 1, 1, 0],
       [1, 0, 0, 1, 1, 0],
-      [1, 1, 0, 0, 0, 0]
+      [1, 1, 0, 0, 0, 0],
     ],
     // 12. Line falls
     [
@@ -153,7 +153,7 @@ class _BlocksLogo extends StatelessWidget {
       [0, 0, 0, 0, 0, 0],
       [1, 0, 0, 1, 1, 0],
       [1, 0, 0, 1, 1, 0],
-      [1, 1, 0, 0, 0, 0]
+      [1, 1, 0, 0, 0, 0],
     ],
     // 13. Line falls
     [
@@ -163,7 +163,7 @@ class _BlocksLogo extends StatelessWidget {
       [0, 0, 0, 0, 0, 0],
       [1, 0, 0, 1, 1, 0],
       [1, 0, 0, 1, 1, 0],
-      [1, 1, 0, 0, 0, 0]
+      [1, 1, 0, 0, 0, 0],
     ],
     // 14. Line hits bottom - line clear animation (flash)
     [
@@ -173,7 +173,7 @@ class _BlocksLogo extends StatelessWidget {
       [0, 1, 1, 1, 1, 0],
       [1, 1, 1, 1, 1, 0],
       [1, 0, 0, 1, 1, 0],
-      [1, 1, 0, 0, 0, 0]
+      [1, 1, 0, 0, 0, 0],
     ],
     // 15. Flash empty
     [
@@ -183,7 +183,7 @@ class _BlocksLogo extends StatelessWidget {
       [0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0],
       [1, 0, 0, 1, 1, 0],
-      [1, 1, 0, 0, 0, 0]
+      [1, 1, 0, 0, 0, 0],
     ],
     // 16. Flash full
     [
@@ -193,7 +193,7 @@ class _BlocksLogo extends StatelessWidget {
       [0, 0, 0, 0, 0, 0],
       [1, 1, 1, 1, 1, 0],
       [1, 0, 0, 1, 1, 0],
-      [1, 1, 0, 0, 0, 0]
+      [1, 1, 0, 0, 0, 0],
     ],
     // 17. Cleared and dropped
     [
@@ -203,7 +203,7 @@ class _BlocksLogo extends StatelessWidget {
       [0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0],
       [1, 0, 0, 1, 1, 0],
-      [1, 1, 0, 0, 0, 0]
+      [1, 1, 0, 0, 0, 0],
     ],
 
     // 18. T-Block appears
@@ -214,7 +214,7 @@ class _BlocksLogo extends StatelessWidget {
       [0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0],
       [1, 0, 0, 1, 1, 0],
-      [1, 1, 0, 0, 0, 0]
+      [1, 1, 0, 0, 0, 0],
     ],
     // 19. T-Block falls
     [
@@ -224,7 +224,7 @@ class _BlocksLogo extends StatelessWidget {
       [0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0],
       [1, 0, 0, 1, 1, 0],
-      [1, 1, 0, 0, 0, 0]
+      [1, 1, 0, 0, 0, 0],
     ],
     // 20. T-Block falls
     [
@@ -234,7 +234,7 @@ class _BlocksLogo extends StatelessWidget {
       [0, 0, 0, 1, 0, 0],
       [0, 0, 0, 0, 0, 0],
       [1, 0, 0, 1, 1, 0],
-      [1, 1, 0, 0, 0, 0]
+      [1, 1, 0, 0, 0, 0],
     ],
     // 21. T-Block hits bottom
     [
@@ -244,7 +244,7 @@ class _BlocksLogo extends StatelessWidget {
       [0, 0, 1, 1, 1, 0],
       [0, 0, 0, 1, 0, 0],
       [1, 0, 0, 1, 1, 0],
-      [1, 1, 0, 0, 0, 0]
+      [1, 1, 0, 0, 0, 0],
     ],
 
     // 22. Wait before loop
@@ -255,7 +255,7 @@ class _BlocksLogo extends StatelessWidget {
       [0, 0, 1, 1, 1, 0],
       [0, 0, 0, 1, 0, 0],
       [1, 0, 0, 1, 1, 0],
-      [1, 1, 0, 0, 0, 0]
+      [1, 1, 0, 0, 0, 0],
     ],
   ];
 
@@ -444,8 +444,11 @@ class _MainNavigationState extends State<MainNavigation> {
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.white.withValues(alpha: 0.5)),
               ),
-              child:
-                  const Icon(Icons.color_lens, size: 16, color: Colors.black45),
+              child: const Icon(
+                Icons.color_lens,
+                size: 16,
+                color: Colors.black45,
+              ),
             ),
           ),
           const SizedBox(width: 8),
@@ -464,8 +467,11 @@ class _NavBarTab extends StatelessWidget {
   final String title;
   final bool isActive;
   final VoidCallback onTap;
-  const _NavBarTab(
-      {required this.title, required this.isActive, required this.onTap});
+  const _NavBarTab({
+    required this.title,
+    required this.isActive,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -599,7 +605,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
     if (_searchQuery.isNotEmpty) {
       list = list
           .where(
-              (l) => l.name.toLowerCase().contains(_searchQuery.toLowerCase()))
+            (l) => l.name.toLowerCase().contains(_searchQuery.toLowerCase()),
+          )
           .toList();
     }
     return list;
@@ -653,12 +660,15 @@ class _GalleryScreenState extends State<GalleryScreen> {
                           ),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 6, vertical: 2),
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
                               color: const Color(0xFF1A1A1E),
                               borderRadius: BorderRadius.circular(4),
                               border: Border.all(
-                                  color: Colors.white.withValues(alpha: 0.1)),
+                                color: Colors.white.withValues(alpha: 0.1),
+                              ),
                             ),
                             child: Text(
                               'c',
@@ -686,26 +696,31 @@ class _GalleryScreenState extends State<GalleryScreen> {
                           color: const Color(0xFF0A0A0C),
                           borderRadius: BorderRadius.circular(6),
                           border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.1)),
+                            color: Colors.white.withValues(alpha: 0.1),
+                          ),
                         ),
                         child: Row(
                           children: [
-                            Icon(Icons.search,
-                                size: 16,
-                                color: Colors.white.withValues(alpha: 0.3)),
+                            Icon(
+                              Icons.search,
+                              size: 16,
+                              color: Colors.white.withValues(alpha: 0.3),
+                            ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: TextField(
                                 onChanged: (val) =>
                                     setState(() => _searchQuery = val),
                                 style: const TextStyle(
-                                    fontSize: 14, color: Colors.white),
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
                                 decoration: InputDecoration(
                                   hintText: 'filter by name...',
                                   hintStyle: TextStyle(
-                                      color:
-                                          Colors.white.withValues(alpha: 0.3),
-                                      fontSize: 14),
+                                    color: Colors.white.withValues(alpha: 0.3),
+                                    fontSize: 14,
+                                  ),
                                   border: InputBorder.none,
                                   isDense: true,
                                 ),
@@ -713,7 +728,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
                             ),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 2),
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
                               decoration: BoxDecoration(
                                 color: const Color(0xFF1A1A1E),
                                 borderRadius: BorderRadius.circular(4),
@@ -738,23 +755,26 @@ class _GalleryScreenState extends State<GalleryScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(6),
                           border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.1)),
+                            color: Colors.white.withValues(alpha: 0.1),
+                          ),
                         ),
                         child: Row(
                           children: [
                             GestureDetector(
                               onTap: () => setState(() => _isCompact = false),
                               child: Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   color: !_isCompact
                                       ? const Color(0xFF1A1A1E)
                                       : Colors.transparent,
                                   borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(5),
-                                      bottomLeft: Radius.circular(5)),
+                                    topLeft: Radius.circular(5),
+                                    bottomLeft: Radius.circular(5),
+                                  ),
                                 ),
                                 child: Text(
                                   'comfortable',
@@ -769,21 +789,24 @@ class _GalleryScreenState extends State<GalleryScreen> {
                               ),
                             ),
                             Container(
-                                width: 1,
-                                color: Colors.white.withValues(alpha: 0.1)),
+                              width: 1,
+                              color: Colors.white.withValues(alpha: 0.1),
+                            ),
                             GestureDetector(
                               onTap: () => setState(() => _isCompact = true),
                               child: Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   color: _isCompact
                                       ? const Color(0xFF1A1A1E)
                                       : Colors.transparent,
                                   borderRadius: const BorderRadius.only(
-                                      topRight: Radius.circular(5),
-                                      bottomRight: Radius.circular(5)),
+                                    topRight: Radius.circular(5),
+                                    bottomRight: Radius.circular(5),
+                                  ),
                                 ),
                                 child: Text(
                                   'compact',
@@ -811,21 +834,25 @@ class _GalleryScreenState extends State<GalleryScreen> {
                           ),
                           child: Row(
                             children: [
-                              Icon(_isPaused ? Icons.play_arrow : Icons.pause,
-                                  color: Colors.white, size: 18),
+                              Icon(
+                                _isPaused ? Icons.play_arrow : Icons.pause,
+                                color: Colors.white,
+                                size: 18,
+                              ),
                               const SizedBox(width: 8),
                               Text(
                                 _isPaused ? 'play all' : 'pause all',
                                 style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500),
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                    ]
+                    ],
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -844,16 +871,19 @@ class _GalleryScreenState extends State<GalleryScreen> {
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 6),
+                              horizontal: 16,
+                              vertical: 6,
+                            ),
                             decoration: BoxDecoration(
                               color: isSelected
                                   ? const Color(0xFFEFE94B)
                                   : Colors.transparent,
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
-                                  color: isSelected
-                                      ? const Color(0xFFEFE94B)
-                                      : Colors.white.withValues(alpha: 0.2)),
+                                color: isSelected
+                                    ? const Color(0xFFEFE94B)
+                                    : Colors.white.withValues(alpha: 0.2),
+                              ),
                             ),
                             child: Text(
                               _tabs[index],
@@ -928,12 +958,15 @@ class _GalleryScreenState extends State<GalleryScreen> {
                         data: SliderThemeData(
                           trackHeight: 2,
                           thumbShape: const RoundSliderThumbShape(
-                              enabledThumbRadius: 6),
-                          overlayShape:
-                              const RoundSliderOverlayShape(overlayRadius: 12),
+                            enabledThumbRadius: 6,
+                          ),
+                          overlayShape: const RoundSliderOverlayShape(
+                            overlayRadius: 12,
+                          ),
                           activeTrackColor: Colors.white.withValues(alpha: 0.2),
-                          inactiveTrackColor:
-                              Colors.white.withValues(alpha: 0.1),
+                          inactiveTrackColor: Colors.white.withValues(
+                            alpha: 0.1,
+                          ),
                           thumbColor: Colors.white,
                         ),
                         child: Slider(
@@ -1065,7 +1098,7 @@ class _PlaygroundScreenState extends State<PlaygroundScreen> {
   final List<MatrixShape> _shapes = [
     MatrixShape.square,
     MatrixShape.circular,
-    MatrixShape.triangle
+    MatrixShape.triangle,
   ];
 
   List<MatrixPattern> get _availablePatterns {
@@ -1110,26 +1143,62 @@ MatrixLoader(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('CONTROLS',
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5)),
+          const Text(
+            'CONTROLS',
+            style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5),
+          ),
           const SizedBox(height: 24),
-          _buildDropdown<MatrixShape>('Shape', _shapes, _shape, _onShapeChanged,
-              (s) => s.name.toUpperCase()),
+          _buildDropdown<MatrixShape>(
+            'Shape',
+            _shapes,
+            _shape,
+            _onShapeChanged,
+            (s) => s.name.toUpperCase(),
+          ),
           const SizedBox(height: 16),
-          _buildDropdown<MatrixPattern>('Pattern', _availablePatterns, _pattern,
-              (v) => setState(() => _pattern = v!), (p) => p.name),
+          _buildDropdown<MatrixPattern>(
+            'Pattern',
+            _availablePatterns,
+            _pattern,
+            (v) => setState(() => _pattern = v!),
+            (p) => p.name,
+          ),
           const SizedBox(height: 24),
-          _buildSlider('Columns', _cols.toDouble(), 1, 20,
-              (v) => setState(() => _cols = v.toInt())),
-          _buildSlider('Rows', _rows.toDouble(), 1, 20,
-              (v) => setState(() => _rows = v.toInt())),
           _buildSlider(
-              'Dot Size', _dotSize, 2, 20, (v) => setState(() => _dotSize = v)),
+            'Columns',
+            _cols.toDouble(),
+            1,
+            20,
+            (v) => setState(() => _cols = v.toInt()),
+          ),
           _buildSlider(
-              'Spacing', _spacing, 0, 10, (v) => setState(() => _spacing = v)),
-          _buildSlider('Duration (s)', _speed, 0.5, 5,
-              (v) => setState(() => _speed = v)),
+            'Rows',
+            _rows.toDouble(),
+            1,
+            20,
+            (v) => setState(() => _rows = v.toInt()),
+          ),
+          _buildSlider(
+            'Dot Size',
+            _dotSize,
+            2,
+            20,
+            (v) => setState(() => _dotSize = v),
+          ),
+          _buildSlider(
+            'Spacing',
+            _spacing,
+            0,
+            10,
+            (v) => setState(() => _spacing = v),
+          ),
+          _buildSlider(
+            'Duration (s)',
+            _speed,
+            0.5,
+            5,
+            (v) => setState(() => _speed = v),
+          ),
         ],
       ),
     );
@@ -1165,36 +1234,48 @@ MatrixLoader(
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Code Snippet',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white70)),
+                    const Text(
+                      'Code Snippet',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white70,
+                      ),
+                    ),
                     TextButton.icon(
-                      icon:
-                          const Icon(Icons.copy, size: 14, color: Colors.white),
-                      label: const Text('Copy',
-                          style: TextStyle(color: Colors.white)),
+                      icon: const Icon(
+                        Icons.copy,
+                        size: 14,
+                        color: Colors.white,
+                      ),
+                      label: const Text(
+                        'Copy',
+                        style: TextStyle(color: Colors.white),
+                      ),
                       onPressed: () {
-                        Clipboard.setData(ClipboardData(
-                            text: _generateCode(GlobalTint.of(context).tint)));
+                        Clipboard.setData(
+                          ClipboardData(
+                            text: _generateCode(GlobalTint.of(context).tint),
+                          ),
+                        );
                         ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Copied to clipboard!')));
+                          const SnackBar(content: Text('Copied to clipboard!')),
+                        );
                       },
-                    )
+                    ),
                   ],
                 ),
                 const SizedBox(height: 8),
                 SelectableText(
                   _generateCode(GlobalTint.of(context).tint),
                   style: const TextStyle(
-                      fontFamily: 'monospace',
-                      fontSize: 12,
-                      color: Color(0xFFA1A1AA)),
+                    fontFamily: 'monospace',
+                    fontSize: 12,
+                    color: Color(0xFFA1A1AA),
+                  ),
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -1217,13 +1298,20 @@ MatrixLoader(
     );
   }
 
-  Widget _buildDropdown<T>(String label, List<T> items, T value,
-      ValueChanged<T?> onChanged, String Function(T) labeler) {
+  Widget _buildDropdown<T>(
+    String label,
+    List<T> items,
+    T value,
+    ValueChanged<T?> onChanged,
+    String Function(T) labeler,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label,
-            style: const TextStyle(fontSize: 12, color: Colors.white54)),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 12, color: Colors.white54),
+        ),
         const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -1238,10 +1326,15 @@ MatrixLoader(
               value: value,
               dropdownColor: const Color(0xFF1A1A1E),
               items: items
-                  .map((e) => DropdownMenuItem(
+                  .map(
+                    (e) => DropdownMenuItem(
                       value: e,
-                      child: Text(labeler(e),
-                          style: const TextStyle(fontSize: 14))))
+                      child: Text(
+                        labeler(e),
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  )
                   .toList(),
               onChanged: onChanged,
             ),
@@ -1251,8 +1344,13 @@ MatrixLoader(
     );
   }
 
-  Widget _buildSlider(String label, double value, double min, double max,
-      ValueChanged<double> onChanged) {
+  Widget _buildSlider(
+    String label,
+    double value,
+    double min,
+    double max,
+    ValueChanged<double> onChanged,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(
@@ -1261,11 +1359,14 @@ MatrixLoader(
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(label,
-                  style: const TextStyle(fontSize: 12, color: Colors.white54)),
-              Text(value.toStringAsFixed(1),
-                  style:
-                      const TextStyle(fontSize: 12, fontFamily: 'monospace')),
+              Text(
+                label,
+                style: const TextStyle(fontSize: 12, color: Colors.white54),
+              ),
+              Text(
+                value.toStringAsFixed(1),
+                style: const TextStyle(fontSize: 12, fontFamily: 'monospace'),
+              ),
             ],
           ),
           SliderTheme(
@@ -1276,8 +1377,12 @@ MatrixLoader(
               overlayColor: const Color(0xFFFF3333).withValues(alpha: 0.2),
               trackHeight: 4,
             ),
-            child:
-                Slider(value: value, min: min, max: max, onChanged: onChanged),
+            child: Slider(
+              value: value,
+              min: min,
+              max: max,
+              onChanged: onChanged,
+            ),
           ),
         ],
       ),
@@ -1314,8 +1419,10 @@ class _StudioScreenState extends State<StudioScreen> {
   void _addFrame() {
     setState(() {
       // Copy current frame
-      final newFrame =
-          List.generate(rows, (r) => List<int>.from(frames[currentFrame][r]));
+      final newFrame = List.generate(
+        rows,
+        (r) => List<int>.from(frames[currentFrame][r]),
+      );
       frames.add(newFrame);
       currentFrame = frames.length - 1;
     });
@@ -1404,15 +1511,17 @@ MatrixLoader(
                             ? const Color(0xFFFF3333)
                             : const Color(0xFF1A1A1E),
                         border: Border.all(
-                            color: isActive
-                                ? const Color(0xFFFF6666)
-                                : const Color(0xFF27272A)),
+                          color: isActive
+                              ? const Color(0xFFFF6666)
+                              : const Color(0xFF27272A),
+                        ),
                         boxShadow: isActive
                             ? [
                                 BoxShadow(
-                                    color: const Color(0xFFFF3333)
-                                        .withValues(alpha: 0.4),
-                                    blurRadius: 8)
+                                  color: const Color(0xFFFF3333)
+                                      .withValues(alpha: 0.4),
+                                  blurRadius: 8,
+                                ),
                               ]
                             : [],
                       ),
@@ -1441,12 +1550,15 @@ MatrixLoader(
           ],
         ),
         const SizedBox(height: 32),
-        const Text('TIMELINE',
-            style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.5,
-                color: Colors.white54)),
+        const Text(
+          'TIMELINE',
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.5,
+            color: Colors.white54,
+          ),
+        ),
         const SizedBox(height: 16),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -1461,10 +1573,11 @@ MatrixLoader(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       border: Border.all(
-                          color: currentFrame == i
-                              ? const Color(0xFFFF3333)
-                              : const Color(0xFF27272A),
-                          width: 2),
+                        color: currentFrame == i
+                            ? const Color(0xFFFF3333)
+                            : const Color(0xFF27272A),
+                        width: 2,
+                      ),
                       borderRadius: BorderRadius.circular(8),
                       color: const Color(0xFF0A0A0C),
                     ),
@@ -1502,12 +1615,15 @@ MatrixLoader(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text('LIVE PREVIEW',
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.5,
-                          color: Colors.white54)),
+                  const Text(
+                    'LIVE PREVIEW',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.5,
+                      color: Colors.white54,
+                    ),
+                  ),
                   const SizedBox(height: 24),
                   MatrixLoader(
                     columns: cols,
@@ -1540,19 +1656,26 @@ MatrixLoader(
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Generated Code',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white70)),
+                  const Text(
+                    'Generated Code',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white70,
+                    ),
+                  ),
                   TextButton.icon(
                     icon: const Icon(Icons.copy, size: 14, color: Colors.white),
-                    label: const Text('Copy',
-                        style: TextStyle(color: Colors.white)),
+                    label: const Text(
+                      'Copy',
+                      style: TextStyle(color: Colors.white),
+                    ),
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: _generateCode()));
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text('Copied to clipboard!')));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Copied to clipboard!')),
+                      );
                     },
-                  )
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
@@ -1562,15 +1685,16 @@ MatrixLoader(
                   child: SelectableText(
                     _generateCode(),
                     style: const TextStyle(
-                        fontFamily: 'monospace',
-                        fontSize: 12,
-                        color: Color(0xFFA1A1AA)),
+                      fontFamily: 'monospace',
+                      fontSize: 12,
+                      color: Color(0xFFA1A1AA),
+                    ),
                   ),
                 ),
               ),
             ],
           ),
-        )
+        ),
       ],
     );
 
@@ -1580,7 +1704,10 @@ MatrixLoader(
         child: Column(
           children: [
             const TabBar(
-              tabs: [Tab(text: 'Editor'), Tab(text: 'Preview')],
+              tabs: [
+                Tab(text: 'Editor'),
+                Tab(text: 'Preview'),
+              ],
               indicatorColor: Color(0xFFFF3333),
               labelColor: Colors.white,
             ),
@@ -1588,7 +1715,9 @@ MatrixLoader(
               child: TabBarView(
                 children: [
                   SingleChildScrollView(
-                      padding: const EdgeInsets.all(24), child: editor),
+                    padding: const EdgeInsets.all(24),
+                    child: editor,
+                  ),
                   rightPanel,
                 ],
               ),
@@ -1626,8 +1755,9 @@ class _MiniFramePainter extends CustomPainter {
           paint.color = const Color(0xFF1A1A1E);
         }
         canvas.drawRect(
-            Rect.fromLTWH(c * dotW + 0.5, r * dotH + 0.5, dotW - 1, dotH - 1),
-            paint);
+          Rect.fromLTWH(c * dotW + 0.5, r * dotH + 0.5, dotW - 1, dotH - 1),
+          paint,
+        );
       }
     }
   }
@@ -1717,8 +1847,10 @@ class InteractiveScreen extends StatefulWidget {
 }
 
 class _InteractiveScreenState extends State<InteractiveScreen> {
-  final List<List<int>> _grid =
-      List.generate(8, (_) => List.generate(8, (_) => 0));
+  final List<List<int>> _grid = List.generate(
+    8,
+    (_) => List.generate(8, (_) => 0),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -1729,10 +1861,11 @@ class _InteractiveScreenState extends State<InteractiveScreen> {
           const Text(
             'TAP THE DOTS TO LIGHT THEM UP',
             style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2,
-                color: Colors.white54),
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 2,
+              color: Colors.white54,
+            ),
           ),
           const SizedBox(height: 32),
           MatrixLoader(

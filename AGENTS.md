@@ -41,6 +41,14 @@ import 'package:flutter_dot_loader/flutter_dot_loader.dart';
 const DotLoader(color: Colors.blue)
 ```
 
+Pick a named state when the chat state is known: `DotLoader.typing()`,
+`DotLoader.thinking()`, `DotLoader.searching()`, `DotLoader.generating()`
+(each takes `color`, `size`/`width`/`height`, `paused`, `semanticsLabel`).
+The box is only as tall as the dots, so it sits inline next to text. All
+loaders honour the OS reduced-motion setting (`respectReducedMotion`, default
+true) and `MatrixLoader` accepts `customDotSize: (row, col) => scale` for
+per-dot sizing.
+
 That's it. No size tuning, no opacity tuning, no animation knobs. Wrap in a
 `SizedBox` only if the parent layout needs a tighter bound.
 

@@ -1,7 +1,7 @@
 ---
 id: TASK-004
 title: Per-dot size callback (GitHub issue 1)
-status: To Do
+status: In Progress
 priority: high
 labels: [improvement-plan-2026-09]
 created_date: '2026-09-24'
@@ -19,3 +19,7 @@ Acceptance criteria:
 - [ ] Issue closed referencing the release
 
 See docs/IMPROVEMENT-PLAN-2026-09.md (P0-4).
+
+## Final Summary
+
+`customDotSize` implemented, tested and documented for 1.1.0. Still open and needs Hooshyar: post a reply on GitHub issue #1 (external reporter) and close it after 1.1.0 is published.

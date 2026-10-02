@@ -1,5 +1,6 @@
 # flutter_dot_loader
 
+[![CI](https://github.com/hooshyar/flutter_dot_loader/actions/workflows/ci.yml/badge.svg)](https://github.com/hooshyar/flutter_dot_loader/actions/workflows/ci.yml)
 [![pub.dev](https://img.shields.io/pub/v/flutter_dot_loader.svg?style=flat-square&color=ff3333&label=pub.dev)](https://pub.dev/packages/flutter_dot_loader)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![Flutter](https://img.shields.io/badge/Flutter-%E2%9D%A4-02569B?style=flat-square&logo=flutter)](https://flutter.dev)
@@ -12,8 +13,8 @@ From a 3-dot "thinking…" indicator for AI chats to a 60-pattern LED matrix wit
 ### ▶️ [Try the live demo](https://hooshyar.github.io/flutter_dot_loader/) — browse all 60 patterns, tweak every knob, and draw your own frames right in the browser.
 
 <p align="center">
-  <img src="assets/1.gif" width="48%" alt="Gallery of 60 dot-matrix loader patterns" />
-  <img src="assets/2.gif" width="48%" alt="Interactive Dot Matrix Studio editor" />
+  <img src="https://raw.githubusercontent.com/hooshyar/flutter_dot_loader/main/assets/1.gif" width="48%" alt="Gallery of 60 dot-matrix loader patterns" />
+  <img src="https://raw.githubusercontent.com/hooshyar/flutter_dot_loader/main/assets/2.gif" width="48%" alt="Interactive Dot Matrix Studio editor" />
 </p>
 
 ---
@@ -23,7 +24,7 @@ From a 3-dot "thinking…" indicator for AI chats to a 60-pattern LED matrix wit
 | Feature | Description |
 |---|---|
 | 💬 **AI-chat "thinking" indicator** | One-liner `DotLoader(color: …)` for chat / AI apps — sensible defaults, `const`-constructable |
-| 🎨 **60 Built-in Patterns** | 20 Square, 20 Circular, and 20 Triangle math-driven animations + 13 semantic aliases (`vortexSpin`, `bullsEye`, `coreRipple`…) |
+| 🎨 **60 Built-in Patterns** | 20 Square, 20 Circular, and 20 Triangle math-driven animations + 16 semantic aliases (`vortexSpin`, `bullsEye`, `coreRipple`…) |
 | 🖥️ **LED Dot-Matrix Feel** | Three-tier opacity remapping for a realistic glowing LED display effect |
 | 🧩 **Custom Frames** | Drive every dot from your own data (`customIntensity`) — sprites, Tetris, scrolling text |
 | 📝 **Scrolling Marquee Text** | Built-in 5×7 font covers A–Z, 0–9, and 30+ punctuation/symbols (e.g. `"LOADING: 42%"`, `"a@b.com"`) |
@@ -67,7 +68,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_dot_loader: ^1.0.0
+  flutter_dot_loader: ^1.1.0
 ```
 
 Or run:
@@ -95,7 +96,36 @@ const DotLoader(color: Colors.blue)
 ```
 
 3 dots, horizontal wave, 1.5s cycle. Inactive color is automatically derived
-from the supplied color at 10% alpha.
+from the supplied color at 10% alpha. The box is only as tall as the dots, so it
+sits inline next to text; pass `width`/`height` to change it.
+
+Name the state instead of picking a pattern:
+
+```dart
+const DotLoader.thinking(color: Colors.blue)    // calm 3-dot ribbon
+const DotLoader.searching(color: Colors.blue)   // 5-dot scanner sweep
+const DotLoader.generating(color: Colors.blue)  // quick 5-dot wave
+const DotLoader.typing(color: Colors.blue)      // classic 3-dot wave
+```
+
+### Works great with
+
+Drop a `DotLoader` into a chat bubble while a reply is on its way, then swap in
+streamed text from [`flutter_streaming_text_markdown`](https://pub.dev/packages/flutter_streaming_text_markdown)
+or a full chat screen from [`flutter_gen_ai_chat_ui`](https://pub.dev/packages/flutter_gen_ai_chat_ui):
+
+```dart
+Container(
+  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+  decoration: BoxDecoration(
+    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+    borderRadius: BorderRadius.circular(16),
+  ),
+  child: waitingForFirstToken
+      ? DotLoader.thinking(color: Theme.of(context).colorScheme.primary)
+      : StreamingTextMarkdown.chatGPT(text: reply),
+)
+```
 
 ### 1. Drop-in Loader
 
@@ -188,7 +218,9 @@ const DotLoader(
 )
 ```
 
-Available on `MatrixLoader`, `DotLoader`, and `TriangleLoader`; follows the same convention as Flutter's `ProgressIndicator.semanticsLabel`.
+Available on `MatrixLoader`, `DotLoader`, and `TriangleLoader`; follows the same convention as Flutter's `ProgressIndicator.semanticsLabel`. The `DotLoader.typing/thinking/searching/generating` presets ship with a default label.
+
+**Reduced motion.** When the OS "reduce motion" setting is on (`MediaQuery.disableAnimations`), every loader stops its ticker and paints one static frame (the end frame for `MatrixPlayback.once`, which also fires `onComplete` right away). It reacts if the setting changes while the app runs. Opt out per widget with `respectReducedMotion: false`.
 
 ### 5. Pick from 60 Patterns
 
@@ -341,14 +373,18 @@ The primary widget for dot-matrix loading animations.
 | `pattern` | `MatrixPattern` | `square1` | Animation pattern; use `custom` with `customIntensity` |
 | `activeColor` | `Color` | `Colors.white` | Color of lit/active dots |
 | `inactiveColor` | `Color` | `Color(0xFF27272A)` | Color of dim/inactive dots |
-| `size` | `double` | `64.0` | Width and height of the bounding box |
+| `size` | `double` | `64.0` | Square bounding-box shorthand; fallback for `width`/`height` |
+| `width` | `double?` | `null` | Bounding box width; falls back to `size` when `null` |
+| `height` | `double?` | `null` | Bounding box height; falls back to `size` when `null` (`DotLoader` derives it from `rows` instead) |
 | `dotSize` | `double` | `4.0` | Diameter of each dot in logical pixels |
-| `spacing` | `double?` | auto | Gap between dots; auto-calculated from `size` if `null` |
+| `spacing` | `double?` | auto | Gap between dots; auto-calculated per axis to fit the box if `null` |
 | `duration` | `Duration` | `1500ms` | Duration of one complete animation cycle |
 | `hoverAnimated` | `bool` | `true` | Enables hover ripple on web/desktop |
 | `opacityBase` | `double` | `0.08` | Minimum opacity for unlit dots |
 | `opacityMid` | `double` | `0.34` | Mid-point opacity for the LED glow curve |
 | `opacityPeak` | `double` | `0.94` | Maximum opacity for fully lit dots |
+| `customDotSize` | `double Function(int row, int col)?` | `null` | Per-dot size scale (1.0 = `dotSize`, 0 hides the dot). Painting only: tap hit-testing and auto-spacing keep using `dotSize` |
+| `respectReducedMotion` | `bool` | `true` | Stop animating and paint one static frame when the OS asks for reduced motion |
 | `customMask` | `bool Function(int row, int col)?` | `null` | Custom function to determine if a dot is rendered |
 | `customIntensity` | `double Function(int row, int col, double progress)?` | `null` | Custom function to drive dot intensity (use with `MatrixPattern.custom`) |
 | `semanticsLabel` | `String?` | `null` | Label announced by screen readers; `null` = decorative (no semantics node) |
@@ -387,7 +423,10 @@ A geometric loader using a tessellated grid of equilateral triangles.
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `color` | `Color` | `Colors.indigoAccent` | Color of the triangles |
-| `size` | `double` | `200.0` | Width and height of the bounding box |
+| `size` | `double` | `200.0` | Square bounding-box shorthand; fallback for `width`/`height` |
+| `width` | `double?` | `null` | Bounding box width; falls back to `size` when `null` |
+| `height` | `double?` | `null` | Bounding box height; falls back to `size` when `null` |
+| `respectReducedMotion` | `bool` | `true` | Stop animating and paint one static frame when the OS asks for reduced motion |
 | `triangleSize` | `double` | `30.0` | Side length of each equilateral triangle |
 | `duration` | `Duration` | `4s` | Duration of one animation cycle |
 | `wireframe` | `bool` | `false` | If `true`, renders only triangle outlines |

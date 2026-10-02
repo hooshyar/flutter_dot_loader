@@ -9,6 +9,11 @@
 /SPECS.md
 /tool/
 /doc/
+/docs/
+/backlog/
+
+# README hero GIFs are referenced by absolute raw.githubusercontent.com URLs.
+*.gif
 
 # --- Mirror of .gitignore patterns we still want excluded from pub ---
 # (When .pubignore is present, it fully replaces .gitignore for archive

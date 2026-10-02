@@ -10,6 +10,8 @@ analyzer:
   errors:
     deprecated_member_use: warning
     deprecated_member_use_from_same_package: warning
+  exclude:
+    - build/**
 
 linter:
   rules:
