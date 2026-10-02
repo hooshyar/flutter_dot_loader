@@ -58,6 +58,15 @@ class TriangleLoader extends StatefulWidget {
   /// When `null` (the default), falls back to [size].
   final double? height;
 
+  /// Whether the loader honours the operating system's "reduce motion"
+  /// setting.
+  ///
+  /// When `true` (the default) and `MediaQuery.maybeDisableAnimationsOf`
+  /// reports `true`, the animation stops and a single static frame is painted.
+  /// Reacts to the setting changing at runtime. Set to `false` to always
+  /// animate.
+  final bool respectReducedMotion;
+
   /// The side length of each equilateral triangle in logical pixels.
   ///
   /// Smaller values produce a finer, denser grid. Defaults to `30.0`.
@@ -90,6 +99,7 @@ class TriangleLoader extends StatefulWidget {
     this.size = 200,
     this.width,
     this.height,
+    this.respectReducedMotion = true,
     this.triangleSize = 30.0,
     this.duration = const Duration(seconds: 4),
     this.wireframe = false,
@@ -109,6 +119,33 @@ class _TriangleLoaderState extends State<TriangleLoader>
     super.initState();
     _controller = AnimationController(vsync: this, duration: widget.duration)
       ..repeat();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _syncReducedMotion();
+  }
+
+  @override
+  void didUpdateWidget(covariant TriangleLoader oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.respectReducedMotion != widget.respectReducedMotion) {
+      _syncReducedMotion();
+    }
+  }
+
+  void _syncReducedMotion() {
+    final reduce =
+        widget.respectReducedMotion &&
+        (MediaQuery.maybeDisableAnimationsOf(context) ?? false);
+    if (reduce) {
+      _controller
+        ..stop()
+        ..value = 0.5;
+    } else if (!_controller.isAnimating) {
+      _controller.repeat();
+    }
   }
 
   @override

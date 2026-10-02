@@ -1,7 +1,7 @@
 ---
 id: TASK-006
 title: AI-state presets and README hero refresh
-status: To Do
+status: In Progress
 priority: medium
 labels: [improvement-plan-2026-09]
 created_date: '2026-09-24'
@@ -18,3 +18,7 @@ Acceptance criteria:
 - [ ] Live-demo badge in README
 
 See docs/IMPROVEMENT-PLAN-2026-09.md (P1-2, P1-3).
+
+## Final Summary
+
+DotLoader.typing/thinking/searching/generating presets added and tested; hero GIFs now use absolute raw URLs and `*.gif` is excluded from the pub archive. Open: record a new first-screen GIF of DotLoader in a chat bubble (needs a screen recording) and a live-demo badge.

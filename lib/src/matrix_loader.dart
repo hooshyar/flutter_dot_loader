@@ -332,6 +332,32 @@ class MatrixLoader extends StatefulWidget {
   /// ```
   final bool Function(int row, int col)? customMask;
 
+  /// Optional per-dot size callback, mirroring [customMask].
+  ///
+  /// Called for every dot with its `row` and `col` and returns a scale factor
+  /// applied to [dotSize]: `1.0` keeps the normal diameter, `0.5` halves it and
+  /// `0` (or any negative value) hides the dot. When `null` (the default) every
+  /// dot uses [dotSize].
+  ///
+  /// Only painting is affected. Tap hit-testing ([onDotTapped]) and the
+  /// auto-spacing calculation keep using the unscaled [dotSize], so a shrunk
+  /// dot still reports taps in its original cell.
+  ///
+  /// ```dart
+  /// customDotSize: (row, col) => col == 1 ? 1.5 : 0.8, // fat middle column
+  /// ```
+  final double Function(int row, int col)? customDotSize;
+
+  /// Whether the loader honours the operating system's "reduce motion" setting.
+  ///
+  /// When `true` (the default) and `MediaQuery.maybeDisableAnimationsOf`
+  /// reports `true`, the animation ticker is stopped and a single static frame
+  /// is painted (the frame at progress `0.5`, or the final frame for
+  /// [MatrixPlayback.once], in which case [onComplete] fires once right away).
+  /// The loader reacts when the setting changes at runtime. Set to `false` to
+  /// always animate.
+  final bool respectReducedMotion;
+
   /// A callback to drive the light intensity of each dot from your own data.
   ///
   /// Only used when [pattern] is [MatrixPattern.custom].
@@ -445,6 +471,8 @@ class MatrixLoader extends StatefulWidget {
     this.opacityMid = 0.34,
     this.opacityPeak = 0.94,
     this.customMask,
+    this.customDotSize,
+    this.respectReducedMotion = true,
     this.customIntensity,
     this.onDotTapped,
     this.onComplete,
@@ -465,6 +493,9 @@ class _MatrixLoaderState extends State<MatrixLoader>
   /// `once` animation or switches playback mid-flight).
   int _runId = 0;
 
+  /// Whether the OS asks for reduced motion (and this widget honours it).
+  bool _reduceMotion = false;
+
   @override
   void initState() {
     super.initState();
@@ -473,8 +504,27 @@ class _MatrixLoaderState extends State<MatrixLoader>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _syncReducedMotion();
+  }
+
+  void _syncReducedMotion() {
+    final reduce =
+        widget.respectReducedMotion &&
+        (MediaQuery.maybeDisableAnimationsOf(context) ?? false);
+    if (reduce != _reduceMotion) {
+      _reduceMotion = reduce;
+      _applyPlayback();
+    }
+  }
+
+  @override
   void didUpdateWidget(covariant MatrixLoader oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (oldWidget.respectReducedMotion != widget.respectReducedMotion) {
+      _syncReducedMotion();
+    }
     if (oldWidget.duration != widget.duration) {
       _controller.duration = widget.duration;
     }
@@ -490,6 +540,18 @@ class _MatrixLoaderState extends State<MatrixLoader>
     // future from a prior run can't fire against this stopped state.
     final runId = ++_runId;
     if (widget.paused) return;
+    if (_reduceMotion) {
+      // Static representative frame: mid-cycle, or the end frame for `once`.
+      final isOnce = widget.playback == MatrixPlayback.once;
+      _controller.value = isOnce ? 1.0 : 0.5;
+      if (isOnce) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted || runId != _runId) return;
+          widget.onComplete?.call();
+        });
+      }
+      return;
+    }
     switch (widget.playback) {
       case MatrixPlayback.loop:
         _controller.repeat();
@@ -596,6 +658,7 @@ class _MatrixLoaderState extends State<MatrixLoader>
                     opacityMid: widget.opacityMid,
                     opacityPeak: widget.opacityPeak,
                     customMask: widget.customMask,
+                    customDotSize: widget.customDotSize,
                     customIntensity: widget.customIntensity,
                   ),
                 );
@@ -630,6 +693,7 @@ class _MatrixPainter extends CustomPainter {
   final double opacityMid;
   final double opacityPeak;
   final bool Function(int row, int col)? customMask;
+  final double Function(int row, int col)? customDotSize;
   final double Function(int row, int col, double progress)? customIntensity;
 
   _MatrixPainter({
@@ -648,6 +712,7 @@ class _MatrixPainter extends CustomPainter {
     required this.opacityMid,
     required this.opacityPeak,
     this.customMask,
+    this.customDotSize,
     this.customIntensity,
   });
 
@@ -691,7 +756,9 @@ class _MatrixPainter extends CustomPainter {
           remapped,
         )!;
 
-        canvas.drawCircle(Offset(x, y), dotSize / 2, paint);
+        final scale = customDotSize?.call(r, c) ?? 1.0;
+        if (scale <= 0) continue;
+        canvas.drawCircle(Offset(x, y), dotSize * scale / 2, paint);
       }
     }
   }

@@ -1,7 +1,7 @@
 ---
 id: TASK-003
 title: Non-square sizing and fix grid overflow when rows > columns
-status: To Do
+status: Done
 priority: high
 labels: [improvement-plan-2026-09]
 created_date: '2026-09-24'
@@ -20,3 +20,7 @@ Acceptance criteria:
 - [ ] Ship in 1.1.0
 
 See docs/IMPROVEMENT-PLAN-2026-09.md (P0-3, B2, B3).
+
+## Final Summary
+
+`width`/`height` with `size` shorthand, per-axis spacing, shared tap geometry, inline DotLoader box (default 64x4), triangle mask fix, tests. Ships in 1.1.0.

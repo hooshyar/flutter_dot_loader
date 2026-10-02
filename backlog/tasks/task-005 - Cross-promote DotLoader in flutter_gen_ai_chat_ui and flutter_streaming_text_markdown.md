@@ -1,7 +1,7 @@
 ---
 id: TASK-005
 title: Cross-promote DotLoader in flutter_gen_ai_chat_ui and flutter_streaming_text_markdown
-status: To Do
+status: In Progress
 priority: medium
 labels: [improvement-plan-2026-09]
 created_date: '2026-09-24'
@@ -17,3 +17,7 @@ Acceptance criteria:
 - [ ] Same for flutter_streaming_text_markdown example/README
 
 See docs/IMPROVEMENT-PLAN-2026-09.md (P1-1).
+
+## Final Summary
+
+README "Works great with" section with a chat-bubble snippet added. Cross-repo follow-ups are filed in the sibling repos (chat task-037, STM task-023).

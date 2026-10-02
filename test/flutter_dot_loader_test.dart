@@ -895,4 +895,238 @@ void main() {
       expect(tappedCol, 1);
     });
   });
+
+  group('reduced motion', () {
+    Widget host(Widget child, {required bool reduce}) => MaterialApp(
+      home: MediaQuery(
+        data: MediaQueryData(disableAnimations: reduce),
+        child: Scaffold(body: Center(child: child)),
+      ),
+    );
+
+    testWidgets('stops the ticker when the OS asks for reduced motion', (
+      tester,
+    ) async {
+      await tester.pumpWidget(host(const MatrixLoader(), reduce: true));
+      await tester.pump();
+      expect(tester.binding.hasScheduledFrame, isFalse);
+    });
+
+    testWidgets('animates when reduced motion is off', (tester) async {
+      await tester.pumpWidget(host(const MatrixLoader(), reduce: false));
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(tester.binding.hasScheduledFrame, isTrue);
+    });
+
+    testWidgets('respectReducedMotion: false keeps animating', (tester) async {
+      await tester.pumpWidget(
+        host(const MatrixLoader(respectReducedMotion: false), reduce: true),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(tester.binding.hasScheduledFrame, isTrue);
+    });
+
+    testWidgets('reacts to the setting changing at runtime', (tester) async {
+      await tester.pumpWidget(host(const MatrixLoader(), reduce: false));
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(tester.binding.hasScheduledFrame, isTrue);
+
+      await tester.pumpWidget(host(const MatrixLoader(), reduce: true));
+      await tester.pump();
+      await tester.pump();
+      expect(tester.binding.hasScheduledFrame, isFalse);
+
+      await tester.pumpWidget(host(const MatrixLoader(), reduce: false));
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(tester.binding.hasScheduledFrame, isTrue);
+    });
+
+    testWidgets('once playback fires onComplete immediately when reduced', (
+      tester,
+    ) async {
+      var completed = 0;
+      await tester.pumpWidget(
+        host(
+          MatrixLoader(
+            playback: MatrixPlayback.once,
+            onComplete: () => completed++,
+          ),
+          reduce: true,
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+      expect(completed, 1);
+      expect(tester.binding.hasScheduledFrame, isFalse);
+    });
+
+    testWidgets('DotLoader passes the flag through and TriangleLoader stops', (
+      tester,
+    ) async {
+      await tester.pumpWidget(host(const DotLoader(), reduce: true));
+      await tester.pump();
+      expect(tester.binding.hasScheduledFrame, isFalse);
+
+      await tester.pumpWidget(host(const TriangleLoader(), reduce: true));
+      await tester.pump();
+      expect(tester.binding.hasScheduledFrame, isFalse);
+
+      await tester.pumpWidget(
+        host(const TriangleLoader(respectReducedMotion: false), reduce: true),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(tester.binding.hasScheduledFrame, isTrue);
+    });
+  });
+
+  group('customDotSize', () {
+    RenderBox paintBox(WidgetTester tester) => tester.renderObject<RenderBox>(
+      find
+          .descendant(
+            of: find.byType(MatrixLoader),
+            matching: find.byType(CustomPaint),
+          )
+          .first,
+    );
+
+    testWidgets('scales dot diameters', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: MatrixLoader(
+                columns: 2,
+                rows: 1,
+                dotSize: 8,
+                customDotSize: (row, col) => 0.5,
+              ),
+            ),
+          ),
+        ),
+      );
+      // dotSize 8, scale 0.5 => radius 2 for every dot.
+      expect(
+        paintBox(tester),
+        paints
+          ..circle(radius: 2.0)
+          ..circle(radius: 2.0),
+      );
+    });
+
+    testWidgets('a scale of 0 hides the dot', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: MatrixLoader(
+                columns: 3,
+                rows: 1,
+                dotSize: 8,
+                customDotSize: (row, col) => col == 1 ? 0 : 1,
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(
+        paintBox(tester),
+        paints
+          ..circle(radius: 4.0)
+          ..circle(radius: 4.0),
+      );
+    });
+
+    testWidgets('null callback keeps dotSize', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: Center(child: MatrixLoader(columns: 2, rows: 1, dotSize: 8)),
+          ),
+        ),
+      );
+      expect(
+        paintBox(tester),
+        paints
+          ..circle(radius: 4.0)
+          ..circle(radius: 4.0),
+      );
+    });
+
+    testWidgets('does not change tap hit-testing', (tester) async {
+      int? tappedCol;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: MatrixLoader(
+                columns: 2,
+                rows: 1,
+                size: 64,
+                dotSize: 8,
+                customDotSize: (row, col) => 0,
+                onDotTapped: (row, col) => tappedCol = col,
+              ),
+            ),
+          ),
+        ),
+      );
+      final topLeft = tester.getTopLeft(find.byType(MatrixLoader));
+      await tester.tapAt(topLeft + const Offset(4, 32));
+      expect(tappedCol, 0);
+    });
+  });
+
+  group('DotLoader AI-state presets', () {
+    Future<void> pump(WidgetTester tester, Widget w) => tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(body: Center(child: w)),
+      ),
+    );
+
+    testWidgets('each preset renders inside its box with a semantics label', (
+      tester,
+    ) async {
+      const presets = <String, DotLoader>{
+        'Typing': DotLoader.typing(),
+        'Thinking': DotLoader.thinking(),
+        'Searching': DotLoader.searching(),
+        'Generating': DotLoader.generating(),
+      };
+      for (final entry in presets.entries) {
+        await pump(tester, entry.value);
+        await tester.pump(const Duration(milliseconds: 200));
+        final size = tester.getSize(find.byType(DotLoader));
+        expect(size.height, lessThanOrEqualTo(8), reason: entry.key);
+        expect(find.bySemanticsLabel(entry.key), findsOneWidget);
+      }
+    });
+
+    testWidgets('presets use curated grids and durations', (tester) async {
+      const thinking = DotLoader.thinking();
+      const searching = DotLoader.searching();
+      const generating = DotLoader.generating();
+      expect(thinking.columns, 3);
+      expect(thinking.duration, const Duration(milliseconds: 2000));
+      expect(searching.columns, 5);
+      expect(generating.columns, 5);
+      expect(generating.duration < searching.duration, isTrue);
+    });
+
+    testWidgets('presets accept color and honour reduced motion', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: MediaQuery(
+            data: MediaQueryData(disableAnimations: true),
+            child: Scaffold(
+              body: Center(child: DotLoader.thinking(color: Colors.blue)),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(tester.binding.hasScheduledFrame, isFalse);
+    });
+  });
 }

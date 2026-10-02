@@ -14,6 +14,20 @@
   restore an explicit box.
 - fix: `MatrixShape.triangle` no longer divides by zero on 1-row or 1-column
   grids (previously the mask produced NaN comparisons and rendered nothing).
+- feat: `respectReducedMotion` (default `true`) on `MatrixLoader`, `DotLoader`
+  and `TriangleLoader`. When `MediaQuery.disableAnimationsOf` is true the
+  ticker stops and one static frame is painted (the end frame for
+  `MatrixPlayback.once`, which fires `onComplete` once). Reacts to runtime
+  changes of the setting.
+- feat: `customDotSize: double Function(int row, int col)?` on `MatrixLoader`
+  and `DotLoader` scales or hides individual dots (answers issue #1). Painting
+  only; hit-testing and auto-spacing keep using `dotSize`.
+- feat: AI-state presets `DotLoader.typing()`, `.thinking()`, `.searching()`
+  and `.generating()` with curated grids, patterns, durations and default
+  semantics labels.
+- docs: CI badge, "Works great with" chat-bubble recipe, README alias count
+  (16), hero GIFs referenced by absolute URL and excluded from the pub
+  archive, pubspec boilerplate removed, dart format drift fixed (CI green again).
 - test: widget coverage for `rows > columns`, 1xN, Nx1, and 1-row triangle
   grids asserting painted bounds stay inside the widget.
 
