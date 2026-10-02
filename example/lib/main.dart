@@ -368,9 +368,8 @@ class _MainNavigationState extends State<MainNavigation> {
                     color: c,
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: _globalTint == c
-                          ? Colors.white
-                          : Colors.transparent,
+                      color:
+                          _globalTint == c ? Colors.white : Colors.transparent,
                       width: 2,
                     ),
                   ),
@@ -1454,12 +1453,10 @@ class _StudioScreenState extends State<StudioScreen> {
   }
 
   String _generateCode() {
-    final frameStrs = frames
-        .map((f) {
-          final rowsStrs = f.map((r) => '[${r.join(', ')}]').join(',\n      ');
-          return '    [\n      $rowsStrs\n    ]';
-        })
-        .join(',\n');
+    final frameStrs = frames.map((f) {
+      final rowsStrs = f.map((r) => '[${r.join(', ')}]').join(',\n      ');
+      return '    [\n      $rowsStrs\n    ]';
+    }).join(',\n');
 
     return '''
 // 1. Define your custom frames
