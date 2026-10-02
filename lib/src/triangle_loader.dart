@@ -41,10 +41,22 @@ class TriangleLoader extends StatefulWidget {
   /// Defaults to [Colors.indigoAccent].
   final Color color;
 
-  /// The width and height of the widget's bounding box in logical pixels.
+  /// The square shorthand for the widget's bounding box in logical pixels.
   ///
-  /// The triangle grid is drawn to fill this area. Defaults to `200.0`.
+  /// The triangle grid is drawn to fill this area. Acts as the fallback for
+  /// [width] and [height]: a `size` of `200` is the same as
+  /// `width: 200, height: 200`. Defaults to `200.0`.
   final double size;
+
+  /// The width of the widget's bounding box in logical pixels.
+  ///
+  /// When `null` (the default), falls back to [size].
+  final double? width;
+
+  /// The height of the widget's bounding box in logical pixels.
+  ///
+  /// When `null` (the default), falls back to [size].
+  final double? height;
 
   /// The side length of each equilateral triangle in logical pixels.
   ///
@@ -76,6 +88,8 @@ class TriangleLoader extends StatefulWidget {
     super.key,
     this.color = Colors.indigoAccent,
     this.size = 200,
+    this.width,
+    this.height,
     this.triangleSize = 30.0,
     this.duration = const Duration(seconds: 4),
     this.wireframe = false,
@@ -109,8 +123,8 @@ class _TriangleLoaderState extends State<TriangleLoader>
     // instead of dirtying ancestor layers ~60 times a second.
     final Widget loader = RepaintBoundary(
       child: SizedBox(
-        width: widget.size,
-        height: widget.size,
+        width: widget.width ?? widget.size,
+        height: widget.height ?? widget.size,
         child: AnimatedBuilder(
           animation: _controller,
           builder: (context, child) {

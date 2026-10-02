@@ -342,9 +342,11 @@ The primary widget for dot-matrix loading animations.
 | `pattern` | `MatrixPattern` | `square1` | Animation pattern; use `custom` with `customIntensity` |
 | `activeColor` | `Color` | `Colors.white` | Color of lit/active dots |
 | `inactiveColor` | `Color` | `Color(0xFF27272A)` | Color of dim/inactive dots |
-| `size` | `double` | `64.0` | Width and height of the bounding box |
+| `size` | `double` | `64.0` | Square bounding-box shorthand; fallback for `width`/`height` |
+| `width` | `double?` | `null` | Bounding box width; falls back to `size` when `null` |
+| `height` | `double?` | `null` | Bounding box height; falls back to `size` when `null` (`DotLoader` derives it from `rows` instead) |
 | `dotSize` | `double` | `4.0` | Diameter of each dot in logical pixels |
-| `spacing` | `double?` | auto | Gap between dots; auto-calculated from `size` if `null` |
+| `spacing` | `double?` | auto | Gap between dots; auto-calculated per axis to fit the box if `null` |
 | `duration` | `Duration` | `1500ms` | Duration of one complete animation cycle |
 | `hoverAnimated` | `bool` | `true` | Enables hover ripple on web/desktop |
 | `opacityBase` | `double` | `0.08` | Minimum opacity for unlit dots |
@@ -388,7 +390,9 @@ A geometric loader using a tessellated grid of equilateral triangles.
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `color` | `Color` | `Colors.indigoAccent` | Color of the triangles |
-| `size` | `double` | `200.0` | Width and height of the bounding box |
+| `size` | `double` | `200.0` | Square bounding-box shorthand; fallback for `width`/`height` |
+| `width` | `double?` | `null` | Bounding box width; falls back to `size` when `null` |
+| `height` | `double?` | `null` | Bounding box height; falls back to `size` when `null` |
 | `triangleSize` | `double` | `30.0` | Side length of each equilateral triangle |
 | `duration` | `Duration` | `4s` | Duration of one animation cycle |
 | `wireframe` | `bool` | `false` | If `true`, renders only triangle outlines |

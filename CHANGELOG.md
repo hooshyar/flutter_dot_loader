@@ -1,3 +1,22 @@
+## 1.1.0
+
+- feat: `width` and `height` on `MatrixLoader`, `DotLoader`, and
+  `TriangleLoader`. `size` remains as the square shorthand and existing call
+  sites render identically; each new parameter falls back to `size` when not
+  set.
+- fix: auto dot spacing is now computed per axis, so grids with
+  `rows > columns` (for example `columns: 1, rows: 5, size: 64`) no longer
+  paint outside the widget's bounding box. Tap hit-testing shares the same
+  geometry.
+- feat: `DotLoader` derives its box height from `rows` and `dotSize` when
+  `height` is not given, so the default 3x1 indicator takes a
+  text-height-friendly box instead of a 64x64 square. Pass `height` to
+  restore an explicit box.
+- fix: `MatrixShape.triangle` no longer divides by zero on 1-row or 1-column
+  grids (previously the mask produced NaN comparisons and rendered nothing).
+- test: widget coverage for `rows > columns`, 1xN, Nx1, and 1-row triangle
+  grids asserting painted bounds stay inside the widget.
+
 ## 1.0.0
 
 First stable release. The API surface (`MatrixLoader`, `DotLoader`,
