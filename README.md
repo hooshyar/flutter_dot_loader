@@ -1,5 +1,6 @@
 # flutter_dot_loader
 
+[![CI](https://github.com/hooshyar/flutter_dot_loader/actions/workflows/ci.yml/badge.svg)](https://github.com/hooshyar/flutter_dot_loader/actions/workflows/ci.yml)
 [![pub.dev](https://img.shields.io/pub/v/flutter_dot_loader.svg?style=flat-square&color=ff3333&label=pub.dev)](https://pub.dev/packages/flutter_dot_loader)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![Flutter](https://img.shields.io/badge/Flutter-%E2%9D%A4-02569B?style=flat-square&logo=flutter)](https://flutter.dev)
@@ -23,7 +24,7 @@ From a 3-dot "thinking…" indicator for AI chats to a 60-pattern LED matrix wit
 | Feature | Description |
 |---|---|
 | 💬 **AI-chat "thinking" indicator** | One-liner `DotLoader(color: …)` for chat / AI apps — sensible defaults, `const`-constructable |
-| 🎨 **60 Built-in Patterns** | 20 Square, 20 Circular, and 20 Triangle math-driven animations + 13 semantic aliases (`vortexSpin`, `bullsEye`, `coreRipple`…) |
+| 🎨 **60 Built-in Patterns** | 20 Square, 20 Circular, and 20 Triangle math-driven animations + 16 semantic aliases (`vortexSpin`, `bullsEye`, `coreRipple`…) |
 | 🖥️ **LED Dot-Matrix Feel** | Three-tier opacity remapping for a realistic glowing LED display effect |
 | 🧩 **Custom Frames** | Drive every dot from your own data (`customIntensity`) — sprites, Tetris, scrolling text |
 | 📝 **Scrolling Marquee Text** | Built-in 5×7 font covers A–Z, 0–9, and 30+ punctuation/symbols (e.g. `"LOADING: 42%"`, `"a@b.com"`) |

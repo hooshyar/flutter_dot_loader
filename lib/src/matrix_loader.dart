@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 /// The geometric shape used to mask (clip) the dot grid in a [MatrixLoader].

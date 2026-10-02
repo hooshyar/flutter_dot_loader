@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'matrix_loader.dart';
 
 /// A simplified, AI-friendly version of [MatrixLoader].

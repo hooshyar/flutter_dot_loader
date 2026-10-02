@@ -122,12 +122,9 @@ void main() {
   });
 
   group('MatrixPattern', () {
-    test(
-      'has 77 values (20 square + 20 circular + 20 triangle + 16 aliases + 1 custom)',
-      () {
-        expect(MatrixPattern.values.length, 77);
-      },
-    );
+    test('has 77 values (20 square + 20 circular + 20 triangle + 16 aliases + 1 custom)', () {
+      expect(MatrixPattern.values.length, 77);
+    });
 
     test('semantic aliases resolve to working patterns', () {
       // Sanity-check a handful of aliases that the README advertises.
@@ -295,8 +292,7 @@ void main() {
         expect(
           file.existsSync(),
           isTrue,
-          reason:
-              'doc/font_preview.md is missing. Run: dart run tool/generate_font_preview.dart',
+          reason: 'doc/font_preview.md is missing. Run: dart run tool/generate_font_preview.dart',
         );
         final actual = file.readAsStringSync();
         if (actual != expected) {
@@ -449,7 +445,9 @@ void main() {
     ) async {
       final handle = tester.ensureSemantics();
       await tester.pumpWidget(
-        const MaterialApp(home: Scaffold(body: Center(child: MatrixLoader()))),
+        const MaterialApp(
+          home: Scaffold(body: Center(child: MatrixLoader())),
+        ),
       );
       expect(find.bySemanticsLabel('Loading'), findsNothing);
       handle.dispose();
