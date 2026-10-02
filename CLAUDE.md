@@ -8,6 +8,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Dart SDK `^3.11.4`, Flutter `>=1.17.0`. No runtime dependencies beyond Flutter itself; only `flutter_lints` for dev.
 
+## Status (2026-10-02)
+
+Version 1.1.0 is on `main`, publish-ready but unpublished (Hooshyar's go). See `docs/BRANCH-LEDGER.md` for what landed and what is left, and `backlog/tasks/` for open work. CI is green. Heavy suites: run one at a time.
+
 ## Common commands
 
 Run from the repo root unless noted.
