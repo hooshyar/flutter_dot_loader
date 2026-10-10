@@ -67,8 +67,16 @@ jobs:
         with:
           flutter-version: 3.38.0
 
+      - name: Show Flutter version
+        run: echo "::notice title=Floor toolchain::$(flutter --version | head -1) / $(dart --version 2>&1)"
+
       - name: Install dependencies
-        run: flutter pub get
+        # On failure, surface pub's explanation as an annotation.
+        run: |
+          flutter pub get > pub_get.txt 2>&1 || {
+            echo "::error title=pub get failed::$(tail -40 pub_get.txt | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')"
+            exit 1
+          }
 
       - name: Analyze lib
         run: flutter analyze lib
