@@ -6,6 +6,7 @@
 
 # --- Internal docs and tooling that ship no value to package consumers ---
 /CLAUDE.md
+/PROJECT.md
 /SPECS.md
 /tool/
 /doc/

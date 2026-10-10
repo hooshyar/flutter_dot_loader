@@ -1,5 +1,14 @@
 ## 1.1.0
 
+- build: the SDK floor drops from `^3.11.4` to `^3.10.0`, so the package now
+  resolves on Flutter 3.38 and later. The Flutter constraint is corrected from
+  `>=1.17.0`, which did not match the SDK floor, to `>=3.38.0`.
+- fix: changing `duration` on a looping or bouncing `MatrixLoader` /
+  `DotLoader` now takes effect immediately. Before, a running loop kept its
+  original speed until `playback` or `paused` also changed.
+- fix: `TriangleLoader` now applies `duration` changes, and repaints when
+  `color`, `triangleSize` or `wireframe` change while it shows a static frame
+  (reduced motion).
 - feat: `width` and `height` on `MatrixLoader`, `DotLoader`, and
   `TriangleLoader`. `size` remains as the square shorthand and existing call
   sites render identically; each new parameter falls back to `size` when not
@@ -8,10 +17,10 @@
   `rows > columns` (for example `columns: 1, rows: 5, size: 64`) no longer
   paint outside the widget's bounding box. Tap hit-testing shares the same
   geometry.
-- feat: `DotLoader` derives its box height from `rows` and `dotSize` when
-  `height` is not given, so the default 3x1 indicator takes a
-  text-height-friendly box instead of a 64x64 square. Pass `height` to
-  restore an explicit box.
+- feat (**behaviour change**): `DotLoader` derives its box height from `rows`
+  and `dotSize` when `height` is not given, so the default 3x1 indicator
+  takes a text-height-friendly box instead of a 64x64 square. Pass `height`
+  to restore an explicit box.
 - fix: `MatrixShape.triangle` no longer divides by zero on 1-row or 1-column
   grids (previously the mask produced NaN comparisons and rendered nothing).
 - feat: `respectReducedMotion` (default `true`) on `MatrixLoader`, `DotLoader`
@@ -25,6 +34,13 @@
 - feat: AI-state presets `DotLoader.typing()`, `.thinking()`, `.searching()`
   and `.generating()` with curated grids, patterns, durations and default
   semantics labels.
+- docs: the `MatrixLoader` reference table now covers `color`, `playback`,
+  `curve`, `paused`, `onComplete` and `onDotTapped`. Two README samples were
+  fixed: the JSON one used `frames` before declaring it, and the tap one
+  printed a literal `$row`. `example/README.md`, which pub.dev shows on the
+  Example tab, is now a real usage guide. Package topics were retuned for
+  search (`loading`, `animation`, `ai`, `chat`, `dot-matrix`), and the
+  internal `PROJECT.md` is excluded from the archive.
 - docs: CI badge, "Works great with" chat-bubble recipe, README alias count
   (16), hero GIFs referenced by absolute URL and excluded from the pub
   archive, pubspec boilerplate removed, dart format drift fixed (CI green again).
