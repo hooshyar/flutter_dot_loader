@@ -19,8 +19,8 @@ screenshots:
     path: assets/screenshot_studio.png
 
 environment:
-  sdk: ^3.10.0
-  flutter: ">=3.38.0"
+  sdk: ^3.8.0
+  flutter: ">=3.32.0"
 
 dependencies:
   flutter:

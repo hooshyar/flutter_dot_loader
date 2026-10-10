@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `flutter_dot_loader` is a published Flutter package (pub.dev) — a zero-dependency dot-matrix / LED loading animation library. The repo contains both the package itself (`lib/`) and an embedded example app (`example/`) used as a live gallery + studio.
 
-Dart SDK `^3.11.4`, Flutter `>=1.17.0`. No runtime dependencies beyond Flutter itself; only `flutter_lints` for dev.
+Dart SDK `^3.8.0`, Flutter `>=3.32.0` (CI's `sdk-floor` job checks this floor; `dart format` output is identical for language versions 3.8 to 3.12). No runtime dependencies beyond Flutter itself; only `flutter_lints` for dev.
 
 ## Status (2026-10-02)
 

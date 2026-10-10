@@ -56,16 +56,16 @@ jobs:
         run: flutter pub publish --dry-run
 
   sdk-floor:
-    # Verifies the declared floor (pubspec `sdk: ^3.10.0`, `flutter: >=3.38.0`)
+    # Verifies the declared floor (pubspec `sdk: ^3.8.0`, `flutter: >=3.32.0`)
     # instead of only the latest stable release.
-    name: SDK floor (Flutter 3.38.0)
+    name: SDK floor (Flutter 3.32.0)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.38.0
+          flutter-version: 3.32.0
 
       - name: Show Flutter version
         run: echo "::notice title=Floor toolchain::$(flutter --version | head -1) / $(dart --version 2>&1)"

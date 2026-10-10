@@ -1,8 +1,10 @@
 ## 1.1.0
 
-- build: the SDK floor drops from `^3.11.4` to `^3.10.0`, so the package now
-  resolves on Flutter 3.38 and later. The Flutter constraint is corrected from
-  `>=1.17.0`, which did not match the SDK floor, to `>=3.38.0`.
+- build: the SDK floor drops from `^3.11.4` to `^3.8.0`, so the package now
+  resolves on Flutter 3.32 and later (it needed about Flutter 3.41 before).
+  The Flutter constraint is corrected from `>=1.17.0`, which did not match the
+  SDK floor, to `>=3.32.0`. A new CI job runs the analyzer and tests on
+  Flutter 3.32.0.
 - fix: changing `duration` on a looping or bouncing `MatrixLoader` /
   `DotLoader` now takes effect immediately. Before, a running loop kept its
   original speed until `playback` or `paused` also changed.
