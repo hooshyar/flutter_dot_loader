@@ -48,6 +48,9 @@
   archive, pubspec boilerplate removed, dart format drift fixed (CI green again).
 - test: widget coverage for `rows > columns`, 1xN, Nx1, and 1-row triangle
   grids asserting painted bounds stay inside the widget.
+- ci: releases publish from GitHub by pushing a `v<version>` tag, and the
+  live web demo now redeploys automatically on every change to `main`.
+
 
 ## 1.0.0
 
