@@ -1,16 +1,16 @@
 name: flutter_dot_loader
-description: "Customizable dot-matrix and LED loading animations for Flutter — 60 patterns, scrolling marquee text, custom pixel frames, AI chat typing indicator. Zero deps."
+description: "Dot-matrix loading animations for Flutter: AI chat typing and thinking indicators, 60 LED patterns, scrolling marquee text and custom pixel frames. Zero deps."
 version: 1.1.0
 homepage: https://github.com/hooshyar/flutter_dot_loader
 repository: https://github.com/hooshyar/flutter_dot_loader
 issue_tracker: https://github.com/hooshyar/flutter_dot_loader/issues
 
 topics:
-  - loader
+  - loading
   - animation
+  - ai
+  - chat
   - dot-matrix
-  - led
-  - pixel-art
 
 screenshots:
   - description: "Gallery of 60 dot-matrix loader patterns"
@@ -19,8 +19,8 @@ screenshots:
     path: assets/screenshot_studio.png
 
 environment:
-  sdk: ^3.11.4
-  flutter: ">=1.17.0"
+  sdk: ^3.8.0
+  flutter: ">=3.32.0"
 
 dependencies:
   flutter:

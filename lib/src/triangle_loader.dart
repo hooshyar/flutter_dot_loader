@@ -133,6 +133,15 @@ class _TriangleLoaderState extends State<TriangleLoader>
     if (oldWidget.respectReducedMotion != widget.respectReducedMotion) {
       _syncReducedMotion();
     }
+    if (oldWidget.duration != widget.duration) {
+      _controller.duration = widget.duration;
+      // A running repeat() keeps its original period; restart it so the new
+      // duration applies right away.
+      if (_controller.isAnimating) {
+        _controller.stop();
+        _controller.repeat();
+      }
+    }
   }
 
   void _syncReducedMotion() {
@@ -265,6 +274,9 @@ class _TrianglePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _TrianglePainter oldDelegate) {
-    return oldDelegate.progress != progress;
+    return oldDelegate.progress != progress ||
+        oldDelegate.color != color ||
+        oldDelegate.triangleSize != triangleSize ||
+        oldDelegate.wireframe != wireframe;
   }
 }

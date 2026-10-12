@@ -1,0 +1,48 @@
+name: Deploy web demo
+
+# Builds example/ for the web and publishes it to GitHub Pages
+# (https://hooshyar.github.io/flutter_dot_loader/) on every push to main
+# that touches the example or the package, so the live demo can't go stale.
+# It was deployed by hand before (last on 2026-07-11, v1.0.0).
+#
+# Deploys to the gh-pages branch, matching the repo's existing Pages
+# "Deploy from a branch" setting.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "example/**"
+      - "lib/**"
+      - "pubspec.yaml"
+      - ".github/workflows/deploy-web-demo.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Build web demo
+        run: |
+          flutter pub get
+          cd example
+          flutter pub get
+          flutter build web --release --base-href /flutter_dot_loader/
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: example/build/web
+          publish_branch: gh-pages

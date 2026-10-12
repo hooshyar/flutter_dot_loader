@@ -167,7 +167,7 @@ MatrixLoader(
   columns: 8,
   rows: 8,
   onDotTapped: (row, col) {
-    print("User tapped dot at \$row, \$col");
+    debugPrint('Tapped dot at $row, $col');
   },
 )
 ```
@@ -344,13 +344,13 @@ Need to push new animations to your app without releasing a new build? `MatrixDa
 import 'dart:convert';
 import 'package:flutter_dot_loader/flutter_dot_loader.dart';
 
-// On your build pipeline / studio:
+// On your build pipeline / studio (`frames` from the example above):
 final payload = MatrixData.framesToJson(frames);
 final body = jsonEncode(payload);
 // → {"version":1,"rows":3,"cols":3,"frames":["010|111|010","101|010|101"]}
 
 // In the app (e.g. Firebase Remote Config string):
-final frames = MatrixData.framesFromJson(
+final remoteFrames = MatrixData.framesFromJson(
   jsonDecode(body) as Map<String, dynamic>,
 );
 ```
@@ -373,12 +373,18 @@ The primary widget for dot-matrix loading animations.
 | `pattern` | `MatrixPattern` | `square1` | Animation pattern; use `custom` with `customIntensity` |
 | `activeColor` | `Color` | `Colors.white` | Color of lit/active dots |
 | `inactiveColor` | `Color` | `Color(0xFF27272A)` | Color of dim/inactive dots |
+| `color` | `Color?` | `null` | Shorthand: sets `activeColor` and derives a dim `inactiveColor` from it |
 | `size` | `double` | `64.0` | Square bounding-box shorthand; fallback for `width`/`height` |
 | `width` | `double?` | `null` | Bounding box width; falls back to `size` when `null` |
 | `height` | `double?` | `null` | Bounding box height; falls back to `size` when `null` (`DotLoader` derives it from `rows` instead) |
 | `dotSize` | `double` | `4.0` | Diameter of each dot in logical pixels |
 | `spacing` | `double?` | auto | Gap between dots; auto-calculated per axis to fit the box if `null` |
-| `duration` | `Duration` | `1500ms` | Duration of one complete animation cycle |
+| `duration` | `Duration` | `1500ms` | Duration of one complete animation cycle (changes apply to a running loop) |
+| `playback` | `MatrixPlayback` | `loop` | `loop`, `bounce` (ping-pong) or `once` |
+| `curve` | `Curve` | `Curves.linear` | Easing applied to the animation progress |
+| `paused` | `bool` | `false` | Freezes the animation on its current frame |
+| `onComplete` | `VoidCallback?` | `null` | Called when a `MatrixPlayback.once` run finishes |
+| `onDotTapped` | `void Function(int row, int col)?` | `null` | Called with the grid position of a tapped dot |
 | `hoverAnimated` | `bool` | `true` | Enables hover ripple on web/desktop |
 | `opacityBase` | `double` | `0.08` | Minimum opacity for unlit dots |
 | `opacityMid` | `double` | `0.34` | Mid-point opacity for the LED glow curve |

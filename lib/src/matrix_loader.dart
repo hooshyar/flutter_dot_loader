@@ -525,10 +525,17 @@ class _MatrixLoaderState extends State<MatrixLoader>
     if (oldWidget.respectReducedMotion != widget.respectReducedMotion) {
       _syncReducedMotion();
     }
-    if (oldWidget.duration != widget.duration) {
+    final durationChanged = oldWidget.duration != widget.duration;
+    if (durationChanged) {
       _controller.duration = widget.duration;
     }
-    if (oldWidget.playback != widget.playback ||
+    // A running repeat() keeps the period it started with, so a new duration
+    // only takes effect once the loop is restarted. repeat() resumes from the
+    // current value, so the restart has no visible jump.
+    final restartLoop =
+        durationChanged && widget.playback != MatrixPlayback.once;
+    if (restartLoop ||
+        oldWidget.playback != widget.playback ||
         oldWidget.paused != widget.paused) {
       _applyPlayback();
     }

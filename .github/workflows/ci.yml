@@ -54,3 +54,32 @@ jobs:
 
       - name: Dry-run publish (catches pubspec & lint issues)
         run: flutter pub publish --dry-run
+
+  sdk-floor:
+    # Verifies the declared floor (pubspec `sdk: ^3.8.0`, `flutter: >=3.32.0`)
+    # instead of only the latest stable release.
+    name: SDK floor (Flutter 3.32.0)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.32.0
+
+      - name: Show Flutter version
+        run: echo "::notice title=Floor toolchain::$(flutter --version | head -1) / $(dart --version 2>&1)"
+
+      - name: Install dependencies
+        # On failure, surface pub's explanation as an annotation.
+        run: |
+          flutter pub get > pub_get.txt 2>&1 || {
+            echo "::error title=pub get failed::$(tail -40 pub_get.txt | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')"
+            exit 1
+          }
+
+      - name: Analyze lib
+        run: flutter analyze lib
+
+      - name: Run tests
+        run: flutter test
